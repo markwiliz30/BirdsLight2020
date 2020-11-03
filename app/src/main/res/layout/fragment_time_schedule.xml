@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TimeSchedule"
+    android:background="#14BED1"
+    android:orientation="vertical"
+    android:paddingBottom="20dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+            android:id="@+id/lblTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time Schedule"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_margin="20dp"
+            android:layout_gravity="center"
+            android:textColor="#39405A"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lst_time"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="10dp"
+
+                android:paddingHorizontal="30dp"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:weightSum="2">
+                    <TextView
+                        android:id="@+id/time_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:text="Set Time"/>
+                    <Button
+                        android:id="@+id/btn_Start_Time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:background="@drawable/button_model"
+                        android:drawableRight="@drawable/ic_access_time_black_24dp"
+                        android:textColor="#14BED1"
+                        android:layout_gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:layout_weight="1"
+                        android:text="Start" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:weightSum="2">
+                    <TextView
+                        android:id="@+id/time_end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:text="Set Time"/>
+                    <Button
+                        android:id="@+id/btn_End_Time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_model"
+                        android:layout_margin="20dp"
+                        android:drawableRight="@drawable/ic_access_time_black_24dp"
+                        android:textColor="#14BED1"
+                        android:layout_gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:enabled="false"
+                        android:layout_weight="1"
+                        android:text="End"/>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+            <Button
+                android:id="@+id/btn_save_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_model"
+                android:layout_marginHorizontal="80dp"
+                android:textColor="@color/MainColor"
+                android:layout_gravity="center"
+                android:paddingHorizontal="10dp"
+                android:text="Save"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

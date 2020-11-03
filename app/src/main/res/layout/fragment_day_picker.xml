@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#14BED1"
+    tools:context=".DayPicker"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Date Range"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:layout_margin="20dp"
+                    android:gravity="center"
+                    android:layout_weight="8"
+                    android:paddingLeft="60dp"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btn_next_page"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:clickable="true"
+                    android:src="@drawable/ic_navigate_next_dark_blue_24dp"
+                    app:backgroundTint="#14BED1"
+                    app:elevation="-1dp"
+                    app:fabSize="normal"
+                    app:maxImageSize="40dp"
+                    android:layout_weight="2"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_set_calender"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_model"
+                android:textColor="#14BED1"
+                android:layout_gravity="center"
+                android:paddingHorizontal="30sp"
+                android:text="Set Date" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="10"
+                >
+
+                <TextView
+                    android:id="@+id/lblDays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Day Picker"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:layout_margin="20dp"
+                    android:gravity="center"
+                    android:layout_weight="8"
+                    android:paddingLeft="50dp"
+                    />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btn_info"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:clickable="true"
+                    android:src="@drawable/ic_info_outline_darkblue_24dp"
+                    app:backgroundTint="#14BED1"
+                    app:elevation="-1dp"
+                    app:fabSize="mini"
+                    android:layout_weight="2"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/btnMonday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Mon"
+                    android:textColor="@color/MainColor"
+                    android:textSize="20sp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+                <Button
+                    android:id="@+id/btnTuesday"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Tue"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+                <Button
+                    android:id="@+id/btnWednesday"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Wed"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/btnThursday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Thu"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+                <Button
+                    android:id="@+id/btnFriday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Fri"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+                <Button
+                    android:id="@+id/btnSaturday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Sat"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                >
+
+                <Button
+                    android:id="@+id/btnSunday"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="Sun"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+                <Button
+                    android:id="@+id/btnAll"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_model"
+                    android:text="All"
+                    android:textColor="#14BED1"
+                    android:textSize="20dp"
+                    android:padding="20dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

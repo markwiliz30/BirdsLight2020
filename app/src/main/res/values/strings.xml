@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BLApp</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="program_to_step">Add Step</string>
+    <string name="step_to_program">Back</string>
+    <string name="no_data_available">Back</string>
+</resources>

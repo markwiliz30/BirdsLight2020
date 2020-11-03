@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:weightSum="8"
+        android:id="@+id/pgm_list">
+
+        <ImageView
+            android:id="@+id/img_wifi_lvl"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_signal_wifi_4_bar_dark_blue_24dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/lbl_wifi_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="wifi name"
+                android:textSize="25sp"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent" />
+            <TextView
+                android:id="@+id/lbl_wifi_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="wifi status"
+                android:textSize="15sp"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

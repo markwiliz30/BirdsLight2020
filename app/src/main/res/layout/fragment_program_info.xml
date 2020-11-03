@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingBottom="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lblInfo"
+        android:text="Information"
+        android:drawableLeft="@drawable/ic_info_outline_black_50dp"
+        android:textSize="30dp"
+        android:textColor="#39405A"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        ></TextView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#39405A"/>
+
+    <TextView
+        android:id="@+id/lblInfoMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableBottom="@drawable/ic_play_circle_filled_black_30dp"
+        android:text="To Activate all created programs, you should press the Activate button."
+        android:textColor="#39405A"
+        android:textSize="20dp"></TextView>
+
+    <Button
+        android:id="@+id/btn_got_it"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Got it!"
+        android:layout_marginRight="20dp"
+        android:background="@color/transparent"/>
+
+
+</LinearLayout>

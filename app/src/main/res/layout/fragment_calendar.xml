@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#14BED1"
+    tools:context=".CalendarFragment">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/startView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="From:"
+                android:layout_weight="1"
+                android:gravity="left|center" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/endView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="To:"
+                android:gravity="left|center"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
+
+            <com.aminography.primedatepicker.calendarview.PrimeCalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dayLabelTextColor="#39405A"
+                app:todayLabelTextColor="@color/DarkColor"
+                app:monthLabelTextColor="@color/colorAccent"
+                app:pickedDayLabelTextColor="@color/MainColor"
+
+                />
+
+
+
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:id="@+id/radio_group"
+            >
+                <RadioButton
+                    android:id="@+id/start_Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date"
+                    android:textSize="18dp"
+                    android:gravity="left|center"
+                    android:layout_marginHorizontal="10dp"
+                    android:checked="true"
+                    />
+
+                <RadioButton
+                    android:id="@+id/end_Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="10dp"/>
+
+        </RadioGroup>
+
+            <Button
+                android:id="@+id/btn_Save_Calender"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/button_model"
+                android:drawableRight="@drawable/ic_check_black_24dp"
+                android:textColor="#14BED1"
+                android:layout_gravity="center"
+                android:paddingHorizontal="20dp"
+                android:text="Set Date" />
+
+        </LinearLayout>
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

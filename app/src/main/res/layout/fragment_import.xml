@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#14BED1"
+    tools:context=".ImportFragment"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/lblImportList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Import List"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:textColor="#39405A"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:gravity="right|center"
+                android:layout_height="70dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select All"
+                    android:layout_gravity="right|center"/>
+                <CheckBox
+                    android:id="@+id/select_all_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:layout_marginRight="30dp"/>
+            </LinearLayout>
+
+
+
+            <!--tools:listitem="@layout/fragment_program_list"        //add this to preview the item list on recycler-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_import"
+                android:layout_width="match_parent"
+                android:layout_height="300dp">
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_import_list"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_model"
+                    android:drawableRight="@drawable/ic_import_export_black_24dp"
+                    android:textColor="#14BED1"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:text="Import"
+                    android:textSize="15dp"/>
+
+                <Button
+                    android:id="@+id/delete_import"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_model"
+                    android:drawableRight="@drawable/ic_delete_light_24dp"
+                    android:textColor="#14BED1"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:text="Delete"
+                    android:textSize="15dp"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

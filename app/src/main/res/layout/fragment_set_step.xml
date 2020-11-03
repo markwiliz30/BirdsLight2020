@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#14BED1"
+    tools:context=".SetStepFragment"
+    android:orientation="vertical">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal">
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New: "
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="#39405A"
+
+             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Program-"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="#39405A"
+            />
+        <TextView
+            android:id="@+id/step_parent_pgm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="#39405A"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step: "
+            android:textSize="25dp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_dec_step"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_chevron_left_black_24dp"
+            app:backgroundTint="#39405A"
+            app:fabSize="mini"/>
+
+        <EditText
+            android:id="@+id/txt_step_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="99"
+            android:text="1"
+            android:textSize="20dp"
+            android:inputType="number"
+            android:textColor="#39405A"/>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_inc_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:fabSize="mini"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            app:backgroundTint="#39405A" />
+
+        <Button
+            android:id="@+id/btn_add_step"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/button_model"
+            android:text="Add Step"
+            android:layout_marginLeft="20dp"
+            android:textColor="#14BED1"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pan: "
+            android:textSize="25dp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_marginStart="30dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/update_step_pan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="28sp"
+            android:textColor="#39405A"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="°"
+            android:textSize="25sp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+
+
+    </LinearLayout>
+        <SeekBar
+            android:id="@+id/edit_pan_sb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:max="255"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tilt: "
+            android:textSize="25dp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_marginStart="30dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/update_step_tilt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="28sp"
+            android:textColor="#39405A"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="°"
+            android:textSize="25sp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+
+
+    </LinearLayout>
+        <SeekBar
+            android:id="@+id/edit_tilt_sb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:max="255"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blink: "
+            android:textSize="25dp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_marginStart="30dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/update_step_blink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="28sp"
+            android:textColor="#39405A"
+            />
+
+
+    </LinearLayout>
+        <SeekBar
+            android:id="@+id/edit_blink_sb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:max="255"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time: "
+            android:textSize="25dp"
+            android:textColor="#39405A"
+            android:textStyle="bold"
+            android:layout_marginStart="30dp"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_dec_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_chevron_left_black_24dp"
+            app:backgroundTint="#39405A"
+            app:fabSize="mini"/>
+
+        <EditText
+            android:id="@+id/txt_step_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="99"
+            android:text="0"
+            android:textSize="20dp"
+            android:inputType="number"
+            android:textColor="#39405A"/>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_inc_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            app:fabSize="mini"
+            android:src="@drawable/ic_chevron_right_black_24dp"
+            app:backgroundTint="#39405A" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+        <Button
+            android:id="@+id/btn_step_save"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/button_model"
+            android:text="Save"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="#14BED1"/>
+        <Button
+            android:id="@+id/btnDeleteStep"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@drawable/button_model"
+            android:text="Delete"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="#14BED1"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>
