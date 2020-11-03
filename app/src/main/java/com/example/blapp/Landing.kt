@@ -31,6 +31,7 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.core.os.bundleOf
+import com.example.blapp.common.DeviceProtocol
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
@@ -77,6 +78,11 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landing)
         setPermission()
+
+        //testing code
+//        val deviceProtocol = DeviceProtocol()
+//        Protocol.cDeviceProt = deviceProtocol
+//        Protocol.cDeviceProt!!.startChannel()
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
 
