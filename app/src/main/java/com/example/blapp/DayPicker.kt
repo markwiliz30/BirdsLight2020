@@ -540,15 +540,15 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
     override fun onRangeDaysPicked(startDay: PrimeCalendar, endDay: PrimeCalendar) {
         Disabled = false
-        collection!!.sMonth = startDay.month.toString()
+        collection!!.sMonth = startDay.month.plus(1).toString()
         collection!!.sDay = startDay.dayOfMonth.toString()
-        collection!!.eMonth = endDay.month.toString()
+        collection!!.eMonth = endDay.month.plus(1).toString()
         collection!!.eDay = endDay.dayOfMonth.toString()
 
-        btn_set_calender.text = startDay.month.toString()+"/"+startDay.dayOfMonth+" ~ "+endDay.month+"/"+endDay.dayOfMonth
+        btn_set_calender.text = startDay.month.plus(1).toString()+"/"+startDay.dayOfMonth+" ~ "+endDay.month.plus(1)+"/"+endDay.dayOfMonth
 
 
-        Toast.makeText(activity , collection!!.sMonth+collection!!.sDay+collection!!.eMonth+collection!!.eDay , Toast.LENGTH_SHORT).show()
+     //   Toast.makeText(activity , collection!!.sMonth+collection!!.sDay+collection!!.eMonth+collection!!.eDay , Toast.LENGTH_SHORT).show()
     }
 
     override fun onSingleDayPicked(singleDay: PrimeCalendar) {

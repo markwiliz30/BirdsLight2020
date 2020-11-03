@@ -291,7 +291,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 CurrentID.UpdateID(num = ID_DAYPICKERFRAGMENT)
             } else if (CurrentID.getID() == ID_DAYPICKERFRAGMENT) {
                 navController.navigate(R.id.action_dayPicker_to_programFragment)
-                CurrentID.Updatebool(x = true)
+                CurrentID.Updatebool(x = false)
                 CurrentID.UpdateID(num = ID_PROGRAMFRAGMENT)
             } else if (CurrentID.getID() == ID_IMPORTFRAGMENT) {
                 navController.navigate(R.id.action_importFragment_to_programFragment)
