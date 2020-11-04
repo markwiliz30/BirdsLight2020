@@ -55,6 +55,10 @@ class TestFragment : Fragment() {
         tglPgm1.setOnClickListener{
 
             if(ButtonStatus){
+                //test code
+                Protocol.cDeviceProt = DeviceProtocol()
+                Protocol.cDeviceProt!!.startChannel()
+
                 data = byteArrayOf(
                     0x01.toByte(),
                     0x01.toByte()
