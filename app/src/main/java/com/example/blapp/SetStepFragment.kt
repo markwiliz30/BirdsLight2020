@@ -289,10 +289,11 @@ class SetStepFragment : Fragment() {
 
             var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
 
-            var dataHold = DataSetItem()
+            var dataHold: DataSetItem
 
             for(item in StepCollection.stepCollection)
             {
+                dataHold = DataSetItem()
                 dataHold.myCommand = item.command
                 dataHold.myDatas = byteArrayOf(
                     item.pgm!!.toByte(),
@@ -307,6 +308,7 @@ class SetStepFragment : Fragment() {
 
             for(item in PgmCollection.pgmCollection)
             {
+                dataHold = DataSetItem()
                 dataHold.myCommand = item.command
                 dataHold.myDatas = byteArrayOf(
                     item.pgm!!.toByte()
@@ -316,6 +318,7 @@ class SetStepFragment : Fragment() {
 
             for(item in ScheduleCollection.scheduleCollection)
             {
+                dataHold = DataSetItem()
                 dataHold.myCommand = item.command
                 dataHold.myDatas = byteArrayOf(
                     item.pgm!!.toByte(),

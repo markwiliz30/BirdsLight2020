@@ -132,7 +132,7 @@ class LandingFragment : Fragment() {
                     dataHold.myCommand = 0x04
                     dataHold.myDatas = byteArrayOf(
                         tdYearInt.toByte(),
-                        tdMonth.toByte(),
+                        tdMonth.plus(1).toByte(),
                         tdDay.toByte(),
                         tdHour.toByte(),
                         tdMinute.toByte(),
@@ -140,6 +140,7 @@ class LandingFragment : Fragment() {
                     )
                     dataSetCollection.add(dataHold)
 
+                    dataHold = DataSetItem()
                     dataHold.myCommand = 0x01
                     dataHold.myDatas = byteArrayOf(
                         0x80.toByte(),

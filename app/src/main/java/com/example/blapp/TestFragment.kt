@@ -3,6 +3,7 @@ package com.example.blapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.service.autofill.Dataset
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,14 +57,14 @@ class TestFragment : Fragment() {
 
             if(ButtonStatus){
                 //test code
-                Protocol.cDeviceProt = DeviceProtocol()
-                Protocol.cDeviceProt!!.startChannel()
+//                Protocol.cDeviceProt = DeviceProtocol()
+//                Protocol.cDeviceProt!!.startChannel()
 
                 data = byteArrayOf(
                     0x01.toByte(),
                     0x01.toByte()
                 )
-                Protocol.cDeviceProt!!.transferData(0x11, data)
+                Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
 
 //                data = byteArrayOf(
 //                    0x01.toByte(),
@@ -148,18 +149,23 @@ class TestFragment : Fragment() {
             )
             dataSetCollection.add(dataHold)
 
+            dataHold = DataSetItem()
+            dataHold.myCommand = 0x11
             dataHold.myDatas = byteArrayOf(
                 0x02.toByte(),
                 0x00.toByte()
             )
             dataSetCollection.add(dataHold)
 
+            dataHold = DataSetItem()
+            dataHold.myCommand = 0x11
             dataHold.myDatas = byteArrayOf(
                 0x03.toByte(),
                 0x00.toByte()
             )
             dataSetCollection.add(dataHold)
 
+            dataHold = DataSetItem()
             dataHold.myCommand = 0x01
             dataHold.myDatas = byteArrayOf(
                 0x80.toByte(),

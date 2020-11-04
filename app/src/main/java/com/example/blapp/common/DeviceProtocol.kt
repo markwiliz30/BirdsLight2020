@@ -91,6 +91,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
         }
     }
     private val postSendData = Runnable {
+        //if (canAccess)
         if (canAccess) {
             sendData()
         }
