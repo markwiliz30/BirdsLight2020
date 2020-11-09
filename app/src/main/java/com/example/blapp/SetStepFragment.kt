@@ -7,27 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentController
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.CurrentId.extensions.CurrentID
-import com.bumptech.glide.load.model.ByteBufferEncoder
 import com.example.blapp.collection.PgmCollection
 import com.example.blapp.collection.StepCollection
 import com.example.blapp.common.Protocol
 import com.example.blapp.model.PgmItem
 import com.example.blapp.model.StepItem
-import kotlinx.android.synthetic.main.fragment_program.*
 import kotlinx.android.synthetic.main.fragment_set_step.*
-import com.example.blapp.ProgramFragment
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.model.DataSetItem
-import kotlinx.android.synthetic.main.activity_landing.*
 
 /**
  * A simple [Fragment] subclass.
@@ -287,55 +279,57 @@ class SetStepFragment : Fragment() {
                 CurrentID.UpdateID(num = 3)
             }
 
-            var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
+//            var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
+//
+//            var dataHold: DataSetItem
+//
+//            for(item in StepCollection.stepCollection)
+//            {
+//                dataHold = DataSetItem()
+//                dataHold.myCommand = item.command
+//                dataHold.myDatas = byteArrayOf(
+//                    item.pgm!!.toByte(),
+//                    item.step!!.toByte(),
+//                    item.pan!!.toByte(),
+//                    item.tilt!!.toByte(),
+//                    item.blink!!.toByte(),
+//                    item.time!!.toByte()
+//                )
+//                dataSetCollection.add(dataHold)
+//            }
+//
+//            for(item in PgmCollection.pgmCollection)
+//            {
+//                dataHold = DataSetItem()
+//                dataHold.myCommand = item.command
+//                dataHold.myDatas = byteArrayOf(
+//                    item.pgm!!.toByte()
+//                )
+//                dataSetCollection.add(dataHold)
+//            }
+//
+//            for(item in ScheduleCollection.scheduleCollection)
+//            {
+//                dataHold = DataSetItem()
+//                dataHold.myCommand = item.command
+//                dataHold.myDatas = byteArrayOf(
+//                    item.pgm!!.toByte(),
+//                    item.smonth!!.toByte(),
+//                    item.sday!!.toByte(),
+//                    item.emonth!!.toByte(),
+//                    item.eday!!.toByte(),
+//                    item.wday!!.toByte(),
+//                    item.shour!!.toByte(),
+//                    item.sminute!!.toByte(),
+//                    item.ehour!!.toByte(),
+//                    item.eminute!!.toByte()
+//                )
+//                dataSetCollection.add(dataHold)
+//            }
+//
+//            Protocol.cDeviceProt!!.upload(dataSetCollection)
 
-            var dataHold: DataSetItem
-
-            for(item in StepCollection.stepCollection)
-            {
-                dataHold = DataSetItem()
-                dataHold.myCommand = item.command
-                dataHold.myDatas = byteArrayOf(
-                    item.pgm!!.toByte(),
-                    item.step!!.toByte(),
-                    item.pan!!.toByte(),
-                    item.tilt!!.toByte(),
-                    item.blink!!.toByte(),
-                    item.time!!.toByte()
-                )
-                dataSetCollection.add(dataHold)
-            }
-
-            for(item in PgmCollection.pgmCollection)
-            {
-                dataHold = DataSetItem()
-                dataHold.myCommand = item.command
-                dataHold.myDatas = byteArrayOf(
-                    item.pgm!!.toByte()
-                )
-                dataSetCollection.add(dataHold)
-            }
-
-            for(item in ScheduleCollection.scheduleCollection)
-            {
-                dataHold = DataSetItem()
-                dataHold.myCommand = item.command
-                dataHold.myDatas = byteArrayOf(
-                    item.pgm!!.toByte(),
-                    item.smonth!!.toByte(),
-                    item.sday!!.toByte(),
-                    item.emonth!!.toByte(),
-                    item.eday!!.toByte(),
-                    item.wday!!.toByte(),
-                    item.shour!!.toByte(),
-                    item.sminute!!.toByte(),
-                    item.ehour!!.toByte(),
-                    item.eminute!!.toByte()
-                )
-                dataSetCollection.add(dataHold)
-            }
-
-            Protocol.cDeviceProt!!.upload(dataSetCollection)
+            UploadDataSets()
 
 //            data = byteArrayOf(
 //                0x01.toByte(),
@@ -350,6 +344,47 @@ class SetStepFragment : Fragment() {
 
         }
 
+    }
+
+    private fun UploadDataSets()
+    {
+        var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
+
+        var dataHold: DataSetItem
+
+        val filteredSchedCollection = ScheduleCollection.scheduleCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()}
+
+        val filteredStepCollection = StepCollection.stepCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()}
+
+        for(lStepItem in filteredStepCollection)
+        {
+            for(lSchedItem in filteredSchedCollection)
+            {
+                dataHold = DataSetItem()
+                dataHold.myCommand = 0x06.toByte()
+                dataHold.myDatas = byteArrayOf(
+                    lStepItem.pgm!!.toByte(),
+                    lSchedItem.smonth!!.toByte(),
+                    lSchedItem.sday!!.toByte(),
+                    lSchedItem.emonth!!.toByte(),
+                    lSchedItem.eday!!.toByte(),
+                    lSchedItem.wday!!.toByte(),
+                    lSchedItem.shour!!.toByte(),
+                    lSchedItem.sminute!!.toByte(),
+                    lSchedItem.ehour!!.toByte(),
+                    lSchedItem.eminute!!.toByte(),
+                    lStepItem.step!!.toByte(),
+                    lStepItem.pan!!.toByte(),
+                    lStepItem.tilt!!.toByte(),
+                    lStepItem.blink!!.toByte(),
+                    lStepItem.time!!.toByte()
+                )
+
+                dataSetCollection.add(dataHold)
+            }
+        }
+
+        Protocol.cDeviceProt!!.upload(dataSetCollection)
     }
 
     private fun AddPgmToCollection(pgm: PgmItem, stepList: List<StepItem>)
