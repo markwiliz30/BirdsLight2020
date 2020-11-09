@@ -246,34 +246,8 @@ class ProgramFragment : Fragment(){
             InfoPopup()
         }
         btn_activate.setOnClickListener{
-            val date = Date() // given date
-
-            val calendar =
-                GregorianCalendar.getInstance() // creates a new calendar instance
-
-            calendar.time = date // assigns calendar to given date
-
-            calendar[Calendar.HOUR_OF_DAY] // gets hour in 24h format
-
-            calendar[Calendar.HOUR] // gets hour in 12h format
-
-            calendar[Calendar.MONTH] // gets month number, NOTE this is zero based!
-
-//            Toast.makeText(context, calendar[Calendar.YEAR].toString(), Toast.LENGTH_SHORT).show()
-
-            var tes = calendar[Calendar.YEAR].toString()
-
-//            Toast.makeText(context, tes.substring(1..3), Toast.LENGTH_SHORT).show()
-
-//            val tdYearStr = calendar[Calendar.YEAR].toString()
-//            val tdYearInt = tdYearStr.substring(1..3).toInt()
-//            Toast.makeText(context, tdYearInt.toString(), Toast.LENGTH_SHORT).show()
-
-            var test: MutableList<String> = mutableListOf()
-            test.add("wew")
-            test.add("waw")
-            test.add("wow")
-            Toast.makeText(context, test.count().toString(), Toast.LENGTH_SHORT).show()
+            val lData = byteArrayOf(0x00.toByte())
+            Protocol.cDeviceProt!!.transferData(0x02.toByte(), lData)
         }
     }
     private fun DeleteAlert(pos: Int){
