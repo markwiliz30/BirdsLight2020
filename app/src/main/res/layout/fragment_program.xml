@@ -93,7 +93,7 @@
                     android:textColor="#14BED1"
                     android:layout_gravity="center"
                     android:paddingHorizontal="10dp"
-                    android:text="Import"
+                    android:text="Export"
                     android:textSize="15dp"/>
             </LinearLayout>
         </LinearLayout>
