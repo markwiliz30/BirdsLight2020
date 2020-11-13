@@ -43,7 +43,6 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
     lateinit var eDay: String
     var collection: DayManager? = null
     var Disabled: Boolean = false
-    var ScheduleComplete: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,8 +69,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
         if(DayState.firstboot){
             InfoPopup()
-
         }
+
        var filtered = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
         collection = filtered.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
 
@@ -97,16 +96,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
             }
         }
 
-        btnMonday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else{
-            collection!!.monday =! collection!!.monday
-            BorderOrganize(1)
-            true
-            }
-        }
+//        btnMonday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else{
+//            collection!!.monday =! collection!!.monday
+//            BorderOrganize(1)
+//            true
+//            }
+//        }
 
         btnTuesday.setOnClickListener{
             if(Disabled){
@@ -117,16 +116,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 ShowTimeSchedule(2)
             }
         }
-        btnTuesday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.tuesday = !collection!!.tuesday
-                BorderOrganize(2)
-                true
-            }
-        }
+//        btnTuesday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.tuesday = !collection!!.tuesday
+//                BorderOrganize(2)
+//                true
+//            }
+//        }
 
         btnWednesday.setOnClickListener{
             if(Disabled){
@@ -137,16 +136,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 ShowTimeSchedule(3)
             }
         }
-        btnWednesday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.wednesday = !collection!!.wednesday
-                BorderOrganize(3)
-                true
-            }
-        }
+//        btnWednesday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.wednesday = !collection!!.wednesday
+//                BorderOrganize(3)
+//                true
+//            }
+//        }
         btnThursday.setOnClickListener{
             if(Disabled){
                 Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
@@ -156,16 +155,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 ShowTimeSchedule(4)
             }
         }
-        btnThursday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.thursday = !collection!!.thursday
-                BorderOrganize(4)
-                true
-            }
-        }
+//        btnThursday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.thursday = !collection!!.thursday
+//                BorderOrganize(4)
+//                true
+//            }
+//        }
         btnFriday.setOnClickListener{
             if(Disabled){
                 Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
@@ -175,16 +174,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 ShowTimeSchedule(5)
             }
         }
-        btnFriday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.friday = !collection!!.friday
-                BorderOrganize(5)
-                true
-            }
-        }
+//        btnFriday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.friday = !collection!!.friday
+//                BorderOrganize(5)
+//                true
+//            }
+//        }
         btnSaturday.setOnClickListener{
             if(Disabled){
                 Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
@@ -195,16 +194,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
             }
         }
 
-        btnSaturday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.saturday = !collection!!.saturday
-                BorderOrganize(6)
-                true
-            }
-        }
+//        btnSaturday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.saturday = !collection!!.saturday
+//                BorderOrganize(6)
+//                true
+//            }
+//        }
         btnSunday.setOnClickListener{
             if(Disabled){
                 Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
@@ -215,16 +214,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
             }
         }
 
-        btnSunday.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.sunday = !collection!!.sunday
-                BorderOrganize(7)
-                true
-            }
-        }
+//        btnSunday.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.sunday = !collection!!.sunday
+//                BorderOrganize(7)
+//                true
+//            }
+//        }
         btnAll.setOnClickListener{
             if(Disabled){
                 Toast.makeText(activity , "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
@@ -236,16 +235,16 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
         }
 
-        btnAll.setOnLongClickListener{
-            if(Disabled){
-                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
-                true
-            }else {
-                collection!!.alldays = !collection!!.alldays
-                BorderOrganize(8)
-                true
-            }
-        }
+//        btnAll.setOnLongClickListener{
+//            if(Disabled){
+//                Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+//                true
+//            }else {
+//                collection!!.alldays = !collection!!.alldays
+//                BorderOrganize(8)
+//                true
+//            }
+//        }
 
         for(i in 1..7){
             initialOrganize(i)
@@ -256,12 +255,12 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
            CreateCalander()
         }
 
-        btn_info.setOnClickListener{
-            InfoPopup()
-        }
+//        btn_info.setOnClickListener{
+//            InfoPopup()
+//        }
 
         btn_next_page.setOnClickListener{
-            if(!ScheduleComplete){
+            if(DayState.ScheduleComplete){
                 val bundle = bundleOf("parentPgmIndex" to  CurrentID.parentPgmIndex)
                 navController.navigate(R.id.action_dayPicker_to_setStepFragment, bundle)
                 CurrentID.UpdateID(num = 6)
@@ -270,6 +269,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
             }else {
                 if(Disabled){
                     Toast.makeText(activity, "Please Set A Date Range" , Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(activity, "Please Set atleast one day" , Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -455,6 +456,33 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                     btnSunday.setBackgroundResource(R.drawable.button_model)
                 }
             }
+            8-> {
+                if(collection!!.alldays){
+                    SelectAllDays()
+                }else{
+                    if(!collection!!.monday){
+                        btnMonday.setBackgroundResource(R.drawable.button_model)
+                    }
+                    else if(!collection!!.tuesday){
+                        btnTuesday.setBackgroundResource(R.drawable.button_model)
+                    }
+                    else if(!collection!!.wednesday){
+                        btnWednesday.setBackgroundResource(R.drawable.button_model)
+                    }
+                    else if(!collection!!.thursday){
+                        btnThursday.setBackgroundResource(R.drawable.button_model)
+                    }
+                    else if(!collection!!.friday){
+                        btnFriday.setBackgroundResource(R.drawable.button_model)
+                    }
+                    else if(!collection!!.saturday){
+                        btnSaturday.setBackgroundResource(R.drawable.button_model)
+                    }
+                    else if(!collection!!.sunday){
+                        btnSunday.setBackgroundResource(R.drawable.button_model)
+                    }
+                }
+            }
         }
 
     }
@@ -632,7 +660,7 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
     val infoAlert = AlertDialog.Builder(activity!!).create()
     val InfoView = layoutInflater.inflate(R.layout.fragment_info, null)
 
-    InfoView.lblInfoMessage.text = "Set date first before clicking any buttons in Day Picker panel. \n\nSingle press to manage time schedule or \"Hold\" to activate the selected day"
+    InfoView.lblInfoMessage.text = "Set date first before clicking any buttons in Day Picker panel."
     infoAlert.setView(InfoView)
     infoAlert.show()
     InfoView.btn_got_it.setOnClickListener{

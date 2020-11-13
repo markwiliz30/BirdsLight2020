@@ -10,4 +10,5 @@ object DayState {
     public var sunday: Boolean = false
     public var alldays: Boolean = false
     public var firstboot = true
+    public var ScheduleComplete: Boolean = false
 }

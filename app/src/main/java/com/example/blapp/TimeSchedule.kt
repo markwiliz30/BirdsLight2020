@@ -22,6 +22,7 @@ import com.CurrentId.extensions.CurrentID
 import com.example.blapp.adapter.TimeAdapter
 import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.ScheduleCollection
+import com.example.blapp.common.DayState
 import com.example.blapp.helper.MyButton
 import com.example.blapp.helper.MySwipeHelper
 import com.example.blapp.helper.MySwipeHelper2
@@ -50,6 +51,7 @@ class TimeSchedule : Fragment() {
     var conflicts: Boolean = true
     lateinit var adapter: TimeAdapter
     lateinit var layoutManager: LinearLayoutManager
+    var collection: DayManager? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +67,9 @@ class TimeSchedule : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+
+        var filtered = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+        collection = filtered.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
 
         lst_time.setHasFixedSize(true)
         layoutManager = LinearLayoutManager(activity)
@@ -121,13 +126,16 @@ class TimeSchedule : Fragment() {
                     Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
                 }else{
                     if(day == 8){
+                        collection!!.alldays = true
                         addAllDaysCollection()
                     }else{
+                        ChangeDayStatus(day)
                         addToTimeCollection()
                     }
 
                     refreshList()
                     returnToInitial()
+                    DayState.ScheduleComplete = true
                     Toast.makeText(activity, "Save Success" , Toast.LENGTH_LONG).show()
                 }
 
@@ -211,7 +219,7 @@ class TimeSchedule : Fragment() {
         var tempStime: Int = 0
         var tempEtime: Int = 0
         conflicts = true
-        var TimeRestric = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+        var TimeRestric = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day }
 
         tempStime = if(tempsminute < 10){
             (""+tempshour+"0"+tempsminute+"").toInt()
@@ -248,6 +256,32 @@ class TimeSchedule : Fragment() {
                 }
             }
         return conflicts
+    }
+
+    fun ChangeDayStatus(wday: Int){
+        when(wday){
+            1 -> {
+                collection!!.monday = true
+            }
+            2 -> {
+                collection!!.tuesday = true
+            }
+            3 -> {
+                collection!!.wednesday = true
+            }
+            4 -> {
+                collection!!.thursday = true
+            }
+            5 -> {
+                collection!!.friday = true
+            }
+            6 -> {
+                collection!!.saturday = true
+            }
+            7 -> {
+                collection!!.sunday = true
+            }
+        }
     }
 
     private fun addAllDaysCollection(){

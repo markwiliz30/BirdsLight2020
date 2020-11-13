@@ -148,20 +148,83 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace if statement "WifiUtils.isConnectedToBL"
                 ID_TESTFRAGMENT ->
+                  if (WifiUtils.isConnectedToBL) {
+                      if (CurrentID.getID() == ID_HOME) {
+                          navController.navigate(R.id.action_landingFragment_to_testFragment)
+                          CurrentID.UpdateID(num = it.id)
+                      } else if (CurrentID.getID() == ID_PROGRAMFRAGMENT) {
+                          navController.navigate(R.id.action_programFragment_to_testFragment)
+                          CurrentID.UpdateID(num = it.id)
+                      } else if (CurrentID.getID() == ID_SCHEDULEFRAGMENT) {
+                          navController.navigate(R.id.action_scheduleFragment_to_testFragment)
+                          CurrentID.UpdateID(num = it.id)
+                      } else if (CurrentID.getID() == ID_SETTINGSFRAGMENT) {
+                          navController.navigate(R.id.action_settings_to_testFragment)
+                          CurrentID.UpdateID(num = it.id)
+                      } else if (CurrentID.getID() == ID_STEPFRAGMENT) {
+                          bottomNavigation.isVisible = false
+                          ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                      } else if (CurrentID.getID() == ID_TIMESCHEDFRAGMENT) {
+                          bottomNavigation.isVisible = false
+                          ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                      } else if (CurrentID.getID() == ID_DAYPICKERFRAGMENT) {
+                          bottomNavigation.isVisible = false
+                          ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                      } else if (CurrentID.getID() == ID_IMPORTFRAGMENT) {
+                          bottomNavigation.isVisible = false
+                          ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                      } else if (CurrentID.getID() == ID_CALENDAR) {
+                          bottomNavigation.isVisible = false
+                          ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                      }
+                  } else {
+                        bottomNavigation.isVisible = false
+                        NotConnectedAlert()
+                    }
+
+                // replace if statement "WifiUtils.isConnectedToBL"
+                ID_PROGRAMFRAGMENT ->
+                   if (WifiUtils.isConnectedToBL) {
+                       if (CurrentID.getID() == ID_HOME) {
+                           navController.navigate(R.id.action_landingFragment_to_programFragment)
+                           CurrentID.UpdateID(num = it.id)
+                       } else if (CurrentID.getID() == ID_TESTFRAGMENT) {
+                           navController.navigate(R.id.action_testFragment_to_programFragment)
+                           CurrentID.UpdateID(num = it.id)
+                       } else if (CurrentID.getID() == ID_SCHEDULEFRAGMENT) {
+                           navController.navigate(R.id.action_scheduleFragment_to_programFragment)
+                           CurrentID.UpdateID(num = it.id)
+                       } else if (CurrentID.getID() == ID_SETTINGSFRAGMENT) {
+                           navController.navigate(R.id.action_settings_to_programFragment)
+                           CurrentID.UpdateID(num = it.id)
+                       } else if (CurrentID.getID() == ID_CALENDAR) {
+                           bottomNavigation.isVisible = false
+                           ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                       }
+                   } else {
+                        bottomNavigation.isVisible = false
+                        NotConnectedAlert()
+                    }
+
+                //replace the if statement "WifiUtils.isConnectedToBL"
+                ID_SCHEDULEFRAGMENT ->
                     if (WifiUtils.isConnectedToBL) {
                         if (CurrentID.getID() == ID_HOME) {
-                            navController.navigate(R.id.action_landingFragment_to_testFragment)
+                            navController.navigate(R.id.action_landingFragment_to_scheduleFragment)
+                            CurrentID.UpdateID(num = it.id)
+                        } else if (CurrentID.getID() == ID_TESTFRAGMENT) {
+                            navController.navigate(R.id.action_testFragment_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
                         } else if (CurrentID.getID() == ID_PROGRAMFRAGMENT) {
-                            navController.navigate(R.id.action_programFragment_to_testFragment)
-                            CurrentID.UpdateID(num = it.id)
-                        } else if (CurrentID.getID() == ID_SCHEDULEFRAGMENT) {
-                            navController.navigate(R.id.action_scheduleFragment_to_testFragment)
+                            navController.navigate(R.id.action_programFragment_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
                         } else if (CurrentID.getID() == ID_SETTINGSFRAGMENT) {
-                            navController.navigate(R.id.action_settings_to_testFragment)
+                            navController.navigate(R.id.action_settings_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
                         } else if (CurrentID.getID() == ID_STEPFRAGMENT) {
+                            bottomNavigation.isVisible = false
+                            ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                        } else if (CurrentID.getID() == ID_IMPORTFRAGMENT) {
                             bottomNavigation.isVisible = false
                             ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
                         } else if (CurrentID.getID() == ID_TIMESCHEDFRAGMENT) {
@@ -170,70 +233,8 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                         } else if (CurrentID.getID() == ID_DAYPICKERFRAGMENT) {
                             bottomNavigation.isVisible = false
                             ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                        } else if (CurrentID.getID() == ID_IMPORTFRAGMENT) {
-                            bottomNavigation.isVisible = false
-                            ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                        } else if (CurrentID.getID() == ID_CALENDAR) {
-                            bottomNavigation.isVisible = false
-                            ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
                         }
-                    } else {
-                        bottomNavigation.isVisible = false
-                        NotConnectedAlert()
-                    }
-
-                // replace if statement "WifiUtils.isConnectedToBL"
-                ID_PROGRAMFRAGMENT ->
-                    if (WifiUtils.isConnectedToBL) {
-                        if (CurrentID.getID() == ID_HOME) {
-                            navController.navigate(R.id.action_landingFragment_to_programFragment)
-                            CurrentID.UpdateID(num = it.id)
-                        } else if (CurrentID.getID() == ID_TESTFRAGMENT) {
-                            navController.navigate(R.id.action_testFragment_to_programFragment)
-                            CurrentID.UpdateID(num = it.id)
-                        } else if (CurrentID.getID() == ID_SCHEDULEFRAGMENT) {
-                            navController.navigate(R.id.action_scheduleFragment_to_programFragment)
-                            CurrentID.UpdateID(num = it.id)
-                        } else if (CurrentID.getID() == ID_SETTINGSFRAGMENT) {
-                            navController.navigate(R.id.action_settings_to_programFragment)
-                            CurrentID.UpdateID(num = it.id)
-                        } else if (CurrentID.getID() == ID_CALENDAR) {
-                            bottomNavigation.isVisible = false
-                            ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                        }
-                    } else {
-                        bottomNavigation.isVisible = false
-                        NotConnectedAlert()
-                    }
-
-                //replace the if statement "WifiUtils.isConnectedToBL"
-                ID_SCHEDULEFRAGMENT -> if (WifiUtils.isConnectedToBL) {
-                    if (CurrentID.getID() == ID_HOME) {
-                        navController.navigate(R.id.action_landingFragment_to_scheduleFragment)
-                        CurrentID.UpdateID(num = it.id)
-                    } else if (CurrentID.getID() == ID_TESTFRAGMENT) {
-                        navController.navigate(R.id.action_testFragment_to_scheduleFragment)
-                        CurrentID.UpdateID(num = it.id)
-                    } else if (CurrentID.getID() == ID_PROGRAMFRAGMENT) {
-                        navController.navigate(R.id.action_programFragment_to_scheduleFragment)
-                        CurrentID.UpdateID(num = it.id)
-                    } else if (CurrentID.getID() == ID_SETTINGSFRAGMENT) {
-                        navController.navigate(R.id.action_settings_to_scheduleFragment)
-                        CurrentID.UpdateID(num = it.id)
-                    } else if (CurrentID.getID() == ID_STEPFRAGMENT) {
-                        bottomNavigation.isVisible = false
-                        ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                    } else if (CurrentID.getID() == ID_IMPORTFRAGMENT) {
-                        bottomNavigation.isVisible = false
-                        ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                    } else if (CurrentID.getID() == ID_TIMESCHEDFRAGMENT) {
-                        bottomNavigation.isVisible = false
-                        ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                    } else if (CurrentID.getID() == ID_DAYPICKERFRAGMENT) {
-                        bottomNavigation.isVisible = false
-                        ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                    }
-                } else {
+                    }else {
                     bottomNavigation.isVisible = false
                     NotConnectedAlert()
                 }

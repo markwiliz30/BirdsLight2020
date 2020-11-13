@@ -81,7 +81,12 @@
                 android:textColor="#39405A"
                 />
 
-
+            <NumberPicker
+                android:id="@+id/numberPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="50dp"
+                />
 
             <Button
                 android:id="@+id/btnReset"
@@ -89,7 +94,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="30dp"
                 android:background="@drawable/button_model"
                 android:text="Reset Default"
                 android:textColor="#14BED1"
