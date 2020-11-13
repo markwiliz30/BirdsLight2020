@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.blapp.common.DeviceProtocol
 import com.example.blapp.common.Protocol
+import com.example.blapp.common.TestTransferRateVal
 import com.example.blapp.model.DataSetItem
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import kotlinx.android.synthetic.main.fragment_test.*
@@ -53,7 +54,6 @@ class TestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        var command: Byte = 0x02
         var data: ByteArray
 
         tglPgm1.setOnClickListener{
@@ -215,29 +215,50 @@ class TestFragment : Fragment() {
         }
 
         btn_test_inc.setOnClickListener{
-
             var curNum:Int = test_Number.text.toString().toInt()
-            var newNum:Int = curNum+50
+            var newNum:Int = curNum
             if(newNum < 1000){
+                newNum += 50
+                TestTransferRateVal.tRate = newNum
                 test_Number.setText(newNum.toString())
-
             }else{
                 Toast.makeText(context, "You've reached the maxed input", Toast.LENGTH_SHORT).show()
-                test_Number.setText("1000")
             }
         }
 
         btn_test_dec.setOnClickListener{
-
             var curNum:Int = test_Number.text.toString().toInt()
-            var newNum:Int = curNum-50
+            var newNum:Int = curNum
             if(newNum > 50){
+                newNum -= 50
+                TestTransferRateVal.tRate = newNum
                 test_Number.setText(newNum.toString())
             }else{
                 Toast.makeText(context, "You've reached the min input", Toast.LENGTH_SHORT).show()
-                test_Number.setText("50")
             }
         }
+
+        testSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                pVal = progress
+                tVal = progress
+                bVal = progress
+                data = byteArrayOf(
+                    pVal.toByte(),
+                    tVal.toByte(),
+                    bVal.toByte()
+                )
+                Protocol.cDeviceProt?.newAdjTransferWithDelay(0x01, data)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Toast.makeText(context, "delay is- "+ TestTransferRateVal.tRate.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
 
 
     }
