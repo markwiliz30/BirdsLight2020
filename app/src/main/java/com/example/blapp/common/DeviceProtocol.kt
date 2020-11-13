@@ -191,6 +191,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
                     data = dataSets[i].myDatas!!
                     dataLength = data.size
                     sendData()
+                    isRecognized = false
                 }
 
                 if(isRecognized)
@@ -198,8 +199,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
                     i++
                     canEnter = true
                 }
-            }
-            else{
+            } else{
                 canAccess=false
                 i=0
             }

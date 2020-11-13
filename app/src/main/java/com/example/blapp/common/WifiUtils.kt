@@ -131,7 +131,7 @@ class WifiUtils {
 
                         var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
 
-                        var dataHold = DataSetItem()
+                        var dataHold:DataSetItem
 
                         val date = Date() // given date
 
@@ -148,6 +148,7 @@ class WifiUtils {
                         val tdMinute = calendar[Calendar.MINUTE]
                         val tdSecond = calendar[Calendar.SECOND]
 
+                        dataHold = DataSetItem()
                         dataHold.myCommand = 0x04
                         dataHold.myDatas = byteArrayOf(
                             tdYearInt.toByte(),
@@ -159,6 +160,7 @@ class WifiUtils {
                         )
                         dataSetCollection.add(dataHold)
 
+                        dataHold = DataSetItem()
                         dataHold.myCommand = 0x01
                         dataHold.myDatas = byteArrayOf(
                             0x80.toByte(),

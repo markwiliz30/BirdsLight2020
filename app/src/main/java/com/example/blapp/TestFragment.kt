@@ -17,6 +17,7 @@ import com.example.blapp.common.Protocol
 import com.example.blapp.model.DataSetItem
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import kotlinx.android.synthetic.main.fragment_test.*
+import java.util.*
 import kotlin.math.round
 
 class TestFragment : Fragment() {
@@ -112,12 +113,40 @@ class TestFragment : Fragment() {
 
         tglPgm3.setOnClickListener{
             if(ButtonStatus){
-                data = byteArrayOf(
-                    0x03.toByte(),
-                    0x01.toByte()
-                )
-                Protocol.cDeviceProt!!.transferData(0x11, data)
+                //uncomment me
+//                data = byteArrayOf(
+//                    0x03.toByte(),
+//                    0x01.toByte()
+//                )
+//                Protocol.cDeviceProt!!.transferData(0x11, data)
 
+                //for testing
+                val date = Date() // given date
+
+                val calendar =
+                    GregorianCalendar.getInstance() // creates a new calendar instance
+
+                calendar.time = date // assigns calendar to given date
+
+                val tdYearStr = calendar[Calendar.YEAR].toString()
+                val tdYearInt = tdYearStr.substring(1..3).toInt()
+                val tdMonth = calendar[Calendar.MONTH] // 0 based
+                val tdDay = calendar[Calendar.DAY_OF_MONTH]
+                val tdHour = calendar[Calendar.HOUR_OF_DAY]
+                val tdMinute = calendar[Calendar.MINUTE]
+                val tdSecond = calendar[Calendar.SECOND]
+
+
+                var myData = byteArrayOf(
+                    tdYearInt.toByte(),
+                    tdMonth.plus(1).toByte(),
+                    tdDay.toByte(),
+                    tdHour.toByte(),
+                    tdMinute.toByte(),
+                    tdSecond.toByte()
+                )
+
+                Protocol.cDeviceProt!!.transferData(0x04, myData)
 //                    data = byteArrayOf(
 //                        0x01.toByte(),
 //                        0x01.toByte(),
