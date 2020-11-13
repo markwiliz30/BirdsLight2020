@@ -24,6 +24,7 @@ import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.common.DayState
 import com.example.blapp.common.Protocol
 import com.example.blapp.model.DayManager
+import com.example.blapp.model.ScheduleItem
 import kotlinx.android.synthetic.main.fragment_day_picker.*
 import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_info.view.*
@@ -73,7 +74,6 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
        var filtered = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
         collection = filtered.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
-
 
         if(collection!!.sMonth == "" && collection!!.sDay == "" && collection!!.eMonth == "" && collection!!.eDay == ""){
             Disabled = true
@@ -246,7 +246,7 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 //            }
 //        }
 
-        for(i in 1..7){
+        for(i in 1..8){
             initialOrganize(i)
         }
 
@@ -260,7 +260,7 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 //        }
 
         btn_next_page.setOnClickListener{
-            if(DayState.ScheduleComplete){
+            if(collection!!.monday || collection!!.tuesday || collection!!.wednesday || collection!!.thursday || collection!!.friday || collection!!.saturday || collection!!.sunday || collection!!.alldays){
                 val bundle = bundleOf("parentPgmIndex" to  CurrentID.parentPgmIndex)
                 navController.navigate(R.id.action_dayPicker_to_setStepFragment, bundle)
                 CurrentID.UpdateID(num = 6)
@@ -297,20 +297,14 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
     fun DeselectAllDays(){
         btnMonday.setBackgroundResource(R.drawable.button_model)
-        collection!!.monday = false
         btnTuesday.setBackgroundResource(R.drawable.button_model)
-        collection!!.tuesday = false
         btnWednesday.setBackgroundResource(R.drawable.button_model)
-        collection!!.wednesday =false
         btnThursday.setBackgroundResource(R.drawable.button_model)
-        collection!!.thursday = false
         btnFriday.setBackgroundResource(R.drawable.button_model)
-        collection!!.friday = false
         btnSaturday.setBackgroundResource(R.drawable.button_model)
-        collection!!.saturday = false
         btnSunday.setBackgroundResource(R.drawable.button_model)
-        collection!!.sunday = false
         btnAll.setBackgroundResource(R.drawable.button_model)
+        collection!!.alldays = false
     }
 
     fun ShowTimeSchedule(day: Int) {
@@ -406,60 +400,77 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
 
 
     fun initialOrganize(day: Int){
+        var schedcollection = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day }
         when (day){
             1->{
-            if(collection!!.monday){
+            if(schedcollection.isNotEmpty()){
                 btnMonday.setBackgroundResource(R.drawable.bottom_border)
+                collection!!.monday = true
                 }else{
                 btnMonday.setBackgroundResource(R.drawable.button_model)
+                collection!!.monday = false
                 }
             }
             2->{
-                if(collection!!.tuesday){
+                if(schedcollection.isNotEmpty()){
                     btnTuesday.setBackgroundResource(R.drawable.bottom_border)
+                    collection!!.tuesday = true
                 }else{
                     btnTuesday.setBackgroundResource(R.drawable.button_model)
+                    collection!!.tuesday = false
                 }
             }
             3->{
-                if(collection!!.wednesday){
+                if(schedcollection.isNotEmpty()){
                     btnWednesday.setBackgroundResource(R.drawable.bottom_border)
+                    collection!!.wednesday = true
                 }else{
                     btnWednesday.setBackgroundResource(R.drawable.button_model)
+                    collection!!.wednesday = false
                 }
             }
             4->{
-                if(collection!!.thursday){
+                if(schedcollection.isNotEmpty()){
                     btnThursday.setBackgroundResource(R.drawable.bottom_border)
+                    collection!!.thursday = true
                 }else{
                     btnThursday.setBackgroundResource(R.drawable.button_model)
+                    collection!!.thursday = false
                 }
             }
             5->{
-                if(collection!!.friday){
+                if(schedcollection.isNotEmpty()){
                     btnFriday.setBackgroundResource(R.drawable.bottom_border)
+                    collection!!.friday = true
                 }else{
                     btnFriday.setBackgroundResource(R.drawable.button_model)
+                    collection!!.friday = false
                 }
             }
             6->{
-                if(collection!!.saturday){
+                if(schedcollection.isNotEmpty()){
                     btnSaturday.setBackgroundResource(R.drawable.bottom_border)
+                    collection!!.saturday = true
                 }else{
                     btnSaturday.setBackgroundResource(R.drawable.button_model)
+                    collection!!.saturday = false
                 }
             }
             7->{
-                if(collection!!.sunday){
+                if(schedcollection.isNotEmpty()){
                     btnSunday.setBackgroundResource(R.drawable.bottom_border)
+                    collection!!.sunday = true
                 }else{
                     btnSunday.setBackgroundResource(R.drawable.button_model)
+                    collection!!.sunday = false
                 }
             }
             8-> {
-                if(collection!!.alldays){
+                if(schedcollection.isNotEmpty()){
                     SelectAllDays()
+                    collection!!.alldays = true
                 }else{
+                    collection!!.alldays = false
                     if(!collection!!.monday){
                         btnMonday.setBackgroundResource(R.drawable.button_model)
                     }

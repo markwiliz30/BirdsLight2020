@@ -7,6 +7,7 @@ import android.service.autofill.Dataset
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.NumberPicker
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -35,6 +36,7 @@ class TestFragment : Fragment() {
         // Inflate the layout for this fragment
 
         return inflater.inflate(R.layout.fragment_test, container, false)
+
     }
 
     override fun onDetach() {
@@ -210,6 +212,31 @@ class TestFragment : Fragment() {
             tglPgm3.setBackgroundResource(R.drawable.button_model)
             lblProgramRunning.text = "No test program is running"
             ButtonStatus = true
+        }
+
+        btn_test_inc.setOnClickListener{
+
+            var curNum:Int = test_Number.text.toString().toInt()
+            var newNum:Int = curNum+50
+            if(newNum < 1000){
+                test_Number.setText(newNum.toString())
+
+            }else{
+                Toast.makeText(context, "You've reached the maxed input", Toast.LENGTH_SHORT).show()
+                test_Number.setText("1000")
+            }
+        }
+
+        btn_test_dec.setOnClickListener{
+
+            var curNum:Int = test_Number.text.toString().toInt()
+            var newNum:Int = curNum-50
+            if(newNum > 50){
+                test_Number.setText(newNum.toString())
+            }else{
+                Toast.makeText(context, "You've reached the min input", Toast.LENGTH_SHORT).show()
+                test_Number.setText("50")
+            }
         }
 
 
