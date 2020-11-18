@@ -19,7 +19,9 @@ import com.example.blapp.model.PgmItem
 import com.example.blapp.model.StepItem
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import com.example.blapp.collection.ScheduleCollection
+import com.example.blapp.common.Language
 import com.example.blapp.model.DataSetItem
+import kotlinx.android.synthetic.main.fragment_time_schedule.*
 
 /**
  * A simple [Fragment] subclass.
@@ -63,6 +65,7 @@ class SetStepFragment : Fragment() {
         navController = Navigation.findNavController(view)
         val command: Byte = 0x01
         var data: ByteArray
+        LanguageTranslate()
 
         if(PgmCollection.pgmCollection.count() >= CurrentID.parentPgmIndex){
             editClicked= true
@@ -522,6 +525,20 @@ class SetStepFragment : Fragment() {
             update_step_pan.text = "-"+passVal.toInt()
         }
 
+    }
+
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lbl_New_Program.text = "新"
+            lbl_Step.text = "步"
+            btn_add_step.text = "添加步骤"
+            lbl_Pan.text = "泛"
+            lbl_Tilt.text = "倾斜"
+            lbl_Blink.text ="眨"
+            lbl_Time.text = "时间"
+            btn_step_save.text = "救"
+            btnDeleteStep.text = "删除"
+        }
     }
 
 }

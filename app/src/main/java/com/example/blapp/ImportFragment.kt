@@ -15,6 +15,7 @@ import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.PgmCollection
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.collection.StepCollection
+import com.example.blapp.common.Language
 import com.example.blapp.databasehelper.DBmanager
 import com.example.blapp.model.DayManager
 import com.example.blapp.model.PgmItem
@@ -23,6 +24,7 @@ import com.example.blapp.model.StepItem
 import kotlinx.android.synthetic.main.fragment_import.*
 import kotlinx.android.synthetic.main.fragment_import_list.*
 import kotlinx.android.synthetic.main.fragment_import_list.view.*
+import kotlinx.android.synthetic.main.fragment_program.*
 
 
 class ImportFragment : Fragment() {
@@ -51,7 +53,7 @@ class ImportFragment : Fragment() {
         recycler_import.setItemViewCacheSize(25)
         layoutManager = LinearLayoutManager(activity)
         recycler_import.layoutManager = layoutManager
-
+        LanguageTranslate()
         btn_import_list.setOnClickListener{
             for (item in adapter.itemList){
                 if(item.isClicked){
@@ -191,5 +193,13 @@ class ImportFragment : Fragment() {
         }
 
         mAlertDialog.show()
+    }
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lblImportList.text = "出口清单"
+            lbl_Select_All.text = "全选"
+            btn_import_list.text = "出口"
+            delete_import.text = "删除"
+        }
     }
 }

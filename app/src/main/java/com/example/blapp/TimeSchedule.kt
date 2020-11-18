@@ -23,6 +23,7 @@ import com.example.blapp.adapter.TimeAdapter
 import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.common.DayState
+import com.example.blapp.common.Language
 import com.example.blapp.helper.MyButton
 import com.example.blapp.helper.MySwipeHelper
 import com.example.blapp.helper.MySwipeHelper2
@@ -30,6 +31,7 @@ import com.example.blapp.listener.MyButtonClickListener
 import com.example.blapp.model.DayManager
 import com.example.blapp.model.ScheduleItem
 import kotlinx.android.synthetic.main.fragment_day_picker.*
+import kotlinx.android.synthetic.main.fragment_test.*
 import kotlinx.android.synthetic.main.fragment_time_list.*
 import kotlinx.android.synthetic.main.fragment_time_schedule.*
 import java.sql.Time
@@ -67,7 +69,7 @@ class TimeSchedule : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-
+        LanguageTranslate()
         var filtered = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
         collection = filtered.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
 
@@ -305,5 +307,16 @@ class TimeSchedule : Fragment() {
            newItem.eday = DateFind!!.eDay!!.toByte()
            ScheduleCollection.scheduleCollection.add(newItem)
        }
+    }
+
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lblTime.text = "时间表"
+            time_start.text = "设置时间"
+            time_end.text = "设置时间"
+            btn_Start_Time.text = "开始"
+            btn_End_Time.text = "结束"
+            btn_save_time.text ="救"
+        }
     }
 }

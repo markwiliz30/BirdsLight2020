@@ -14,10 +14,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.blapp.common.DeviceProtocol
+import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
 import com.example.blapp.common.TestTransferRateVal
 import com.example.blapp.model.DataSetItem
 import kotlinx.android.synthetic.main.fragment_set_step.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_test.*
 import java.util.*
 import kotlin.math.round
@@ -55,7 +57,7 @@ class TestFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
         var data: ByteArray
-
+        LanguageTranslate()
         tglPgm1.setOnClickListener{
 
             if(ButtonStatus){
@@ -261,5 +263,12 @@ class TestFragment : Fragment() {
         })
 
 
+    }
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lblProgram.text = "选择程序"
+            lblProgramRunning.text = "没有测试程序正在运行"
+            btnReset.text = "重启"
+        }
     }
 }

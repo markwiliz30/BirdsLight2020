@@ -207,7 +207,7 @@ class LandingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         WifiUtils.isConnectedToBL = false
-
+        LanguageTranslate()
         lst_wifi.setHasFixedSize(true)
         layoutManager = LinearLayoutManager(activity)
         lst_wifi.layoutManager = layoutManager

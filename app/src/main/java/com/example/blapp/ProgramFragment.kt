@@ -23,6 +23,7 @@ import com.example.blapp.collection.PgmCollection
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.collection.StepCollection
 import com.example.blapp.common.DeviceProtocol
+import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
 import com.example.blapp.databasehelper.DBmanager
 import com.example.blapp.helper.MyButton
@@ -35,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_info.view.*
 import kotlinx.android.synthetic.main.fragment_input_dialog.*
 import kotlinx.android.synthetic.main.fragment_input_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_program.*
+import kotlinx.android.synthetic.main.fragment_set_step.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -202,6 +204,8 @@ class ProgramFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+
+        LanguageTranslate()
         btn_new_pgm.setOnClickListener{
 //            var createdPgmIndex: Int = 0
             if(PgmCollection.pgmCollection == null)
@@ -377,6 +381,14 @@ class ProgramFragment : Fragment(){
         InfoView.btn_got_it.setOnClickListener{
 
             infoAlert.dismiss()
+        }
+    }
+
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lblProgramList.text = "程序清单"
+            btn_new_pgm.text = "新"
+            btnImportFragment.text = "出口"
         }
     }
 }
