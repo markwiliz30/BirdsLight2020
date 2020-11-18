@@ -61,7 +61,7 @@ class SetStepFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        val command: Byte = 0x02
+        val command: Byte = 0x01
         var data: ByteArray
 
         if(PgmCollection.pgmCollection.count() >= CurrentID.parentPgmIndex){
@@ -73,12 +73,9 @@ class SetStepFragment : Fragment() {
         if(editClicked){
             btn_step_save.text= "Update"
             data = byteArrayOf(
-                0x01.toByte(),
-                0x01.toByte(),
                 pVal.toByte(),
                 tVal.toByte(),
-                bVal.toByte(),
-                0x01.toByte()
+                bVal.toByte()
             )
             Protocol.cDeviceProt?.transferDataWithDelay(command, data)
 
@@ -96,12 +93,9 @@ class SetStepFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 pVal = progress
                 data = byteArrayOf(
-                   0x01.toByte(),
-                    0x01.toByte(),
                     pVal.toByte(),
-                   tVal.toByte(),
-                  bVal.toByte(),
-                   0x01.toByte()
+                    tVal.toByte(),
+                    bVal.toByte()
                 )
               Protocol.cDeviceProt?.transferDataWithDelay(command, data)
                 updateTextOnPan(pVal)
@@ -120,12 +114,9 @@ class SetStepFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 tVal = progress
                 data = byteArrayOf(
-                    0x01.toByte(),
-                    0x01.toByte(),
                     pVal.toByte(),
                     tVal.toByte(),
-                    bVal.toByte(),
-                    0x01.toByte()
+                    bVal.toByte()
                 )
                 Protocol.cDeviceProt?.transferDataWithDelay(command, data)
                 updateTextOnTilt(tVal)
@@ -144,12 +135,9 @@ class SetStepFragment : Fragment() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 bVal = progress
                data = byteArrayOf(
-                    0x01.toByte(),
-                    0x01.toByte(),
                     pVal.toByte(),
                     tVal.toByte(),
-                    bVal.toByte(),
-                    0x01.toByte()
+                    bVal.toByte()
                 )
                 Protocol.cDeviceProt?.transferDataWithDelay(command, data)
                 update_step_blink.text = bVal.toString()
@@ -458,20 +446,17 @@ class SetStepFragment : Fragment() {
     private fun ResetCurrentStep()
     {
         var data: ByteArray
-        val command: Byte = 0x02
+        val command: Byte = 0x01
         pVal = 128
         tVal = 128
         bVal = 0
         tmVal = 0
 
         data = byteArrayOf(
-                    0x01.toByte(),
-                  0x01.toByte(),
-                   pVal.toByte(),
-                    tVal.toByte(),
-                   bVal.toByte(),
-                   0x01.toByte()
-                )
+            pVal.toByte(),
+            tVal.toByte(),
+            bVal.toByte()
+        )
         Protocol.cDeviceProt?.transferDataWithDelay(command, data)
 
         updateTextOnTilt(tVal)
@@ -487,7 +472,7 @@ class SetStepFragment : Fragment() {
     private fun AddStep(index: Int)
     {
         val newItem = StepItem()
-        newItem.command = 0x02
+        newItem.command = 0x06
         newItem.pgm = CurrentID.parentPgmIndex.toByte()
         newItem.step = index.toByte()
         newItem.pan = pVal.toByte()

@@ -3,15 +3,18 @@ package com.example.blapp.common
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-
 import com.example.blapp.communication.Channel
 import com.example.blapp.communication.OnSocketListener
 import com.example.blapp.model.DataSetItem
-
 import java.net.InetSocketAddress
 import java.net.SocketException
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
 
 class DeviceProtocol : Handler.Callback, OnSocketListener {
+    var executorService: ExecutorService = Executors.newSingleThreadExecutor()
+    var longRunningTaskFuture = null
     var version: Byte = 0x01
     var byteDataLength = ByteArray(2)
     var signature = byteArrayOf(
@@ -191,6 +194,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
                     data = dataSets[i].myDatas!!
                     dataLength = data.size
                     sendData()
+                    isRecognized = false
                 }
 
                 if(isRecognized)
@@ -198,8 +202,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
                     i++
                     canEnter = true
                 }
-            }
-            else{
+            } else{
                 canAccess=false
                 i=0
             }
@@ -212,6 +215,26 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
         dataLength = data.size
         canSend = true
         postDelayedSendToModule.postDelayed(sendToModule, 100)
+    }
+
+    //for debugging
+    fun AdjTransferDataWithDelay(exCommand: Byte, exData: ByteArray) {
+        command = exCommand
+        data = exData
+        dataLength = data.size
+        canSend = true
+        postDelayedSendToModule.postDelayed(sendToModule, TestTransferRateVal.tRate.toLong())
+    }
+
+    //for debugging
+    fun newAdjTransferWithDelay(exCommand: Byte, exData: ByteArray) {
+        postDelayedSendToModule.removeCallbacks(sendToModule)
+        command = exCommand
+        data = exData
+        dataLength = data.size
+        canSend = true
+        postDelayedSendToModule.postDelayed(sendToModule, TestTransferRateVal.tRate.toLong())
+//        longRunningTaskFuture = executorService.submit(sendToModule) as Nothing?
     }
 
     override fun handleMessage(msg: Message): Boolean {

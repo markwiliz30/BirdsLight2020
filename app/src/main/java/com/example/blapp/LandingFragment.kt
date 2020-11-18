@@ -114,7 +114,7 @@ class LandingFragment : Fragment() {
 
                     var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
 
-                    var dataHold = DataSetItem()
+                    var dataHold:DataSetItem
 
                     val date = Date() // given date
 
@@ -131,6 +131,7 @@ class LandingFragment : Fragment() {
                     val tdMinute = calendar[Calendar.MINUTE]
                     val tdSecond = calendar[Calendar.SECOND]
 
+                    dataHold = DataSetItem()
                     dataHold.myCommand = 0x04
                     dataHold.myDatas = byteArrayOf(
                         tdYearInt.toByte(),
