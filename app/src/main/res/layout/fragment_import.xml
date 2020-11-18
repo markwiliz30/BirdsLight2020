@@ -31,6 +31,7 @@
                 android:layout_height="70dp"
                 >
                 <TextView
+                    android:id="@+id/lbl_Select_All"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Select All"

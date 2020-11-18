@@ -21,12 +21,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blapp.adapter.WifiAdapter
 import com.example.blapp.common.DeviceProtocol
+import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
 import com.example.blapp.common.WifiUtils
 import com.example.blapp.model.DataSetItem
 import com.example.blapp.model.WifiItem
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_landing.*
+import kotlinx.android.synthetic.main.fragment_day_picker.*
 import kotlinx.android.synthetic.main.fragment_landing.*
 import java.io.IOException
 import java.lang.Exception
@@ -267,4 +269,10 @@ class LandingFragment : Fragment() {
 //        item2.level = 4
 //        wifiList.add(item2)
 //    }
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lblProgramList.text = "扫描设备"
+            btn_scan.text = "刷新"
+        }
+    }
 }

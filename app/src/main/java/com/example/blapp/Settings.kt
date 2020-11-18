@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.content.DialogInterface
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -40,29 +41,33 @@ class Settings : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        LanguageTranslate()
+
         LanguageID.setOnClickListener{
 
-            var languageSelected = 0
-            val listItems = arrayOf("Arabic ",
-                "Armenian",
-                "Bengali",
+            //Language.LanguageSelected = 0
+            val listItems = arrayOf(
+//                "Arabic ",
+//                "Armenian",
+//                "Bengali",
+//                "Chinese",
+//                "Czech",
+//                "Dutch",
                 "Chinese",
-                "Czech",
-                "Dutch",
-                "English",
-                "Filipino",
-                "French",
-                "German",
-                "Indonesian",
-                "Japanese",
-                "Korean",
-                "Malay",
-                "Portuguese",
-                "Russian ",
-                "Spanish",
-                "Swedish",
-                "Thai",
-                "Vietnamese")
+                "English"
+//                "French",
+//                "German",
+//                "Indonesian",
+//                "Japanese",
+//                "Korean",
+//                "Malay",
+//                "Portuguese",
+//                "Russian ",
+//                "Spanish",
+//                "Swedish",
+//                "Thai",
+//                "Vietnamese"
+                   )
 
             val builder = AlertDialog.Builder(activity!!)
             builder.setTitle("Choose item")
@@ -75,12 +80,14 @@ class Settings : Fragment() {
 //                        "Position: " + which + " Value: " + listItems[which],
 //                        Toast.LENGTH_LONG
 //                    ).show()
-                    languageSelected = which
+                    Language.LanguageSelected = which
                 })
 
             builder.setPositiveButton("Done",
                 DialogInterface.OnClickListener { dialog, which ->
-                    lblSelectedLanguage.text =listItems[languageSelected]
+                    lblSelectedLanguage.text =listItems[Language.LanguageSelected!!]
+                    Language.Lang = lblSelectedLanguage.text.toString()
+                    LanguageTranslate()
                         dialog.dismiss() })
 
             val dialog = builder.create()
@@ -114,5 +121,13 @@ class Settings : Fragment() {
         }
 
         mAlertDialog.show()
+    }
+
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lbl_Settings.text = "设定"
+            lblLanguage.text = "语言"
+            lblFactoryReset.text = "恢复出厂设置"
+        }
     }
 }

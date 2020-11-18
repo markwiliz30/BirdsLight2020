@@ -22,12 +22,14 @@ import com.example.blapp.adapter.TimeAdapter
 import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.common.DayState
+import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
 import com.example.blapp.model.DayManager
 import com.example.blapp.model.ScheduleItem
 import kotlinx.android.synthetic.main.fragment_day_picker.*
 import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_info.view.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 
 /**
  * A simple [Fragment] subclass.
@@ -67,7 +69,7 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-
+        LanguageTranslate()
         if(DayState.firstboot){
             InfoPopup()
         }
@@ -707,5 +709,13 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
         )
         datePicker?.setOnDateSetListener(this)
         datePicker?.show(activity!!.supportFragmentManager, "PrimeDatePickerBottomSheet")
+    }
+
+    fun LanguageTranslate(){
+        if (Language.Lang == "Chinese"){
+            lblSelectDate.text = "选择日期范围"
+            btn_set_calender.text = "设置日期"
+            lblDays.text = "日选器"
+        }
     }
 }

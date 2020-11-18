@@ -1,0 +1,53 @@
+Landing Fragment
+-lblProgramList : Scanned Devices
+-btn_scan : Refresh
+
+Test Fragment
+-lblProgram : Select program
+-lblProgramRunning : No test program is running
+-btnReset : Reset
+
+Day_Picker Fragment
+-lblSelectDate : Select Date Range
+-btn_set_calender : Set Date
+-lblDays : Day Picker
+
+Time Schedule Fragment
+-lblTime : Time Schedule
+-time_start : Set Time
+-time_end : Set Time
+-btn_Start_Time : Start
+-btn_End_Time : End
+-btn_save_time : Save
+
+Set Step Fragment
+-lbl_New_Program : New
+-lbl_Step : Step
+-btn_add_step : Add step
+-lbl_Pan : Pan
+-lbl_Tilt : Tilt
+-lbl_Blink : Blink
+-lbl_Time : Time
+-btn_step_save : Save
+-btnDeleteStep : Delete
+
+Program Fragment
+-lblProgramList : ProgramList
+-btn_new_pgm : New
+-btnImportFragment : Export
+
+Import Fragment 
+-lblImportList : Export List
+-lbl_Select_All : Select All
+-btn_import_list : Export
+-delete_import : Delete
+
+Info Fragment
+-lblInfo : Information
+-lblInfoMessage : After you set up the date, Single press to manage time schedule or &quot;Hold&quot; to activate the selected day
+-btn_got_it : Got it
+
+Settings Fragment 
+-lbl_Settings : Settings
+-lblLanguage : Language
+-lblFactoryReset : Factory Reset
