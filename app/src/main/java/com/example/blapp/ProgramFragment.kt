@@ -142,6 +142,19 @@ class ProgramFragment : Fragment(){
                         }
                     )
                 )
+                buffer.add(
+                    MyButton(activity,
+                        "Copy",
+                        30,
+                        R.drawable.ic_baseline_file_copy_24,
+                        Color.parseColor("#14BED1"),
+                        object : MyButtonClickListener{
+                            override fun onClick(pos: Int) {
+                                Toast.makeText(activity!!, "Copy", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
+                )
 
 //                buffer.add(
 //                    MyButton(activity,
