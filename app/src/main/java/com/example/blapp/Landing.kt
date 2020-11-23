@@ -148,7 +148,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace if statement "WifiUtils.isConnectedToBL"
                 ID_TESTFRAGMENT ->
-                  if (WifiUtils.isConnectedToBL) {
+                  if (true) {
                       if (CurrentID.getID() == ID_HOME) {
                           navController.navigate(R.id.action_landingFragment_to_testFragment)
                           CurrentID.UpdateID(num = it.id)
@@ -184,7 +184,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 // replace if statement "WifiUtils.isConnectedToBL"
                 ID_PROGRAMFRAGMENT ->
-                   if (WifiUtils.isConnectedToBL) {
+                   if (true) {
                        if (CurrentID.getID() == ID_HOME) {
                            navController.navigate(R.id.action_landingFragment_to_programFragment)
                            CurrentID.UpdateID(num = it.id)
@@ -208,7 +208,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
                 ID_SCHEDULEFRAGMENT ->
-                    if (WifiUtils.isConnectedToBL) {
+                    if (true) {
                         if (CurrentID.getID() == ID_HOME) {
                             navController.navigate(R.id.action_landingFragment_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
@@ -240,7 +240,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 }
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
-                ID_SETTINGSFRAGMENT -> if (WifiUtils.isConnectedToBL) {
+                ID_SETTINGSFRAGMENT -> if (true) {
                     if (CurrentID.getID() == ID_HOME) {
                         navController.navigate(R.id.action_landingFragment_to_settings)
                         CurrentID.UpdateID(num = it.id)

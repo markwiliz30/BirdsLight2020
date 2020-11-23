@@ -375,7 +375,7 @@ class SetStepFragment : Fragment() {
             }
         }
 
-        Protocol.cDeviceProt!!.upload(dataSetCollection)
+//        Protocol.cDeviceProt!!.upload(dataSetCollection)
     }
 
     private fun AddPgmToCollection(pgm: PgmItem, stepList: List<StepItem>)
