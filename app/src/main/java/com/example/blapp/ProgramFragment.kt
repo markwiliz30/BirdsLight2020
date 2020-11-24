@@ -150,7 +150,11 @@ class ProgramFragment : Fragment(){
                         Color.parseColor("#14BED1"),
                         object : MyButtonClickListener{
                             override fun onClick(pos: Int) {
-                                Toast.makeText(activity!!, "Copy", Toast.LENGTH_SHORT).show()
+                                var CopiedPgm = PgmCollection.pgmCollection!!.count() + 1
+                                Toast.makeText(activity!!, "Copied Program "+ pos.plus(1) +" to Program"+CopiedPgm, Toast.LENGTH_SHORT).show()
+
+
+
                             }
                         }
                     )

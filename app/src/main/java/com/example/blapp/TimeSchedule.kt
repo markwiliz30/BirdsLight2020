@@ -221,7 +221,8 @@ class TimeSchedule : Fragment() {
         var tempStime: Int = 0
         var tempEtime: Int = 0
         conflicts = true
-        var TimeRestric = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day }
+       // var TimeRestric = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day }
+        var TimeRestric = ScheduleCollection.scheduleCollection.filter {it.wday!!.toInt() == day }
 
         tempStime = if(tempsminute < 10){
             (""+tempshour+"0"+tempsminute+"").toInt()
