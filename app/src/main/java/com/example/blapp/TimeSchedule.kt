@@ -126,6 +126,9 @@ class TimeSchedule : Fragment() {
                 if(!timeConflict()){
                     btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
                     Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
+//                }else if(!DateConflict()){
+//                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
+//                    Toast.makeText(activity, "Date has Conflict" , Toast.LENGTH_LONG).show()
                 }else{
                     if(day == 8){
                         collection!!.alldays = true
@@ -254,7 +257,10 @@ class TimeSchedule : Fragment() {
 
           for(x in tstart2..tend2){
                     if(tempStime == x || tempEtime == x){
-                        conflicts = false
+                        if(!DateConflict()){
+                            conflicts = false
+                            break
+                        }
                     }
                 }
             }
@@ -308,6 +314,34 @@ class TimeSchedule : Fragment() {
            newItem.eday = DateFind!!.eDay!!.toByte()
            ScheduleCollection.scheduleCollection.add(newItem)
        }
+    }
+
+    fun DateConflict():Boolean{
+        var DateConflicts = true
+        var CurSDate =""+ collection!!.sMonth + collection!!.sDay +""
+        var CurEDate = ""+ collection!!.eMonth + collection!!.eDay+""
+        var DateFilter = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() != CurrentID.parentPgmIndex }
+
+        if(!DateFilter.isEmpty()){
+            for(DateCon in DateFilter){
+            var difSDate = DateCon.smonth!!.toString() + DateCon.sday!!.toString()
+            var difEDate = DateCon.emonth!!.toString() + DateCon.eday!!.toString()
+
+                if(CurSDate.toInt() >= difSDate.toInt() && CurSDate.toInt() >= difEDate.toInt()){
+                    if(CurEDate.toInt() >= difSDate.toInt() && CurEDate.toInt() <= difEDate.toInt()){
+                        DateConflicts = false
+                        break
+                    }else{
+                        DateConflicts = true
+                        break
+                    }
+                }else{
+                    DateConflicts = false
+                }
+            }
+        }
+
+        return DateConflicts
     }
 
     fun LanguageTranslate(){

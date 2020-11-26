@@ -192,7 +192,7 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
             }else {
 //                collection!!.saturday = !collection!!.saturday
 //                ShowSaveAlert(6, collection!!.saturday)
-                ShowTimeSchedule(5)
+                ShowTimeSchedule(6)
             }
         }
 
