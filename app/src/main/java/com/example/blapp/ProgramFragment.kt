@@ -150,11 +150,17 @@ class ProgramFragment : Fragment(){
                         Color.parseColor("#14BED1"),
                         object : MyButtonClickListener{
                             override fun onClick(pos: Int) {
+                                val bundle = bundleOf("parentPgmIndex" to  PgmCollection.pgmCollection!!.count() + 1)
+
+                                val newItem = DayManager()
+                                newItem.pgm = PgmCollection.pgmCollection!!.count().toByte().inc()
+                                DayCollection.dayCollection.add(newItem)
+                                navController.navigate(R.id.action_programFragment_to_dayPicker , bundle)
+                                CurrentID.UpdateID(num = 8)
+                                CurrentID.Updatebool(x = true)
+
                                 var CopiedPgm = PgmCollection.pgmCollection!!.count() + 1
                                 Toast.makeText(activity!!, "Copied Program "+ pos.plus(1) +" to Program"+CopiedPgm, Toast.LENGTH_SHORT).show()
-
-
-
                             }
                         }
                     )
@@ -324,6 +330,16 @@ class ProgramFragment : Fragment(){
             }
         }
 
+    }
+
+    private fun CopyProgram(pgm: PgmItem, stepList: List<StepItem>)
+    {
+        for(item in stepList)
+        {
+            StepCollection.stepCollection!!.add(item)
+        }
+
+        PgmCollection.pgmCollection!!.add(pgm)
     }
 
     fun showCreateCategoryDialog(pgm: Int) {
