@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_set_step.*
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.common.Language
 import com.example.blapp.model.DataSetItem
-import kotlinx.android.synthetic.main.fragment_time_schedule.*
+import com.example.blapp.model.ScheduleItem
 
 /**
  * A simple [Fragment] subclass.
@@ -337,43 +337,161 @@ class SetStepFragment : Fragment() {
 
     }
 
+    private fun ConvertDecToBinVal(decVal: Byte?): Byte{
+        var binVal = 0.toByte()
+        if(decVal == 0x01.toByte())
+        {
+            binVal = 0x01.toByte()
+        }else if(decVal == 0x02.toByte())
+        {
+            binVal = 0x02.toByte()
+        }else if(decVal == 0x03.toByte())
+        {
+            binVal = 0x04.toByte()
+        }else if(decVal == 0x04.toByte())
+        {
+            binVal = 0x08.toByte()
+        }else if(decVal == 0x05.toByte())
+        {
+            binVal = 0x10.toByte()
+        }else if(decVal == 0x06.toByte())
+        {
+            binVal = 0x20.toByte()
+        }else if(decVal == 0x07.toByte())
+        {
+            binVal = 0x40.toByte()
+        }else if(decVal == 0x08.toByte())
+        {
+            binVal = 0x80.toByte()
+        }
+
+        return binVal
+    }
+
     private fun UploadDataSets()
     {
         var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
-
         var dataHold: DataSetItem
-
-        val filteredSchedCollection = ScheduleCollection.scheduleCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()}
-
+        val filteredSchedCollection = ScheduleCollection.scheduleCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()} as MutableList
         val filteredStepCollection = StepCollection.stepCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()}
+        var groupFilteredSchedCollect: MutableList<ScheduleItem> = mutableListOf()
+
+        for(i in 0 until filteredSchedCollection.count())
+        {
+            val currItem = filteredSchedCollection[0]
+            var groupSched = filteredSchedCollection.filter { it.shour == currItem.shour && it.sminute == currItem.sminute && it.ehour == currItem.ehour && it.eminute == currItem.eminute }
+
+            if(groupSched.count() > 1)
+            {
+                var newWday = 0
+                for(i in groupSched)
+                {
+                    newWday += ConvertDecToBinVal(i.wday).toInt()
+                }
+
+                val item = ScheduleItem()
+                item.command = currItem.command
+                item.pgm = currItem.pgm
+                item.smonth = currItem.smonth
+                item.sday = currItem.sday
+                item.emonth = currItem.emonth
+                item.eday = currItem.eday
+                item.wday = newWday.toByte()
+                item.shour = currItem.shour
+                item.sminute = currItem.sminute
+                item.ehour = currItem.ehour
+                item.eminute = currItem.eminute
+                item.pgmname = currItem.pgmname
+                item.sched = currItem.sched
+                groupFilteredSchedCollect.add(item)
+            }
+            else
+            {
+                val item = ScheduleItem()
+                item.command = currItem.command
+                item.pgm = currItem.pgm
+                item.smonth = currItem.smonth
+                item.sday = currItem.sday
+                item.emonth = currItem.emonth
+                item.eday = currItem.eday
+                item.wday = ConvertDecToBinVal(currItem.wday)
+                item.shour = currItem.shour
+                item.sminute = currItem.sminute
+                item.ehour = currItem.ehour
+                item.eminute = currItem.eminute
+                item.pgmname = currItem.pgmname
+                item.sched = currItem.sched
+                groupFilteredSchedCollect.add(item)
+            }
+
+            for(grpItem in groupSched)
+            {
+                filteredSchedCollection.remove(grpItem)
+            }
+
+            if(filteredSchedCollection.count() == 0)
+            {
+                break
+            }
+        }
+
+        var dataArray = byteArrayOf(
+            groupFilteredSchedCollect[0].pgm!!.toByte(),
+            groupFilteredSchedCollect[0].smonth!!.toByte(),
+            groupFilteredSchedCollect[0].sday!!.toByte(),
+            groupFilteredSchedCollect[0].emonth!!.toByte(),
+            groupFilteredSchedCollect[0].eday!!.toByte(),
+            groupFilteredSchedCollect.count().toByte()
+        )
+
+        for(lSchedItem in groupFilteredSchedCollect)
+        {
+            dataArray += lSchedItem.wday!!
+            dataArray += lSchedItem.shour!!
+            dataArray += lSchedItem.sminute!!
+            dataArray += lSchedItem.ehour!!
+            dataArray += lSchedItem.eminute!!
+        }
+
+        dataArray += filteredStepCollection.count().toByte()
 
         for(lStepItem in filteredStepCollection)
         {
-            for(lSchedItem in filteredSchedCollection)
-            {
-                dataHold = DataSetItem()
-                dataHold.myCommand = 0x06.toByte()
-                dataHold.myDatas = byteArrayOf(
-                    lStepItem.pgm!!.toByte(),
-                    lSchedItem.smonth!!.toByte(),
-                    lSchedItem.sday!!.toByte(),
-                    lSchedItem.emonth!!.toByte(),
-                    lSchedItem.eday!!.toByte(),
-                    lSchedItem.wday!!.toByte(),
-                    lSchedItem.shour!!.toByte(),
-                    lSchedItem.sminute!!.toByte(),
-                    lSchedItem.ehour!!.toByte(),
-                    lSchedItem.eminute!!.toByte(),
-                    lStepItem.step!!.toByte(),
-                    lStepItem.pan!!.toByte(),
-                    lStepItem.tilt!!.toByte(),
-                    lStepItem.blink!!.toByte(),
-                    lStepItem.time!!.toByte()
-                )
-
-                dataSetCollection.add(dataHold)
-            }
+            dataArray += lStepItem.pan!!
+            dataArray += lStepItem.tilt!!
+            dataArray += lStepItem.blink!!
+            dataArray += lStepItem.time!!
         }
+
+        Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
+
+//        for(lStepItem in filteredStepCollection)
+//        {
+//            for(lSchedItem in filteredSchedCollection)
+//            {
+//                dataHold = DataSetItem()
+//                dataHold.myCommand = 0x06.toByte()
+//                dataHold.myDatas = byteArrayOf(
+//                    lStepItem.pgm!!.toByte(),
+//                    lSchedItem.smonth!!.toByte(),
+//                    lSchedItem.sday!!.toByte(),
+//                    lSchedItem.emonth!!.toByte(),
+//                    lSchedItem.eday!!.toByte(),
+//                    lSchedItem.wday!!.toByte(),
+//                    lSchedItem.shour!!.toByte(),
+//                    lSchedItem.sminute!!.toByte(),
+//                    lSchedItem.ehour!!.toByte(),
+//                    lSchedItem.eminute!!.toByte(),
+//                    lStepItem.step!!.toByte(),
+//                    lStepItem.pan!!.toByte(),
+//                    lStepItem.tilt!!.toByte(),
+//                    lStepItem.blink!!.toByte(),
+//                    lStepItem.time!!.toByte()
+//                )
+//
+//                dataSetCollection.add(dataHold)
+//            }
+//        }
 
 //        Protocol.cDeviceProt!!.upload(dataSetCollection)
     }
