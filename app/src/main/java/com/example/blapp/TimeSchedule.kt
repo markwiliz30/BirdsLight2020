@@ -89,6 +89,39 @@ class TimeSchedule : Fragment() {
                 time_end.text= "To: "+hourOfDay.toString()+":"+minute.toString()
                 tempehour = hourOfDay
                 tempeminute = minute
+
+                 if(tempshour == tempehour && tempeminute == tempsminute){
+                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
+                    Toast.makeText(activity, "Invalid Time Set" , Toast.LENGTH_LONG).show()
+                    time_end.text= ""
+                    tempehour = 25
+                    tempeminute = 25
+                }
+                else{
+                    if(!timeConflict()){
+                        btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
+                        Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
+                        time_end.text= ""
+                        tempehour = 25
+                        tempeminute = 25
+//                }else if(!DateConflict()){
+//                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
+//                    Toast.makeText(activity, "Date has Conflict" , Toast.LENGTH_LONG).show()
+                    }else{
+                        //if(day == 8){
+                          //  collection!!.alldays = true
+                          //  addAllDaysCollection()
+                      //  }else{
+                            //ChangeDayStatus(day)
+                           // addToTimeCollection()
+
+                       // }
+                    }
+
+                }
+
+
+
             }
         }, hour , minute , false)
 
@@ -111,39 +144,31 @@ class TimeSchedule : Fragment() {
             mTimePickerEnd.show()
         }
         btn_save_time.setOnClickListener{
-
             if(tempehour == 25 && tempeminute == 25 && tempshour == 25 && tempsminute == 25){
                 btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
                 Toast.makeText(activity, "No time set" , Toast.LENGTH_LONG).show()
+                time_end.text= ""
+                tempehour = 25
+                tempeminute = 25
             }else if (tempeminute == 25 && tempehour == 25){
                 btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
                 Toast.makeText(activity, "End Time is not Set" , Toast.LENGTH_LONG).show()
-            }else if(tempshour == tempehour && tempeminute == tempsminute){
-                btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
-                Toast.makeText(activity, "Invalid Time Set" , Toast.LENGTH_LONG).show()
-            }
-            else{
-                if(!timeConflict()){
-                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
-                    Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
-//                }else if(!DateConflict()){
-//                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
-//                    Toast.makeText(activity, "Date has Conflict" , Toast.LENGTH_LONG).show()
+                time_end.text= ""
+                tempehour = 25
+                tempeminute = 25
+            }else{
+                if(day == 8){
+                    collection!!.alldays = true
+                    addAllDaysCollection()
                 }else{
-                    if(day == 8){
-                        collection!!.alldays = true
-                        addAllDaysCollection()
-                    }else{
-                        ChangeDayStatus(day)
-                        addToTimeCollection()
-                    }
-
-                    refreshList()
-                    returnToInitial()
-                    DayState.ScheduleComplete = true
-                    Toast.makeText(activity, "Save Success" , Toast.LENGTH_LONG).show()
+                    ChangeDayStatus(day)
+                    addToTimeCollection()
                 }
 
+                refreshList()
+                returnToInitial()
+                DayState.ScheduleComplete = true
+                Toast.makeText(activity, "Save Success" , Toast.LENGTH_LONG).show()
             }
         }
         generateitem()
@@ -257,10 +282,10 @@ class TimeSchedule : Fragment() {
 
           for(x in tstart2..tend2){
                     if(tempStime == x || tempEtime == x){
-                        if(!DateConflict()){
+                        //if(!DateConflict()){
                             conflicts = false
-                            break
-                        }
+
+                        //}
                     }
                 }
             }
