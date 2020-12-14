@@ -150,7 +150,7 @@ class TestFragment : Fragment() {
                     tdSecond.toByte()
                 )
 
-                Protocol.cDeviceProt!!.transferData(0x04, myData)
+                Protocol.cDeviceProt!!.transferData(0x04.toByte(), myData)
 //                    data = byteArrayOf(
 //                        0x01.toByte(),
 //                        0x01.toByte(),
@@ -215,53 +215,6 @@ class TestFragment : Fragment() {
             lblProgramRunning.text = "No test program is running"
             ButtonStatus = true
         }
-
-        btn_test_inc.setOnClickListener{
-            var curNum:Int = test_Number.text.toString().toInt()
-            var newNum:Int = curNum
-            if(newNum < 1000){
-                newNum += 50
-                TestTransferRateVal.tRate = newNum
-                test_Number.setText(newNum.toString())
-            }else{
-                Toast.makeText(context, "You've reached the maxed input", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        btn_test_dec.setOnClickListener{
-            var curNum:Int = test_Number.text.toString().toInt()
-            var newNum:Int = curNum
-            if(newNum > 50){
-                newNum -= 50
-                TestTransferRateVal.tRate = newNum
-                test_Number.setText(newNum.toString())
-            }else{
-                Toast.makeText(context, "You've reached the min input", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        testSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                pVal = progress
-                tVal = progress
-                bVal = progress
-                data = byteArrayOf(
-                    pVal.toByte(),
-                    tVal.toByte(),
-                    bVal.toByte()
-                )
-                Protocol.cDeviceProt?.newAdjTransferWithDelay(0x01, data)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                Toast.makeText(context, "delay is- "+ TestTransferRateVal.tRate.toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
-
 
     }
     fun LanguageTranslate(){

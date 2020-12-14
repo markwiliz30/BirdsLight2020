@@ -39,9 +39,18 @@ RecyclerView.Adapter<TimeViewHolder>(){
     }
 
     fun DeleteTime(pgm: Byte, day: Byte ,sched : Byte){
-
+        var eight = 8
         val filteredSched = ScheduleCollection.scheduleCollection.filter { it.pgm == pgm && it.wday == day}
+        val allDayFinder = ScheduleCollection.scheduleCollection.filter {it.pgm == pgm && it.wday == eight.toByte()}
         val item = filteredSched.find { it.sched == sched }
+
+        if(allDayFinder.isNotEmpty()){
+        for(allitem in allDayFinder){
+            if(allitem!!.shour == item!!.shour && allitem!!.sminute == item!!.sminute && allitem!!.ehour == item!!.ehour && allitem!!.eminute == item!!.eminute){
+                ScheduleCollection.scheduleCollection.remove(allitem)
+            }
+         }
+        }
 
         ScheduleCollection.scheduleCollection.remove(item)
 

@@ -411,6 +411,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                 btnMonday.setBackgroundResource(R.drawable.button_model)
                 collection!!.monday = false
+                collection!!.alldays = false
+                btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             2->{
@@ -420,6 +422,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                     btnTuesday.setBackgroundResource(R.drawable.button_model)
                     collection!!.tuesday = false
+                    collection!!.alldays = false
+                    btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             3->{
@@ -429,6 +433,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                     btnWednesday.setBackgroundResource(R.drawable.button_model)
                     collection!!.wednesday = false
+                    collection!!.alldays = false
+                    btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             4->{
@@ -438,6 +444,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                     btnThursday.setBackgroundResource(R.drawable.button_model)
                     collection!!.thursday = false
+                    collection!!.alldays = false
+                    btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             5->{
@@ -447,6 +455,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                     btnFriday.setBackgroundResource(R.drawable.button_model)
                     collection!!.friday = false
+                    collection!!.alldays = false
+                    btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             6->{
@@ -456,6 +466,8 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                     btnSaturday.setBackgroundResource(R.drawable.button_model)
                     collection!!.saturday = false
+                    collection!!.alldays = false
+                    btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             7->{
@@ -465,12 +477,15 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                 }else{
                     btnSunday.setBackgroundResource(R.drawable.button_model)
                     collection!!.sunday = false
+                    collection!!.alldays = false
+                    btnAll.setBackgroundResource(R.drawable.button_model)
                 }
             }
             8-> {
                 if(schedcollection.isNotEmpty()){
-                    SelectAllDays()
+                 //   SelectAllDays()
                     collection!!.alldays = true
+                    btnAll.setBackgroundResource(R.drawable.bottom_border)
                 }else{
                     collection!!.alldays = false
                     if(!collection!!.monday){
@@ -496,6 +511,12 @@ class DayPicker : Fragment(), PrimeDatePickerBottomSheet.OnDayPickedListener {
                     }
                 }
             }
+        }
+
+        if(collection!!.alldays){
+            btnAll.setBackgroundResource(R.drawable.bottom_border)
+        }else{
+            btnAll.setBackgroundResource(R.drawable.button_model)
         }
 
     }

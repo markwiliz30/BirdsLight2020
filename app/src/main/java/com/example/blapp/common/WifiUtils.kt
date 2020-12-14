@@ -148,42 +148,42 @@ class WifiUtils {
                         val tdMinute = calendar[Calendar.MINUTE]
                         val tdSecond = calendar[Calendar.SECOND]
 
-                        dataHold = DataSetItem()
-                        dataHold.myCommand = 0x04
-                        dataHold.myDatas = byteArrayOf(
+//                        dataHold = DataSetItem()
+//                        dataHold.myCommand = 0x04
+//                        dataHold.myDatas = byteArrayOf(
+//                            tdYearInt.toByte(),
+//                            tdMonth.toByte(),
+//                            tdDay.toByte(),
+//                            tdHour.toByte(),
+//                            tdMinute.toByte(),
+//                            tdSecond.toByte()
+//                        )
+//                        dataSetCollection.add(dataHold)
+//
+//                        dataHold = DataSetItem()
+//                        dataHold.myCommand = 0x01
+//                        dataHold.myDatas = byteArrayOf(
+//                            0x80.toByte(),
+//                            0x80.toByte(),
+//                            0xff.toByte()
+//                        )
+//                        dataSetCollection.add(dataHold)
+
+                        var dtDataArray = byteArrayOf(
                             tdYearInt.toByte(),
-                            tdMonth.toByte(),
+                            tdMonth.plus(1).toByte(),
                             tdDay.toByte(),
                             tdHour.toByte(),
                             tdMinute.toByte(),
                             tdSecond.toByte()
                         )
-                        dataSetCollection.add(dataHold)
-
-                        dataHold = DataSetItem()
-                        dataHold.myCommand = 0x01
-                        dataHold.myDatas = byteArrayOf(
-                            0x80.toByte(),
-                            0x80.toByte(),
-                            0xff.toByte()
-                        )
-                        dataSetCollection.add(dataHold)
-
-//                        var data = byteArrayOf(
-//                            0x01.toByte(),
-//                            0x01.toByte(),
-//                            128.toByte(),
-//                            128.toByte(),
-//                            128.toByte(),
-//                            0x01.toByte()
-//                        )
 
                         val isSSIDConnected = IsWiFiConnected(context, SSID)
                         if(isSSIDConnected)
                         {
                             Protocol.cDeviceProt!!.startChannel()
-                            Protocol.cDeviceProt!!.upload(dataSetCollection)
-//                            Protocol.cDeviceProt!!.transferDataWithDelay(0x02, data)
+//                            Protocol.cDeviceProt!!.upload(dataSetCollection)
+                            Protocol.cDeviceProt!!.transferData(0x04.toByte(), dtDataArray)
                             wifiList[selectedWifiIndex!!].status = 2
                             sharedWifiAdapter!!.notifyDataSetChanged()
                             dialog.dismiss()
@@ -196,8 +196,8 @@ class WifiUtils {
                                 if(innerIsSSIDConnected)
                                 {
                                     Protocol.cDeviceProt!!.startChannel()
-                                    Protocol.cDeviceProt!!.upload(dataSetCollection)
-//                                    Protocol.cDeviceProt!!.transferDataWithDelay(0x02, data)
+//                                    Protocol.cDeviceProt!!.upload(dataSetCollection)
+                                    Protocol.cDeviceProt!!.transferData(0x04.toByte(), dtDataArray)
                                     wifiList[selectedWifiIndex!!].status = 2
                                     sharedWifiAdapter!!.notifyDataSetChanged()
                                     dialog.dismiss()

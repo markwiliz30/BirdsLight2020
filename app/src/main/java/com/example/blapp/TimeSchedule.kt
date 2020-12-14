@@ -90,39 +90,37 @@ class TimeSchedule : Fragment() {
                 tempehour = hourOfDay
                 tempeminute = minute
 
-                 if(tempshour == tempehour && tempeminute == tempsminute){
-                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
-                    Toast.makeText(activity, "Invalid Time Set" , Toast.LENGTH_LONG).show()
-                    time_end.text= ""
-                    tempehour = 25
-                    tempeminute = 25
-                }
-                else{
-                    if(!timeConflict()){
+                
+                    if(tempshour == tempehour && tempeminute == tempsminute){
                         btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
-                        Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "Invalid Time Set" , Toast.LENGTH_LONG).show()
                         time_end.text= ""
                         tempehour = 25
                         tempeminute = 25
+                    }
+                    else{
+                        if(!timeConflict()){
+                            btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
+                            Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
+                            time_end.text= ""
+                            tempehour = 25
+                            tempeminute = 25
 //                }else if(!DateConflict()){
 //                    btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
 //                    Toast.makeText(activity, "Date has Conflict" , Toast.LENGTH_LONG).show()
-                    }else{
-                        //if(day == 8){
-                          //  collection!!.alldays = true
-                          //  addAllDaysCollection()
-                      //  }else{
+                        }else{
+                            //if(day == 8){
+                            //  collection!!.alldays = true
+                            //  addAllDaysCollection()
+                            //  }else{
                             //ChangeDayStatus(day)
-                           // addToTimeCollection()
+                            // addToTimeCollection()
 
-                       // }
+                            // }
+                        }
+
                     }
-
                 }
-
-
-
-            }
         }, hour , minute , false)
 
 
@@ -157,22 +155,147 @@ class TimeSchedule : Fragment() {
                 tempehour = 25
                 tempeminute = 25
             }else{
-                if(day == 8){
-                    collection!!.alldays = true
-                    addAllDaysCollection()
-                }else{
-                    ChangeDayStatus(day)
-                    addToTimeCollection()
+                if(getFilteredSchedCount() >= 11)
+                {
+                    Toast.makeText(context, "You can only have 10 unique time schedule", Toast.LENGTH_SHORT).show()
                 }
+                else
+                {
+                    if(day == 8){
 
-                refreshList()
-                returnToInitial()
-                DayState.ScheduleComplete = true
-                Toast.makeText(activity, "Save Success" , Toast.LENGTH_LONG).show()
+                        collection!!.alldays = true
+                        addAllDaysCollection()
+                    }else{
+                        ChangeDayStatus(day)
+                        addToTimeCollection()
+                    }
+
+                    refreshList()
+                    returnToInitial()
+                    DayState.ScheduleComplete = true
+                    Toast.makeText(activity, "Save Success" , Toast.LENGTH_LONG).show()
+                }
             }
         }
         generateitem()
     }
+
+    private fun getFilteredSchedCount(): Int
+    {
+        val newItem = ScheduleItem()
+        var filtered =  ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day }
+        var DateFind = DayCollection.dayCollection.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+        val schedNumber = filtered.count()+1
+        newItem.command = 0x04
+        newItem.pgm = CurrentID.parentPgmIndex.toByte()
+        newItem.shour = tempshour.toByte()
+        newItem.sminute = tempsminute.toByte()
+        newItem.ehour = tempehour.toByte()
+        newItem.eminute = tempeminute.toByte()
+        newItem.sched = schedNumber.toByte()
+        newItem.wday = day.toByte()
+        newItem.smonth = DateFind!!.sMonth!!.toByte()
+        newItem.sday = DateFind!!.sDay!!.toByte()
+        newItem.emonth= DateFind!!.eMonth!!.toByte()
+        newItem.eday = DateFind!!.eDay!!.toByte()
+
+        val filteredSchedCollection = ScheduleCollection.scheduleCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()} as MutableList
+        filteredSchedCollection.add(newItem)
+
+        var groupFilteredSchedCollect: MutableList<ScheduleItem> = mutableListOf()
+
+        for(i in 0 until filteredSchedCollection.count())
+        {
+            val currItem = filteredSchedCollection[0]
+            var groupSched = filteredSchedCollection.filter { it.shour == currItem.shour && it.sminute == currItem.sminute && it.ehour == currItem.ehour && it.eminute == currItem.eminute }
+
+            if(groupSched.count() > 1)
+            {
+                var newWday = 0
+                for(i in groupSched)
+                {
+                    newWday += ConvertDecToBinVal(i.wday).toInt()
+                }
+
+                val item = ScheduleItem()
+                item.command = currItem.command
+                item.pgm = currItem.pgm
+                item.smonth = currItem.smonth
+                item.sday = currItem.sday
+                item.emonth = currItem.emonth
+                item.eday = currItem.eday
+                item.wday = newWday.toByte()
+                item.shour = currItem.shour
+                item.sminute = currItem.sminute
+                item.ehour = currItem.ehour
+                item.eminute = currItem.eminute
+                item.pgmname = currItem.pgmname
+                item.sched = currItem.sched
+                groupFilteredSchedCollect.add(item)
+            }
+            else
+            {
+                val item = ScheduleItem()
+                item.command = currItem.command
+                item.pgm = currItem.pgm
+                item.smonth = currItem.smonth
+                item.sday = currItem.sday
+                item.emonth = currItem.emonth
+                item.eday = currItem.eday
+                item.wday = ConvertDecToBinVal(currItem.wday)
+                item.shour = currItem.shour
+                item.sminute = currItem.sminute
+                item.ehour = currItem.ehour
+                item.eminute = currItem.eminute
+                item.pgmname = currItem.pgmname
+                item.sched = currItem.sched
+                groupFilteredSchedCollect.add(item)
+            }
+
+            for(grpItem in groupSched)
+            {
+                filteredSchedCollection.remove(grpItem)
+            }
+
+            if(filteredSchedCollection.count() == 0)
+            {
+                break
+            }
+        }
+        return groupFilteredSchedCollect.count()
+    }
+
+    private fun ConvertDecToBinVal(decVal: Byte?): Byte{
+        var binVal = 0.toByte()
+        if(decVal == 0x01.toByte())
+        {
+            binVal = 0x01.toByte()
+        }else if(decVal == 0x02.toByte())
+        {
+            binVal = 0x02.toByte()
+        }else if(decVal == 0x03.toByte())
+        {
+            binVal = 0x04.toByte()
+        }else if(decVal == 0x04.toByte())
+        {
+            binVal = 0x08.toByte()
+        }else if(decVal == 0x05.toByte())
+        {
+            binVal = 0x10.toByte()
+        }else if(decVal == 0x06.toByte())
+        {
+            binVal = 0x20.toByte()
+        }else if(decVal == 0x07.toByte())
+        {
+            binVal = 0x40.toByte()
+        }else if(decVal == 0x08.toByte())
+        {
+            binVal = 0x80.toByte()
+        }
+
+        return binVal
+    }
+
     private fun generateitem(){
         adapter = TimeAdapter(activity,ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day } as MutableList<ScheduleItem>)
         lst_time.adapter = adapter
@@ -248,9 +371,13 @@ class TimeSchedule : Fragment() {
     fun timeConflict():Boolean{
         var tempStime: Int = 0
         var tempEtime: Int = 0
+        var TimeRestric = ScheduleCollection.scheduleCollection.filter {it.wday!!.toInt() == day }
         conflicts = true
        // var TimeRestric = ScheduleCollection.scheduleCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.wday!!.toInt() == day }
-        var TimeRestric = ScheduleCollection.scheduleCollection.filter {it.wday!!.toInt() == day }
+        if(day == 8) {
+            TimeRestric = ScheduleCollection.scheduleCollection.filter {  it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+        }
+
 
         tempStime = if(tempsminute < 10){
             (""+tempshour+"0"+tempsminute+"").toInt()
@@ -318,7 +445,7 @@ class TimeSchedule : Fragment() {
         }
     }
 
-    private fun addAllDaysCollection(){
+    private fun  addAllDaysCollection(){
 
         var DateFind = DayCollection.dayCollection.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
 

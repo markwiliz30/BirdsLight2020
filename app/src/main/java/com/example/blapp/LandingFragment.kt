@@ -131,9 +131,30 @@ class LandingFragment : Fragment() {
                     val tdMinute = calendar[Calendar.MINUTE]
                     val tdSecond = calendar[Calendar.SECOND]
 
-                    dataHold = DataSetItem()
-                    dataHold.myCommand = 0x04
-                    dataHold.myDatas = byteArrayOf(
+//                    dataHold = DataSetItem()
+//                    dataHold.myCommand = 0x04
+//                    dataHold.myDatas = byteArrayOf(
+//                        tdYearInt.toByte(),
+//                        tdMonth.plus(1).toByte(),
+//                        tdDay.toByte(),
+//                        tdHour.toByte(),
+//                        tdMinute.toByte(),
+//                        tdSecond.toByte()
+//                    )
+//                    dataSetCollection.add(dataHold)
+
+//                    dataHold = DataSetItem()
+//                    dataHold.myCommand = 0x01
+//                    dataHold.myDatas = byteArrayOf(
+//                        0x80.toByte(),
+//                        0x80.toByte(),
+//                        0xff.toByte()
+//                    )
+//                    dataSetCollection.add(dataHold)
+
+//                    Protocol.cDeviceProt!!.upload(dataSetCollection)
+
+                    var dtDataArray = byteArrayOf(
                         tdYearInt.toByte(),
                         tdMonth.plus(1).toByte(),
                         tdDay.toByte(),
@@ -141,18 +162,8 @@ class LandingFragment : Fragment() {
                         tdMinute.toByte(),
                         tdSecond.toByte()
                     )
-                    dataSetCollection.add(dataHold)
 
-                    dataHold = DataSetItem()
-                    dataHold.myCommand = 0x01
-                    dataHold.myDatas = byteArrayOf(
-                        0x80.toByte(),
-                        0x80.toByte(),
-                        0xff.toByte()
-                    )
-                    dataSetCollection.add(dataHold)
-
-                    Protocol.cDeviceProt!!.upload(dataSetCollection)
+                    Protocol.cDeviceProt!!.transferData(0x04.toByte(), dtDataArray)
 
 //                    val data = byteArrayOf(
 //                        0x80.toByte(),

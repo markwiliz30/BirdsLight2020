@@ -47,7 +47,7 @@ class ProgramFragment : Fragment(){
     lateinit var layoutManager: LinearLayoutManager
     var parentPgmIndex: Int = 0
     lateinit var adapter: PgmAdapter
-
+    var collection: DayManager? = null
    // internal lateinit var dbStep:DBmanager
     internal lateinit var dbm:DBmanager
     internal var lstStep: List<StepItem> = ArrayList<StepItem>()
@@ -89,6 +89,10 @@ class ProgramFragment : Fragment(){
                         object : MyButtonClickListener{
                             override fun onClick(pos: Int) {
                                 DeleteAlert(pos)
+                             var filter= DayCollection.dayCollection.filter {  it.pgm!!.toInt() == pos+1}
+                                collection = filter.find {it.pgm!!.toInt() == pos+1}
+                                DayCollection.dayCollection.remove(collection)
+
                             }
                         }
                     )
@@ -108,12 +112,13 @@ class ProgramFragment : Fragment(){
 //                                CurrentID.Updatebool(x = true)
 //                            }
                               override fun onClick(pos: Int) {
-                                  val bundle = bundleOf("parentPgmIndex" to  pos+1)
-                                  val pgmChecker =  DayCollection.dayCollection.filter { it.pgm!!.toInt() == pos+1 }
+                                  val getItem = PgmCollection.pgmCollection[pos]
+                                  val bundle = bundleOf("parentPgmIndex" to  getItem.pgm!!.toInt())
+                                  val pgmChecker =  DayCollection.dayCollection.filter { it.pgm!!.toInt() == getItem.pgm!!.toInt() }
 
                                   if(pgmChecker.isEmpty()){
                                       val newItem = DayManager()
-                                      newItem.pgm = pos.toByte().inc()
+                                      newItem.pgm = getItem.pgm
                                       DayCollection.dayCollection.add(newItem)
                                       navController.navigate(R.id.action_programFragment_to_dayPicker , bundle)
                                       CurrentID.UpdateID(num = 8)
@@ -201,17 +206,20 @@ class ProgramFragment : Fragment(){
     }
 
     private fun generateItem() {
+        PgmCollection.pgmCollection.sortBy { it.pgm!!.toInt() }
+//        val a = PgmCollection.pgmCollection.sortedWith(compareBy({ it.pgm }))
+//        PgmCollection.pgmCollection = a as MutableList<PgmItem>
         adapter = PgmAdapter(activity, PgmCollection.pgmCollection)
         recycler_pgm.adapter = adapter
     }
 
     private fun SynchronizePgmCollection(){
-        var pgmCollectionIndex = 1
-        for(item in PgmCollection.pgmCollection)
-        {
-            item.pgm = pgmCollectionIndex.toByte()
-            pgmCollectionIndex++
-        }
+//        var pgmCollectionIndex = 1
+//        for(item in PgmCollection.pgmCollection)
+//        {
+//            item.pgm = pgmCollectionIndex.toByte()
+//            pgmCollectionIndex++
+//        }
 
         adapter = PgmAdapter(activity, PgmCollection.pgmCollection)
         recycler_pgm.adapter = adapter
@@ -237,7 +245,17 @@ class ProgramFragment : Fragment(){
             }
             else
             {
-                CurrentID.parentPgmIndex = PgmCollection.pgmCollection!!.count() + 1
+                var checker = 1
+                for(item in PgmCollection.pgmCollection)
+                {
+                    if(item.pgm!!.toInt() != checker)
+                    {
+                        break
+                    }
+                    checker++
+                }
+                CurrentID.parentPgmIndex = checker
+//                CurrentID.parentPgmIndex = PgmCollection.pgmCollection!!.count() + 1
             }
 
 //            val bundle = bundleOf("parentPgmIndex" to  createdPgmIndex)
@@ -278,16 +296,17 @@ class ProgramFragment : Fragment(){
         }
     }
     private fun DeleteAlert(pos: Int){
+        val getItem = PgmCollection.pgmCollection[pos]
         val mAlertDialog = AlertDialog.Builder(activity!!)
         mAlertDialog.setIcon(R.mipmap.ic_launcher_round) //set alertdialog icon
         mAlertDialog.setTitle("Are you sure?") //set alertdialog title
-        mAlertDialog.setMessage("Do you want to delete Program " + (pos + 1) + "?" ) //set alertdialog message
+        mAlertDialog.setMessage("Do you want to delete Program " + (getItem.pgm!!.toInt()) + "?" ) //set alertdialog message
         mAlertDialog.setPositiveButton("Yes") { dialog, id ->
-            val pgmIndex = PgmCollection.pgmCollection[pos]
-            RefreshStepCollection(pgmIndex.pgm!!.toInt())
-            PgmCollection.pgmCollection.removeAt(pos)
-            SynchronizePgmCollection()
-            DeleteSchedule(pgmIndex.pgm!!.toInt())
+            RefreshStepCollection(getItem.pgm!!.toInt())
+            DeletePGM(getItem.pgm!!.toInt())
+//            PgmCollection.pgmCollection.removeAt(pos)
+//            SynchronizePgmCollection()
+            DeleteSchedule(getItem.pgm!!.toInt())
 
         }
         mAlertDialog.setNegativeButton("No") { dialog, id ->
@@ -300,6 +319,16 @@ class ProgramFragment : Fragment(){
 
     }
 
+    private fun DeletePGM(pgm: Int)
+    {
+        do{
+            val pgmFilter = PgmCollection.pgmCollection.find { it.pgm!!.toInt() == pgm }
+            PgmCollection.pgmCollection.remove(pgmFilter)
+        }while (pgmFilter!= null)
+//        PgmCollection.pgmCollection.removeAt(pgm)
+        SynchronizePgmCollection()
+    }
+
     private fun RefreshStepCollection(pgm: Int)
     {
         do{
@@ -308,14 +337,14 @@ class ProgramFragment : Fragment(){
 
         }while (retreivedStep != null)
 
-        for(item in StepCollection.stepCollection)
-        {
-            if(item.pgm!!.toInt() > pgm)
-            {
-                val newPgm = item.pgm!!.toInt() -1
-                item.pgm = newPgm.toByte()
-            }
-        }
+//        for(item in StepCollection.stepCollection)
+//        {
+//            if(item.pgm!!.toInt() > pgm)
+//            {
+//                val newPgm = item.pgm!!.toInt() -1
+//                item.pgm = newPgm.toByte()
+//            }
+//        }
     }
 
     private fun DeleteSchedule(pgm: Int){
@@ -324,13 +353,14 @@ class ProgramFragment : Fragment(){
             ScheduleCollection.scheduleCollection.remove(schedFilter)
         }while (schedFilter!= null)
 
-        for(item in ScheduleCollection.scheduleCollection){
-            if(item.pgm!!.toInt() > pgm){
-                item.pgm = item!!.pgm!!.dec()
-            }
-        }
+//        for(item in ScheduleCollection.scheduleCollection){
+//            if(item.pgm!!.toInt() > pgm){
+//                item.pgm = item!!.pgm!!.dec()
+//            }
+//        }
 
     }
+
 
     private fun CopyProgram(pgm: PgmItem, stepList: List<StepItem>)
     {

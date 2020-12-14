@@ -67,7 +67,9 @@ class SetStepFragment : Fragment() {
         var data: ByteArray
         LanguageTranslate()
 
-        if(PgmCollection.pgmCollection.count() >= CurrentID.parentPgmIndex){
+        val searchItem = PgmCollection.pgmCollection.find { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+
+        if(searchItem != null){
             editClicked= true
             FindCurrentStepOnPgmCollection(CurrentID.parentPgmIndex)
 
@@ -370,8 +372,6 @@ class SetStepFragment : Fragment() {
 
     private fun UploadDataSets()
     {
-        var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
-        var dataHold: DataSetItem
         val filteredSchedCollection = ScheduleCollection.scheduleCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()} as MutableList
         val filteredStepCollection = StepCollection.stepCollection.filter{it.pgm == CurrentID.parentPgmIndex.toByte()}
         var groupFilteredSchedCollect: MutableList<ScheduleItem> = mutableListOf()
@@ -463,7 +463,7 @@ class SetStepFragment : Fragment() {
             dataArray += lStepItem.time!!
         }
 
-        Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
+//        Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
 
 //        for(lStepItem in filteredStepCollection)
 //        {
