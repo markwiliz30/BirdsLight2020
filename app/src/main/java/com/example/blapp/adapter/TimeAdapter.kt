@@ -32,7 +32,17 @@ RecyclerView.Adapter<TimeViewHolder>(){
         var ehourHold: Byte = itemList[position].ehour!!
         var eminuteHold: Byte = itemList[position].eminute!!
         holder.txt_num.text = timeHold.toString()+"."
-        holder.txt_title.text = itemList[position].shour.toString()+":"+itemList[position].sminute.toString() +"~"+itemList[position].ehour.toString()+":"+itemList[position].eminute.toString()
+        //holder.txt_title.text = itemList[position].shour.toString()+":"+itemList[position].sminute.toString() +"~"+itemList[position].ehour.toString()+":"+itemList[position].eminute.toString()
+       if(sminuteHold < 10 && eminuteHold < 10){
+           holder.txt_title.text =shourHold.toString()+":0"+sminuteHold+"~"+ehourHold+":0"+eminuteHold
+       }else if(sminuteHold < 10 && eminuteHold > 10){
+           holder.txt_title.text =shourHold.toString()+":0"+sminuteHold+"~"+ehourHold+":"+eminuteHold
+       }else if(sminuteHold > 10 && eminuteHold < 10){
+           holder.txt_title.text =shourHold.toString()+":"+sminuteHold+"~"+ehourHold+":0"+eminuteHold
+       }else{
+           holder.txt_title.text =shourHold.toString()+":"+sminuteHold+"~"+ehourHold+":"+eminuteHold
+       }
+
         holder.btn_del.setOnClickListener{
             DeleteAlert(itemList[position].pgm!!, itemList[position].wday!!, (position + 1).toByte(),shourHold,sminuteHold,ehourHold,eminuteHold )
         }

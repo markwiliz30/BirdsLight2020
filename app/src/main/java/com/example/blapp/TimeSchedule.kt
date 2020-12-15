@@ -86,7 +86,12 @@ class TimeSchedule : Fragment() {
 
         mTimePickerEnd = TimePickerDialog(activity, object : TimePickerDialog.OnTimeSetListener{
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                time_end.text= "To: "+hourOfDay.toString()+":"+minute.toString()
+                if(minute < 10){
+                    time_end.text= "To: "+hourOfDay.toString()+":0"+minute.toString()
+                }else{
+                    time_end.text= "To: "+hourOfDay.toString()+":"+minute.toString()
+                }
+
                 tempehour = hourOfDay
                 tempeminute = minute
 
@@ -94,7 +99,7 @@ class TimeSchedule : Fragment() {
                     if(tempshour == tempehour && tempeminute == tempsminute){
                         btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
                         Toast.makeText(activity, "Invalid Time Set" , Toast.LENGTH_LONG).show()
-                        time_end.text= ""
+                        time_end.text= "Set Time"
                         tempehour = 25
                         tempeminute = 25
                     }
@@ -102,7 +107,7 @@ class TimeSchedule : Fragment() {
                         if(!timeConflict()){
                             btn_save_time.startAnimation(AnimationUtils.loadAnimation(activity , R.anim.shake))
                             Toast.makeText(activity, "Time has Conflict" , Toast.LENGTH_LONG).show()
-                            time_end.text= ""
+                            time_end.text= "Set Time"
                             tempehour = 25
                             tempeminute = 25
 //                }else if(!DateConflict()){
@@ -126,7 +131,12 @@ class TimeSchedule : Fragment() {
 
         mTimePickerStart = TimePickerDialog(activity, object : TimePickerDialog.OnTimeSetListener {
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                time_start.text = "From: "+hourOfDay.toString()+":"+minute.toString()
+                if(minute < 10){
+                    time_start.text = "From: "+hourOfDay.toString()+":0"+minute.toString()
+                }else{
+                    time_start.text = "From: "+hourOfDay.toString()+":"+minute.toString()
+                }
+
                 tempshour = hourOfDay
                 tempsminute = minute
 

@@ -31,16 +31,20 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.core.os.bundleOf
+import com.example.blapp.collection.DayCollection
+import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.common.DeviceProtocol
+import com.example.blapp.model.DayManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
 import com.google.android.gms.location.*
+import kotlinx.android.synthetic.main.fragment_day_picker.*
 
 
 class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
-
+    var collection: DayManager? = null
     private var Request_Code = 1000
     
     override fun onConnectionFailed(p0: ConnectionResult) {
@@ -148,7 +152,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace if statement "WifiUtils.isConnectedToBL"
                 ID_TESTFRAGMENT ->
-                  if (WifiUtils.isConnectedToBL) {
+                  if (true) {
                       if (CurrentID.getID() == ID_HOME) {
                           navController.navigate(R.id.action_landingFragment_to_testFragment)
                           CurrentID.UpdateID(num = it.id)
@@ -184,7 +188,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 // replace if statement "WifiUtils.isConnectedToBL"
                 ID_PROGRAMFRAGMENT ->
-                   if (WifiUtils.isConnectedToBL) {
+                   if (true) {
                        if (CurrentID.getID() == ID_HOME) {
                            navController.navigate(R.id.action_landingFragment_to_programFragment)
                            CurrentID.UpdateID(num = it.id)
@@ -208,7 +212,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
                 ID_SCHEDULEFRAGMENT ->
-                    if (WifiUtils.isConnectedToBL) {
+                    if (true) {
                         if (CurrentID.getID() == ID_HOME) {
                             navController.navigate(R.id.action_landingFragment_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
@@ -240,7 +244,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 }
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
-                ID_SETTINGSFRAGMENT -> if (WifiUtils.isConnectedToBL) {
+                ID_SETTINGSFRAGMENT -> if (true) {
                     if (CurrentID.getID() == ID_HOME) {
                         navController.navigate(R.id.action_landingFragment_to_settings)
                         CurrentID.UpdateID(num = it.id)
@@ -297,9 +301,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 CurrentID.Updatebool(x = true)
                 CurrentID.UpdateID(num = ID_DAYPICKERFRAGMENT)
             } else if (CurrentID.getID() == ID_DAYPICKERFRAGMENT) {
-                navController.navigate(R.id.action_dayPicker_to_programFragment)
-                CurrentID.Updatebool(x = false)
-                CurrentID.UpdateID(num = ID_PROGRAMFRAGMENT)
+                ShowMessageDayPicker()
             } else if (CurrentID.getID() == ID_IMPORTFRAGMENT) {
                 navController.navigate(R.id.action_importFragment_to_programFragment)
                 CurrentID.Updatebool(x = false)
@@ -512,12 +514,30 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 navController.navigate(R.id.action_timeSchedule_to_landingFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_HOME && current == ID_DAYPICKERFRAGMENT) {
                 bottomNavigation.isVisible = true
                 bottomNavigation.show(clicked)
                 navController.navigate(R.id.action_dayPicker_to_landingFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_HOME && current == ID_IMPORTFRAGMENT) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_importFragment_to_landingFragment)
@@ -526,11 +546,6 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
             } else if (clicked == ID_HOME && current == ID_CALENDAR) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_calendarFragment_to_landingFragment)
-                CurrentID.UpdateID(num = clicked)
-                CurrentID.Updatebool(x = false)
-            } else if (clicked == ID_HOME && current == ID_DAYPICKERFRAGMENT) {
-                bottomNavigation.isVisible = true
-                navController.navigate(R.id.action_dayPicker_to_landingFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
             } else if (clicked == ID_TESTFRAGMENT && current == ID_STEPFRAGMENT) {
@@ -543,11 +558,29 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 navController.navigate(R.id.action_timeSchedule_to_testFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_TESTFRAGMENT && current == ID_DAYPICKERFRAGMENT) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_dayPicker_to_testFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_TESTFRAGMENT && current == ID_IMPORTFRAGMENT) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_importFragment_to_testFragment)
@@ -556,11 +589,6 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
             } else if (clicked == ID_TESTFRAGMENT && current == ID_CALENDAR) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_calendarFragment_to_testFragment)
-                CurrentID.UpdateID(num = clicked)
-                CurrentID.Updatebool(x = false)
-            } else if (clicked == ID_TESTFRAGMENT && current == ID_DAYPICKERFRAGMENT) {
-                bottomNavigation.isVisible = true
-                navController.navigate(R.id.action_dayPicker_to_testFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
             } else if (clicked == ID_PROGRAMFRAGMENT && current == ID_TIMESCHEDFRAGMENT) {
@@ -573,6 +601,15 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 navController.navigate(R.id.action_dayPicker_to_programFragment)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_PROGRAMFRAGMENT && current == ID_CALENDAR) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_calendarFragment_to_programFragment)
@@ -608,11 +645,29 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 navController.navigate(R.id.action_timeSchedule_to_settings)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_SETTINGSFRAGMENT && current == ID_DAYPICKERFRAGMENT) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_dayPicker_to_settings)
                 CurrentID.UpdateID(num = clicked)
                 CurrentID.Updatebool(x = false)
+                var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+                val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+                for(timefound in filteredSched){
+                    ScheduleCollection.scheduleCollection.remove(timefound)
+                }
+                for (datefound in filterDate){
+                    DayCollection.dayCollection.remove(datefound)
+                }
             } else if (clicked == ID_SETTINGSFRAGMENT && current == ID_IMPORTFRAGMENT) {
                 bottomNavigation.isVisible = true
                 navController.navigate(R.id.action_importFragment_to_settings)
@@ -639,6 +694,34 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         }
         mAlertDialog.show()
     }
+    fun ShowMessageDayPicker(){
+        val mAlertDialog = AlertDialog.Builder(this)
+        mAlertDialog.setIcon(R.mipmap.ic_launcher_round) //set alertdialog icon
+        mAlertDialog.setTitle("Are you sure you want to leave?") //set alertdialog title
+        mAlertDialog.setMessage("If you leave before saving, your changes will be lost.") //set alertdialog message
+        mAlertDialog.setPositiveButton("Yes") { dialog, id ->
+            navController.navigate(R.id.action_dayPicker_to_programFragment)
+            CurrentID.Updatebool(x = false)
+            CurrentID.UpdateID(num = ID_PROGRAMFRAGMENT)
+
+            var filterDate = DayCollection.dayCollection.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex }
+            val filteredSched = ScheduleCollection.scheduleCollection.filter {it.pgm!!.toInt() == CurrentID.parentPgmIndex}
+
+            for(timefound in filteredSched){
+                ScheduleCollection.scheduleCollection.remove(timefound)
+            }
+            for (datefound in filterDate){
+                DayCollection.dayCollection.remove(datefound)
+            }
+
+            // Toast.makeText(this, "Yes", Toast.LENGTH_SHORT).show()
+        }
+        mAlertDialog.setNegativeButton("No") { dialog, id ->
+
+            //Toast.makeText(this, "No", Toast.LENGTH_SHORT).show()
+        }
+        mAlertDialog.show()
+    }
 
     fun ExitDialog(){
         val mAlertDialog = AlertDialog.Builder(this)
@@ -648,11 +731,11 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         mAlertDialog.setPositiveButton("Yes") { dialog, id ->
             CurrentID.UpdateID(num = ID_HOME)
             finishAffinity()
-            Toast.makeText(this, "Yes", Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "Yes", Toast.LENGTH_SHORT).show()
         }
         mAlertDialog.setNegativeButton("No") { dialog, id ->
 
-            Toast.makeText(this, "No", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "No", Toast.LENGTH_SHORT).show()
         }
         mAlertDialog.show()
     }
