@@ -428,12 +428,14 @@ class ProgramFragment : Fragment(){
     fun ResetBirdsLight(){
         val command: Byte = 0x01
         val data = byteArrayOf(
-            0.toByte(),
-            0.toByte(),
+            128.toByte(),
+            128.toByte(),
             0.toByte()
         )
 //        undo moko
-//        Protocol.cDeviceProt!!.transferData(command, data)
+//        if(Protocol.cDeviceProt != null) {
+            Protocol.cDeviceProt!!.transferData(command, data)
+//        }
     }
 
     fun InfoPopup(){

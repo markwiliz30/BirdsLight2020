@@ -13,6 +13,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
 class DeviceProtocol : Handler.Callback, OnSocketListener {
+    var sendCount = 0
     var executorService: ExecutorService = Executors.newSingleThreadExecutor()
     var longRunningTaskFuture = null
     var version: Byte = 0x01
@@ -157,6 +158,11 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
         finalAcknowledment[0] = O
         finalAcknowledment[1] = K
         channel!!.sendTo(address, finalAcknowledment)
+
+        if(sendCount > 0)
+        {
+            sendCount--
+        }
     }
 
     private fun sendSignature() {
@@ -209,6 +215,12 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
         }
     }
 
+    fun sendMultiple(count: Int)
+    {
+        sendCount = count
+        
+    }
+
     fun transferDataWithDelay(exCommand: Byte, exData: ByteArray) {
         command = exCommand
         data = exData
@@ -255,7 +267,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
             isRecognized = true
             WifiUtils.isConnectedToBL = true
         }
-        return false
+        return true
     }
 
     override fun onReceived(msg: String) {

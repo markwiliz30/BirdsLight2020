@@ -94,42 +94,47 @@ class LandingFragment : Fragment() {
                 val found = WifiUtils.wifiList.filter { it.name == item.SSID }
                 if(found.count() != 0)
                 {
-                    break
+//                    break
                 }
                 else
                 {
                     newWifiItem.name = item.SSID
-                }
-                newWifiItem.level = WifiManager.calculateSignalLevel(item.level, 5)
-                if("\"" + newWifiItem.name + "\""  == currentConnectedSSID) {
-                    if(Protocol.cDeviceProt != null)
-                    {
-                        Protocol.cDeviceProt!!.stopChannel()
-                        WifiUtils.isConnectedToBL = false
-                    }
 
-                    val dProtocol = DeviceProtocol()
-                    Protocol.cDeviceProt = dProtocol
-                    Protocol.cDeviceProt!!.startChannel()
+                    newWifiItem.level = WifiManager.calculateSignalLevel(item.level, 5)
+                    if("\"" + newWifiItem.name + "\""  == currentConnectedSSID) {
+                        if(Protocol.cDeviceProt != null)
+                        {
+                            Protocol.cDeviceProt!!.stopChannel()
+                            WifiUtils.isConnectedToBL = false
+                        }
 
-                    var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
+                        var dProtocol = DeviceProtocol()
+                        try {
+                            Protocol.cDeviceProt = dProtocol
+                            Protocol.cDeviceProt!!.startChannel()
+                        }catch (e: Exception)
+                        {
 
-                    var dataHold:DataSetItem
+                        }
 
-                    val date = Date() // given date
+                        var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
 
-                    val calendar =
-                        GregorianCalendar.getInstance() // creates a new calendar instance
+                        var dataHold:DataSetItem
 
-                    calendar.time = date // assigns calendar to given date
+                        val date = Date() // given date
 
-                    val tdYearStr = calendar[Calendar.YEAR].toString()
-                    val tdYearInt = tdYearStr.substring(1..3).toInt()
-                    val tdMonth = calendar[Calendar.MONTH] // 0 based
-                    val tdDay = calendar[Calendar.DAY_OF_MONTH]
-                    val tdHour = calendar[Calendar.HOUR_OF_DAY]
-                    val tdMinute = calendar[Calendar.MINUTE]
-                    val tdSecond = calendar[Calendar.SECOND]
+                        val calendar =
+                            GregorianCalendar.getInstance() // creates a new calendar instance
+
+                        calendar.time = date // assigns calendar to given date
+
+                        val tdYearStr = calendar[Calendar.YEAR].toString()
+                        val tdYearInt = tdYearStr.substring(1..3).toInt()
+                        val tdMonth = calendar[Calendar.MONTH] // 0 based
+                        val tdDay = calendar[Calendar.DAY_OF_MONTH]
+                        val tdHour = calendar[Calendar.HOUR_OF_DAY]
+                        val tdMinute = calendar[Calendar.MINUTE]
+                        val tdSecond = calendar[Calendar.SECOND]
 
 //                    dataHold = DataSetItem()
 //                    dataHold.myCommand = 0x04
@@ -154,16 +159,21 @@ class LandingFragment : Fragment() {
 
 //                    Protocol.cDeviceProt!!.upload(dataSetCollection)
 
-                    var dtDataArray = byteArrayOf(
-                        tdYearInt.toByte(),
-                        tdMonth.plus(1).toByte(),
-                        tdDay.toByte(),
-                        tdHour.toByte(),
-                        tdMinute.toByte(),
-                        tdSecond.toByte()
-                    )
+                        var dtDataArray = byteArrayOf(
+                            tdYearInt.toByte(),
+                            tdMonth.plus(1).toByte(),
+                            tdDay.toByte(),
+                            tdHour.toByte(),
+                            tdMinute.toByte(),
+                            tdSecond.toByte()
+                        )
 
-                    Protocol.cDeviceProt!!.transferData(0x04.toByte(), dtDataArray)
+                        try {
+                            Protocol.cDeviceProt!!.transferData(0x04.toByte(), dtDataArray)
+                        }catch (e: Exception)
+                        {
+
+                        }
 
 //                    val data = byteArrayOf(
 //                        0x80.toByte(),
@@ -171,17 +181,19 @@ class LandingFragment : Fragment() {
 //                        0xff.toByte()
 //                    )
 //                    Protocol.cDeviceProt!!.transferDataWithDelay(0x01, data)
-                    newWifiItem.status = 2
-                    newWifiItem.selected = true
-                }
-                else
-                {
-                    newWifiItem.status = 0
-                    newWifiItem.selected = false
-                }
-                newWifiItem.capabilities = item.capabilities
+                        newWifiItem.status = 2
+                        newWifiItem.selected = true
+                    }
+                    else
+                    {
+                        newWifiItem.status = 0
+                        newWifiItem.selected = false
+                    }
+                    newWifiItem.capabilities = item.capabilities
 
-                WifiUtils.wifiList.add(newWifiItem)
+                    WifiUtils.wifiList.add(newWifiItem)
+                }
+                ///
             }
         }
 
