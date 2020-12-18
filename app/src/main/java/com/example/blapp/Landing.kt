@@ -19,9 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import com.example.blapp.common.InputDialog
-import com.example.blapp.common.Protocol
-import com.example.blapp.common.WifiUtils
 import kotlin.system.exitProcess
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.ContextCompat.getSystemService
@@ -33,7 +30,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.core.os.bundleOf
 import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.ScheduleCollection
-import com.example.blapp.common.DeviceProtocol
+import com.example.blapp.common.*
 import com.example.blapp.model.DayManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -121,7 +118,10 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
         bottomNavigation.setOnClickMenuListener {
             when (it.id) {
-                ID_HOME -> if (CurrentID.getID() == ID_TESTFRAGMENT) {
+
+                ID_HOME ->
+                if(!TestRunning.TestPgm1 && !TestRunning.TestPgm2 && !TestRunning.TestPgm3){
+                    if (CurrentID.getID() == ID_TESTFRAGMENT) {
                     navController.navigate(R.id.action_testFragment_to_landingFragment)
                     CurrentID.UpdateID(num = it.id)
                 } else if (CurrentID.getID() == ID_PROGRAMFRAGMENT) {
@@ -148,11 +148,16 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 } else if (CurrentID.getID() == ID_CALENDAR) {
                     bottomNavigation.isVisible = false
                     ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
-                }
+                    }
+                }else{
+                    TestRunningDialog()
+                    bottomNavigation.isVisible = false
+                    bottomNavigation.show(ID_TESTFRAGMENT)
+                    }
 
                 //replace if statement "WifiUtils.isConnectedToBL"
                 ID_TESTFRAGMENT ->
-                  if (WifiUtils.isConnectedToBL) {
+                  if (true) {
                       if (CurrentID.getID() == ID_HOME) {
                           navController.navigate(R.id.action_landingFragment_to_testFragment)
                           CurrentID.UpdateID(num = it.id)
@@ -188,7 +193,8 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 // replace if statement "WifiUtils.isConnectedToBL"
                 ID_PROGRAMFRAGMENT ->
-                   if (WifiUtils.isConnectedToBL) {
+                   if (true) {
+                       if(!TestRunning.TestPgm1 && !TestRunning.TestPgm2 && !TestRunning.TestPgm3){
                        if (CurrentID.getID() == ID_HOME) {
                            navController.navigate(R.id.action_landingFragment_to_programFragment)
                            CurrentID.UpdateID(num = it.id)
@@ -205,6 +211,11 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                            bottomNavigation.isVisible = false
                            ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
                        }
+                       }else{
+                           TestRunningDialog()
+                           bottomNavigation.isVisible = false
+                           bottomNavigation.show(ID_TESTFRAGMENT)
+                       }
                    } else {
                         bottomNavigation.isVisible = false
                         NotConnectedAlert()
@@ -212,7 +223,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
                 ID_SCHEDULEFRAGMENT ->
-                    if (WifiUtils.isConnectedToBL) {
+                    if (true) {
                         if (CurrentID.getID() == ID_HOME) {
                             navController.navigate(R.id.action_landingFragment_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
@@ -244,7 +255,8 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 }
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
-                ID_SETTINGSFRAGMENT -> if (WifiUtils.isConnectedToBL) {
+                ID_SETTINGSFRAGMENT -> if (true) {
+                    if(!TestRunning.TestPgm1 && !TestRunning.TestPgm2 && !TestRunning.TestPgm3){
                     if (CurrentID.getID() == ID_HOME) {
                         navController.navigate(R.id.action_landingFragment_to_settings)
                         CurrentID.UpdateID(num = it.id)
@@ -272,6 +284,11 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                     } else if (CurrentID.getID() == ID_CALENDAR) {
                         bottomNavigation.isVisible = false
                         ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
+                    }
+                    }else{
+                        TestRunningDialog()
+                        bottomNavigation.isVisible = false
+                        bottomNavigation.show(ID_TESTFRAGMENT)
                     }
                 } else {
                     bottomNavigation.isVisible = false
@@ -722,7 +739,17 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         }
         mAlertDialog.show()
     }
-
+    fun TestRunningDialog(){
+        val mAlertDialog = AlertDialog.Builder(this)
+        mAlertDialog.setIcon(R.mipmap.ic_launcher_round) //set alertdialog icon
+        mAlertDialog.setTitle("Test Program is still running!") //set alertdialog title
+        mAlertDialog.setMessage("Stop all running programs before changing tabs.") //set alertdialog message
+        mAlertDialog.setPositiveButton("Ok") { dialog, id ->
+            bottomNavigation.isVisible = true
+            CurrentID.UpdateID(ID_TESTFRAGMENT)
+        }
+        mAlertDialog.show()
+    }
     fun ExitDialog(){
         val mAlertDialog = AlertDialog.Builder(this)
         mAlertDialog.setIcon(R.mipmap.ic_launcher_round) //set alertdialog icon

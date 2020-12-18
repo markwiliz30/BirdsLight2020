@@ -131,7 +131,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="50dp"
                 android:background="@drawable/button_model"
-                android:text="Reset Default"
+                android:text="Home Position"
                 android:textColor="#14BED1"
                 android:textSize="20dp"
                 android:layout_marginTop="20dp"
