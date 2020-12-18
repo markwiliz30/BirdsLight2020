@@ -63,7 +63,7 @@ class TestFragment : Fragment() {
                         0x01.toByte(),
                         0x01.toByte()
                     )
-                   // Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
+                    Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
                     TestRunning.TestPgm1 = true
                     Toast.makeText(context, "Testing Program 1 Running", Toast.LENGTH_SHORT).show()
                     tglPgm1.setBackgroundResource(R.drawable.bottom_border)
@@ -74,7 +74,7 @@ class TestFragment : Fragment() {
                         0x01.toByte(),
                         0x00.toByte()
                     )
-                    //Protocol.cDeviceProt!!.transferData(0x11.toByte(),data)
+                    Protocol.cDeviceProt!!.transferData(0x11.toByte(),data)
                     TestRunning.TestPgm1 = false
                     Toast.makeText(context, "Stopping Program 1", Toast.LENGTH_SHORT).show()
                     tglPgm1.setBackgroundResource(R.drawable.button_model)
@@ -111,7 +111,7 @@ class TestFragment : Fragment() {
                         0x02.toByte(),
                         0x01.toByte()
                     )
-                  //  Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
+                    Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
                     TestRunning.TestPgm2 = true
                     Toast.makeText(context, "Testing Program 2 Running", Toast.LENGTH_SHORT).show()
                     tglPgm2.setBackgroundResource(R.drawable.bottom_border)
@@ -122,7 +122,7 @@ class TestFragment : Fragment() {
                         0x02.toByte(),
                         0x00.toByte()
                     )
-                   // Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
+                    Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
                     TestRunning.TestPgm2 = false
                     Toast.makeText(context, "Stopping Program 2", Toast.LENGTH_SHORT).show()
                     tglPgm2.setBackgroundResource(R.drawable.button_model)
@@ -153,7 +153,7 @@ class TestFragment : Fragment() {
                         0x03.toByte(),
                         0x01.toByte()
                     )
-                   // Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
+                   Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
                     TestRunning.TestPgm3 = true
                     Toast.makeText(context, "Testing Program 3 Running", Toast.LENGTH_SHORT).show()
                     tglPgm3.setBackgroundResource(R.drawable.bottom_border)
@@ -164,7 +164,7 @@ class TestFragment : Fragment() {
                         0x03.toByte(),
                         0x00.toByte()
                     )
-                    //Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
+                    Protocol.cDeviceProt!!.transferData(0x11.toByte(), data)
                     TestRunning.TestPgm3 = false
                     Toast.makeText(context, "Stopping Program 3", Toast.LENGTH_SHORT).show()
                     tglPgm3.setBackgroundResource(R.drawable.button_model)
@@ -219,6 +219,18 @@ class TestFragment : Fragment() {
         }
 
         btnReset.setOnClickListener{
+            if(ButtonStatus){
+                data = byteArrayOf(
+                    0x80.toByte(),
+                    0x80.toByte(),
+                    0xff.toByte())
+
+                Protocol.cDeviceProt!!.transferData(0x11.toByte(),data)
+
+                Toast.makeText(context, "Homing position", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context, "Stop other test program before setting to home position", Toast.LENGTH_SHORT).show()
+            }
 //            var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
 //
 //            var dataHold = DataSetItem()
@@ -254,12 +266,7 @@ class TestFragment : Fragment() {
 //                0xff.toByte()
 //            )
 //            dataSetCollection.add(dataHold)
-            data = byteArrayOf(
-                0x80.toByte(),
-                0x80.toByte(),
-                 0xff.toByte())
 
-            Protocol.cDeviceProt!!.transferData(0x11.toByte(),data)
 //            tglPgm1.setBackgroundResource(R.drawable.button_model)
 //            tglPgm2.setBackgroundResource(R.drawable.button_model)
 //            tglPgm3.setBackgroundResource(R.drawable.button_model)

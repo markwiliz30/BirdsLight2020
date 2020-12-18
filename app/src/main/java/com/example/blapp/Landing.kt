@@ -150,14 +150,15 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                     ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
                     }
                 }else{
-                    TestRunningDialog()
+
                     bottomNavigation.isVisible = false
-                    bottomNavigation.show(ID_TESTFRAGMENT)
+                    //bottomNavigation.show(ID_TESTFRAGMENT)
+                    TestRunningDialog()
                     }
 
                 //replace if statement "WifiUtils.isConnectedToBL"
                 ID_TESTFRAGMENT ->
-                  if (true) {
+                  if (WifiUtils.isConnectedToBL) {
                       if (CurrentID.getID() == ID_HOME) {
                           navController.navigate(R.id.action_landingFragment_to_testFragment)
                           CurrentID.UpdateID(num = it.id)
@@ -193,7 +194,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 // replace if statement "WifiUtils.isConnectedToBL"
                 ID_PROGRAMFRAGMENT ->
-                   if (true) {
+                   if (WifiUtils.isConnectedToBL) {
                        if(!TestRunning.TestPgm1 && !TestRunning.TestPgm2 && !TestRunning.TestPgm3){
                        if (CurrentID.getID() == ID_HOME) {
                            navController.navigate(R.id.action_landingFragment_to_programFragment)
@@ -212,9 +213,10 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                            ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
                        }
                        }else{
-                           TestRunningDialog()
+
                            bottomNavigation.isVisible = false
-                           bottomNavigation.show(ID_TESTFRAGMENT)
+                           //bottomNavigation.show(ID_TESTFRAGMENT)
+                           TestRunningDialog()
                        }
                    } else {
                         bottomNavigation.isVisible = false
@@ -223,7 +225,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
                 ID_SCHEDULEFRAGMENT ->
-                    if (true) {
+                    if (WifiUtils.isConnectedToBL) {
                         if (CurrentID.getID() == ID_HOME) {
                             navController.navigate(R.id.action_landingFragment_to_scheduleFragment)
                             CurrentID.UpdateID(num = it.id)
@@ -255,7 +257,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 }
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
-                ID_SETTINGSFRAGMENT -> if (true) {
+                ID_SETTINGSFRAGMENT -> if (WifiUtils.isConnectedToBL) {
                     if(!TestRunning.TestPgm1 && !TestRunning.TestPgm2 && !TestRunning.TestPgm3){
                     if (CurrentID.getID() == ID_HOME) {
                         navController.navigate(R.id.action_landingFragment_to_settings)
@@ -286,9 +288,10 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                         ShowSaveAlert(clicked = it.id, current = CurrentID.getID())
                     }
                     }else{
-                        TestRunningDialog()
+
                         bottomNavigation.isVisible = false
-                        bottomNavigation.show(ID_TESTFRAGMENT)
+                        //bottomNavigation.show(ID_TESTFRAGMENT)
+                        TestRunningDialog()
                     }
                 } else {
                     bottomNavigation.isVisible = false
@@ -746,7 +749,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         mAlertDialog.setMessage("Stop all running programs before changing tabs.") //set alertdialog message
         mAlertDialog.setPositiveButton("Ok") { dialog, id ->
             bottomNavigation.isVisible = true
-            CurrentID.UpdateID(ID_TESTFRAGMENT)
+            bottomNavigation.show(ID_TESTFRAGMENT)
         }
         mAlertDialog.show()
     }
