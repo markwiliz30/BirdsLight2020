@@ -158,7 +158,7 @@ class SetStepFragment : Fragment() {
         })
 
         btn_inc_time.setOnClickListener{
-            if(tmVal < 40)
+            if(tmVal < 20)
             {
                 tmVal++
                 txt_step_time.setText(tmVal.toString())
@@ -188,10 +188,10 @@ class SetStepFragment : Fragment() {
                    txt_step_time.setText("1")
                     tmVal = 1
                 }
-                else if(txt_step_time.text.toString().toInt() > 40)
+                else if(txt_step_time.text.toString().toInt() > 20)
                 {
-                    txt_step_time.setText("40")
-                    tmVal = 40
+                    txt_step_time.setText("20")
+                    tmVal = 20
                 }
                 else
                 {
