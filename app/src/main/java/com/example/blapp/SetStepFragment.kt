@@ -44,7 +44,6 @@ class SetStepFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         CurrentID.parentPgmIndex = arguments!!.getInt("parentPgmIndex")
-
         stepIndex = 1
         return inflater.inflate(R.layout.fragment_set_step, container, false)
     }
@@ -159,7 +158,7 @@ class SetStepFragment : Fragment() {
         })
 
         btn_inc_time.setOnClickListener{
-            if(tmVal < 100)
+            if(tmVal < 40)
             {
                 tmVal++
                 txt_step_time.setText(tmVal.toString())
@@ -167,7 +166,7 @@ class SetStepFragment : Fragment() {
         }
 
         btn_dec_time.setOnClickListener{
-            if(tmVal > 0)
+            if(tmVal > 1)
             {
                 tmVal--
                 txt_step_time.setText(tmVal.toString())
@@ -186,13 +185,13 @@ class SetStepFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(txt_step_time.text.isEmpty())
                 {
-                   txt_step_time.setText("0")
-                    tmVal = 0
+                   txt_step_time.setText("1")
+                    tmVal = 1
                 }
-                else if(txt_step_time.text.toString().toInt() > 99)
+                else if(txt_step_time.text.toString().toInt() > 40)
                 {
-                    txt_step_time.setText("99")
-                    tmVal = 99
+                    txt_step_time.setText("40")
+                    tmVal = 40
                 }
                 else
                 {
@@ -571,7 +570,7 @@ class SetStepFragment : Fragment() {
         pVal = 128
         tVal = 128
         bVal = 0
-        tmVal = 0
+        tmVal = 1
 
         data = byteArrayOf(
             pVal.toByte(),
