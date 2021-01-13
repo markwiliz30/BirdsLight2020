@@ -225,7 +225,7 @@ class TestFragment : Fragment() {
                     0x80.toByte(),
                     0xff.toByte())
 
-                Protocol.cDeviceProt!!.transferData(0x11.toByte(),data)
+                Protocol.cDeviceProt!!.transferData(0x01.toByte(),data)
 
                 Toast.makeText(context, "Homing position", Toast.LENGTH_SHORT).show()
             }else{
