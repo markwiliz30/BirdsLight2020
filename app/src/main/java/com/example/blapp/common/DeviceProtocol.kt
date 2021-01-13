@@ -6,6 +6,7 @@ import android.os.Message
 import com.example.blapp.communication.Channel
 import com.example.blapp.communication.OnSocketListener
 import com.example.blapp.model.DataSetItem
+import com.example.blapp.model.DayManager
 import java.net.InetSocketAddress
 import java.net.SocketException
 import java.util.concurrent.ExecutorService
@@ -249,6 +250,61 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
 //        longRunningTaskFuture = executorService.submit(sendToModule) as Nothing?
     }
 
+    fun receiveBLData(msg: String)
+    {
+        var getWday = msg.get(5)
+        var wDayList = DayManager()
+        var subWday = getWday.toByte()  //96
+        while(subWday != 0.toByte())
+        {
+            subWday = breakWdays(subWday, wDayList)
+        }
+
+    }
+
+    fun breakWdays(wdays: Byte, wDayList: DayManager): Byte
+    {
+        if(wdays >= 64.toByte())
+        {
+            wDayList.sunday = true
+            return (wdays - 64.toByte()).toByte()
+        }
+        else if(wdays >= 32.toByte())
+        {
+            wDayList.saturday = true
+            return (wdays - 32.toByte()).toByte()
+        }
+        else if(wdays >= 16.toByte())
+        {
+            wDayList.friday = true
+            return (wdays - 16.toByte()).toByte()
+        }
+        else if(wdays >= 8.toByte())
+        {
+            wDayList.thursday = true
+            return (wdays - 8.toByte()).toByte()
+        }
+        else if(wdays >= 4.toByte())
+        {
+            wDayList.wednesday = true
+            return (wdays - 4.toByte()).toByte()
+        }
+        else if(wdays >= 2.toByte())
+        {
+            wDayList.tuesday = true
+            return (wdays - 2.toByte()).toByte()
+        }
+        else if(wdays >= 1.toByte())
+        {
+            wDayList.monday = true
+            return (wdays - 1.toByte()).toByte()
+        }
+        else
+        {
+            return wdays
+        }
+    }
+
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
         val text = bundle.getString("text")
@@ -266,6 +322,11 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
         if (receivedAuth.equals(recogComp)) {
             isRecognized = true
             WifiUtils.isConnectedToBL = true
+        }
+
+        if(firstChar.toByte() == 0x16.toByte())
+        {
+            receiveBLData(text)
         }
         return true
     }
