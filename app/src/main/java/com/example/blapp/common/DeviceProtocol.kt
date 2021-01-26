@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
-class DeviceProtocol : Handler.Callback, OnSocketListener {
+class  DeviceProtocol : Handler.Callback, OnSocketListener {
     var sendCount = 0
     var executorService: ExecutorService = Executors.newSingleThreadExecutor()
     var longRunningTaskFuture = null
@@ -41,7 +41,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
     var postDelayedSendToModule = Handler()
     var canAccess = false
     var isRecognized = false
-    var canSend = false
+    var canSend =  false
     fun startChannel(): String {
         address =
             InetSocketAddress(DeviceInformation.destinationIP, DeviceInformation.destinationPort)
@@ -254,7 +254,7 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
     {
         var getWday = msg.get(5)
         var wDayList = DayManager()
-        var subWday = getWday.toByte()  //96
+        var subWday = getWday.toByte()
         while(subWday != 0.toByte())
         {
             subWday = breakWdays(subWday, wDayList)
@@ -324,10 +324,11 @@ class DeviceProtocol : Handler.Callback, OnSocketListener {
             WifiUtils.isConnectedToBL = true
         }
 
-        if(firstChar.toByte() == 0x16.toByte())
-        {
-            receiveBLData(text)
-        }
+//        if(firstChar.toByte() == 0x16.toByte())
+//        {
+//            receiveBLData(text)
+//        }
+
         return true
     }
 

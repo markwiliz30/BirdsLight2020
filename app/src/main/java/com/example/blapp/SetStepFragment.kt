@@ -505,7 +505,7 @@ class SetStepFragment : Fragment() {
         PgmCollection.pgmCollection!!.add(pgm)
     }
 
-    private fun UpdatePgmAtCollection(pgm: Int, stepList: List<StepItem>){
+    private fun UpdatePgmAtCollection(pgm: Int, stepList: List <StepItem>){
 
         do{
             var found = StepCollection.stepCollection.find{it.pgm == pgm.toByte()}
