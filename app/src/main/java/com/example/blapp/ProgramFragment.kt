@@ -433,9 +433,9 @@ class ProgramFragment : Fragment(){
             0.toByte()
         )
 //        undo moko
-//        if(Protocol.cDeviceProt != null) {
+        if(Protocol.cDeviceProt != null) {
             Protocol.cDeviceProt!!.transferData(command, data)
-//        }
+        }
     }
 
     fun InfoPopup(){

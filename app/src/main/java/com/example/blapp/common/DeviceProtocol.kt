@@ -3,10 +3,13 @@ package com.example.blapp.common
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import com.example.blapp.collection.DayCollection
+import com.example.blapp.collection.PgmCollection
+import com.example.blapp.collection.ScheduleCollection
+import com.example.blapp.collection.StepCollection
 import com.example.blapp.communication.Channel
 import com.example.blapp.communication.OnSocketListener
-import com.example.blapp.model.DataSetItem
-import com.example.blapp.model.DayManager
+import com.example.blapp.model.*
 import java.net.InetSocketAddress
 import java.net.SocketException
 import java.util.concurrent.ExecutorService
@@ -252,51 +255,164 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     fun receiveBLData(msg: String)
     {
-        var getWday = msg.get(5)
-        var wDayList = DayManager()
-        var subWday = getWday.toByte()
-        while(subWday != 0.toByte())
+        var getWdayCount = msg.get(5).toByte()
+        if(getWdayCount.toInt() != 0)
         {
-            subWday = breakWdays(subWday, wDayList)
-        }
+            val getPgm = msg.get(0).toByte()
+            val getSmonth = msg.get(1).toByte()
+            val getSday = msg.get(2).toByte()
+            val getEmonth = msg.get(3).toByte()
+            val getEday = msg.get(4).toByte()
 
+            var dayManagerItem = DayManager()
+            dayManagerItem.pgm = getPgm
+            dayManagerItem.sMonth = getSmonth.toString()
+            dayManagerItem.sDay = getSday.toString()
+            dayManagerItem.eMonth = getEmonth.toString()
+            dayManagerItem.eDay = getEday.toString()
+
+            var i = 1
+            var wdayPos = 0
+            while(i != getWdayCount.toInt())
+            {
+                wdayPos = (6*i) - (i-1)
+                var getWday = msg.get(wdayPos)
+                val getShour = msg.get(wdayPos+1).toByte()
+                val getSmins = msg.get(wdayPos+2).toByte()
+                val getEhour = msg.get(wdayPos+3).toByte()
+                val getEmins = msg.get(wdayPos+4).toByte()
+                var wDayList: MutableList<Int> = mutableListOf()
+                var subWday = getWday.toByte()
+                while(subWday != 0.toByte())
+                {
+                    subWday = breakWdays(subWday, wDayList, dayManagerItem)
+                    var schedItem = ScheduleItem()
+                    schedItem.pgm = getPgm
+                    schedItem.smonth = getSmonth
+                    schedItem.sday = getSday
+                    schedItem.emonth = getEmonth
+                    schedItem.eday = getEday
+                    schedItem.wday = convertToLocalBinFormat(wDayList[0].toByte())
+                    wDayList.clear()
+                    schedItem.shour = getShour
+                    schedItem.sminute = getSmins
+                    schedItem.ehour = getEhour
+                    schedItem.eminute = getEmins
+
+                    ScheduleCollection.scheduleCollection.add(schedItem)
+                    i++
+                }
+            }
+            var pgmItem = PgmItem()
+            pgmItem.pgm = getPgm
+            PgmCollection.pgmCollection.add(pgmItem)
+
+            DayCollection.dayCollection.add(dayManagerItem)
+
+            collectRecSteps(msg, wdayPos, getPgm)
+        }
     }
 
-    fun breakWdays(wdays: Byte, wDayList: DayManager): Byte
+    fun collectRecSteps(msg: String, wdayPos: Int, pgm: Byte)
+    {
+        //adjust the additional to wdayPos
+        val stepCountPos = (wdayPos -1) + 5
+        var stepCount = msg.get(stepCountPos).toByte()
+        for(i in 0 until stepCount.toInt())
+        {
+            var xPos = (stepCountPos+1) + (i*4)
+            var yPos = xPos++
+            var lPos = yPos++
+            var tPos = lPos++
+
+            val stp = i+1
+            val xVal = msg.get(xPos).toByte()
+            val yVal = msg.get(yPos).toByte()
+            val lVal = msg.get(lPos).toByte()
+            val tVal = msg.get(tPos).toByte()
+
+            var stepItem = StepItem()
+            stepItem.pgm = pgm
+            stepItem.step = stp.toByte()
+            stepItem.pan = xVal
+            stepItem.tilt = yVal
+            stepItem.blink = lVal
+            stepItem.time = tVal
+
+            StepCollection.stepCollection.add(stepItem)
+        }
+    }
+
+    fun convertToLocalBinFormat(binVal: Byte?): Byte{
+        var binVal = 0.toByte()
+        if(binVal == 1.toByte())
+        {
+            binVal = 1.toByte()
+        }else if(binVal == 2.toByte())
+        {
+            binVal = 2.toByte()
+        }else if(binVal == 4.toByte())
+        {
+            binVal = 3.toByte()
+        }else if(binVal == 8.toByte())
+        {
+            binVal = 4.toByte()
+        }else if(binVal == 16.toByte())
+        {
+            binVal = 5.toByte()
+        }else if(binVal == 32.toByte())
+        {
+            binVal = 6.toByte()
+        }else if(binVal == 64.toByte())
+        {
+            binVal = 7.toByte()
+        }
+
+        return binVal
+    }
+
+    fun breakWdays(wdays: Byte, wDayList: MutableList<Int>, dayManager: DayManager): Byte
     {
         if(wdays >= 64.toByte())
         {
-            wDayList.sunday = true
+            dayManager.sunday = true
+            wDayList+=64
             return (wdays - 64.toByte()).toByte()
         }
         else if(wdays >= 32.toByte())
         {
-            wDayList.saturday = true
+            dayManager.saturday = true
+            wDayList+= 32
             return (wdays - 32.toByte()).toByte()
         }
         else if(wdays >= 16.toByte())
         {
-            wDayList.friday = true
+            dayManager.friday = true
+            wDayList += 16
             return (wdays - 16.toByte()).toByte()
         }
         else if(wdays >= 8.toByte())
         {
-            wDayList.thursday = true
+            dayManager.thursday = true
+            wDayList += 8
             return (wdays - 8.toByte()).toByte()
         }
         else if(wdays >= 4.toByte())
         {
-            wDayList.wednesday = true
+            dayManager.wednesday = true
+            wDayList += 4
             return (wdays - 4.toByte()).toByte()
         }
         else if(wdays >= 2.toByte())
         {
-            wDayList.tuesday = true
+            dayManager.tuesday = true
+            wDayList += 2
             return (wdays - 2.toByte()).toByte()
         }
         else if(wdays >= 1.toByte())
         {
-            wDayList.monday = true
+            dayManager.monday = true
+            wDayList += 1
             return (wdays - 1.toByte()).toByte()
         }
         else
@@ -324,11 +440,10 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             WifiUtils.isConnectedToBL = true
         }
 
-//        if(firstChar.toByte() == 0x16.toByte())
-//        {
-//            receiveBLData(text)
-//        }
-
+        if(firstChar.toByte() == 0x16.toByte())
+        {
+            receiveBLData(text)
+        }
         return true
     }
 

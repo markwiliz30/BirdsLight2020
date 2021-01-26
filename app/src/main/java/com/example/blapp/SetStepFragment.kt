@@ -462,7 +462,10 @@ class SetStepFragment : Fragment() {
             dataArray += lStepItem.time!!
         }
 
-        Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
+        if(Protocol.cDeviceProt != null)
+        {
+            Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
+        }
 
 //        for(lStepItem in filteredStepCollection)
 //        {
