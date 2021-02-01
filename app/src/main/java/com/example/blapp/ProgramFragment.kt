@@ -72,7 +72,7 @@ class ProgramFragment : Fragment(){
         recycler_pgm.setItemViewCacheSize(25)
         layoutManager = LinearLayoutManager(activity)
         recycler_pgm.layoutManager = layoutManager
-        ResetBirdsLight()
+       // ResetBirdsLight()
         //Add Swipe
         val swipe = object: MySwipeHelper(activity, recycler_pgm, 200)
         {

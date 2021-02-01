@@ -19,6 +19,7 @@ import com.example.blapp.model.PgmItem
 import com.example.blapp.model.StepItem
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import com.example.blapp.collection.ScheduleCollection
+import com.example.blapp.common.DeviceProtocol
 import com.example.blapp.common.Language
 import com.example.blapp.model.DataSetItem
 import com.example.blapp.model.ScheduleItem
@@ -464,6 +465,7 @@ class SetStepFragment : Fragment() {
 
         if(Protocol.cDeviceProt != null)
         {
+
             Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
         }
 
