@@ -277,6 +277,12 @@ class TestFragment : Fragment() {
 //            ButtonStatus = true
         }
 
+        btnRecTest.setOnClickListener{
+            var dRec = byteArrayOf(
+                0x01)
+            Protocol.cDeviceProt!!.transferData(0x16.toByte(), dRec)
+        }
+
     }
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){

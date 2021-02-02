@@ -235,6 +235,7 @@ class WifiUtils {
         if (holdWifiInfo == NetworkInfo.DetailedState.OBTAINING_IPADDR || holdWifiInfo == NetworkInfo.DetailedState.CONNECTED) {
             if(wifiInfo.ssid == "\"" + SSID + "\"")
             {
+                Protocol.currentSSID = SSID
                 return true
             }
         }
