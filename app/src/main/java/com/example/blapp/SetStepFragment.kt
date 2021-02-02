@@ -468,16 +468,8 @@ class SetStepFragment : Fragment() {
 
         if(Protocol.cDeviceProt != null)
         {
-            var dProtocol = DeviceProtocol()
-            try {
-                Protocol.cDeviceProt = null
-                Protocol.cDeviceProt = dProtocol
-                Protocol.cDeviceProt!!.startChannel()
-            }catch (e: Exception)
-            {
 
-            }
-            Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray2)
+            Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
         }
 
 //        for(lStepItem in filteredStepCollection)

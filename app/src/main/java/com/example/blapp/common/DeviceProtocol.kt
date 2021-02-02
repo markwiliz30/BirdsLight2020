@@ -439,11 +439,11 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             isRecognized = true
             WifiUtils.isConnectedToBL = true
         }
-
-        if(firstChar.toByte() == 0x16.toByte())
-        {
-            receiveBLData(text)
-        }
+//
+//        if(firstChar.toByte() == 0x16.toByte())
+//        {
+//            receiveBLData(text)
+//        }
         return true
     }
 
