@@ -24,11 +24,15 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         const val STEP_BLINK = "STEP_BLINK"
         const val STEP_TIME = "STEP_TIME"
         const val STEP_PGM_NAME = "STEP_PGM_NAME"
+        const val STEP_PGM = "STEP_PGM"
 
         const val PROGRAM_TABLE = "TABLE_PROGRAM"
         const val PROGRAM_ID = "PROGRAM_ID"
         const val PROGRAM_COMMAND = "PROGRAM_COMMAND"
         const val PROGRAM_NAME = "PROGRAM_NAME"
+        const val PROGRAM_SAVE = "PROGRAM_SAVE"
+        const val PROGRAM_TIMESTAMP = "PROGRAM_TIMESTAMP"
+        const val PROGRAM_PGM = "PROGRAM_PGM"
 
         const val SCHEDULE_TABLE = "TABLE_SCHEDULE"
         const val SCHEDULE_ID = "SCHEDULE_ID"
@@ -44,17 +48,18 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         const val SCHEDULE_EHOUR = "SCHEDULE_EHOUR"
         const val SCHEDULE_EMINUTE = "SCHEDULE_EMINUTE"
         const val SCHEDULE_SCHED = "SCHEDULE_SCHED"
+        const val SCHEDULE_PGM = "SCHEDULE_PGM"
 
 
 
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
-        db!!.execSQL(("CREATE TABLE $STEP_TABLE ($STEP_ID INTEGER PRIMARY KEY AUTOINCREMENT, $STEP_COMMAND BYTE, $STEP_STEP BYTE, $STEP_PAN BYTE,$STEP_TILT BYTE , $STEP_BLINK BYTE , $STEP_TIME BYTE , $STEP_PGM_NAME TEXT)"))
-        db!!.execSQL(("CREATE TABLE $PROGRAM_TABLE ($PROGRAM_ID INTEGER PRIMARY KEY AUTOINCREMENT , $PROGRAM_COMMAND BYTE, $PROGRAM_NAME TEXT)"))
+        db!!.execSQL(("CREATE TABLE $STEP_TABLE ($STEP_ID INTEGER PRIMARY KEY AUTOINCREMENT, $STEP_COMMAND BYTE, $STEP_STEP BYTE, $STEP_PAN BYTE,$STEP_TILT BYTE , $STEP_BLINK BYTE , $STEP_TIME BYTE , $STEP_PGM_NAME TEXT , $STEP_PGM BYTE)"))
+        db!!.execSQL(("CREATE TABLE $PROGRAM_TABLE ($PROGRAM_ID INTEGER PRIMARY KEY AUTOINCREMENT , $PROGRAM_COMMAND BYTE, $PROGRAM_NAME TEXT, $PROGRAM_SAVE INTEGER , $PROGRAM_TIMESTAMP TEXT, $PROGRAM_PGM INTEGER NULL)"))
         db!!.execSQL(("CREATE TABLE $SCHEDULE_TABLE($SCHEDULE_ID INTEGER PRIMARY KEY AUTOINCREMENT, $SCHEDULE_COMMAND BYTE , $SCHEDULE_PGM_NAME TEXT, $SCHEDULE_SMONTH BYTE ," +
                 "$SCHEDULE_SDAY BYTE , $SCHEDULE_EMONTH BYTE, $SCHEDULE_EDAY BYTE , $SCHEDULE_WDAY BYTE , $SCHEDULE_SHOUR BYTE , $SCHEDULE_SMINUTE BYTE , " +
-                "$SCHEDULE_EHOUR BYTE , $SCHEDULE_EMINUTE BYTE ,$SCHEDULE_SCHED BYTE)"))
+                "$SCHEDULE_EHOUR BYTE , $SCHEDULE_EMINUTE BYTE ,$SCHEDULE_SCHED BYTE , $SCHEDULE_PGM BYTE)"))
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
@@ -103,7 +108,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
                     step.tilt = cursor.getInt(cursor.getColumnIndex(STEP_TILT.toString())).toByte()
                     step.blink = cursor.getInt(cursor.getColumnIndex(STEP_BLINK.toString())).toByte()
                     step.time = cursor.getInt(cursor.getColumnIndex(STEP_TIME.toString())).toByte()
-
+                    step.pgm = cursor.getInt(cursor.getColumnIndex(STEP_PGM.toString())).toByte()
                     lstStep.add(step)
 
                 }while(cursor.moveToNext())
@@ -123,7 +128,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         values.put(STEP_TILT, step.tilt)
         values.put(STEP_BLINK, step.blink)
         values.put(STEP_TIME, step.time)
-
+        values.put(STEP_PGM ,step.pgm)
         db.insert(STEP_TABLE , null , values)
         db.close()
     }
@@ -148,7 +153,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
 
         get() {
             val lstpgm = ArrayList<PgmItem>()
-            val selectQuery = "SELECT * FROM $PROGRAM_TABLE"
+            val selectQuery = "SELECT * FROM $PROGRAM_TABLE WHERE $PROGRAM_SAVE = 1"
             val db: SQLiteDatabase = this.writableDatabase
             val cursor: Cursor = db.rawQuery(selectQuery, null)
             if(cursor.moveToFirst()){
@@ -157,7 +162,33 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
                     pgm.pgm_id = cursor.getInt(cursor.getColumnIndex(PROGRAM_ID.toString())).toByte()
                     pgm.command = cursor.getInt(cursor.getColumnIndex(PROGRAM_COMMAND.toString())).toByte()
                     pgm.name = cursor.getString(cursor.getColumnIndex(PROGRAM_NAME.toString()))
+                    pgm.save = cursor.getInt(cursor.getColumnIndex(PROGRAM_SAVE.toString())).toInt()
+                    pgm.timestamp = cursor.getString(cursor.getColumnIndex(PROGRAM_TIMESTAMP.toString()))
+                    pgm.pgm = cursor.getInt(cursor.getColumnIndex(PROGRAM_PGM.toString())).toByte()
+                    lstpgm.add(pgm)
+                }while(cursor.moveToNext())
 
+            }
+            db.close()
+            return lstpgm
+        }
+
+    val allSaved:List<PgmItem>
+
+        get() {
+            val lstpgm = ArrayList<PgmItem>()
+            val selectQuery = "SELECT * FROM $PROGRAM_TABLE WHERE $PROGRAM_SAVE = 0"
+            val db: SQLiteDatabase = this.writableDatabase
+            val cursor: Cursor = db.rawQuery(selectQuery, null)
+            if(cursor.moveToFirst()){
+                do{
+                    val pgm = PgmItem()
+                    pgm.pgm_id = cursor.getInt(cursor.getColumnIndex(PROGRAM_ID.toString())).toByte()
+                    pgm.command = cursor.getInt(cursor.getColumnIndex(PROGRAM_COMMAND.toString())).toByte()
+                    pgm.name = cursor.getString(cursor.getColumnIndex(PROGRAM_NAME.toString()))
+                    pgm.save = cursor.getInt(cursor.getColumnIndex(PROGRAM_SAVE.toString())).toInt()
+                    pgm.timestamp = cursor.getString(cursor.getColumnIndex(PROGRAM_TIMESTAMP.toString()))
+                    pgm.pgm = cursor.getInt(cursor.getColumnIndex(PROGRAM_PGM.toString())).toByte()
                     lstpgm.add(pgm)
                 }while(cursor.moveToNext())
 
@@ -187,6 +218,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
                     schedule.ehour = cursor.getInt(cursor.getColumnIndex(SCHEDULE_EHOUR.toString())).toByte()
                     schedule.eminute = cursor.getInt(cursor.getColumnIndex(SCHEDULE_EMINUTE.toString())).toByte()
                     schedule.sched = cursor.getInt(cursor.getColumnIndex(SCHEDULE_SCHED.toString())).toByte()
+                    schedule.pgm = cursor.getInt(cursor.getColumnIndex(SCHEDULE_PGM.toString())).toByte()
                     lstSched.add(schedule)
                 }while (cursor.moveToNext())
             }
@@ -209,6 +241,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         values.put(SCHEDULE_EHOUR , schedule.ehour)
         values.put(SCHEDULE_EMINUTE , schedule.eminute)
         values.put(SCHEDULE_SCHED , schedule.sched)
+        values.put(SCHEDULE_PGM, schedule.pgm)
         db.insert(SCHEDULE_TABLE , null , values)
         db.close()
 
@@ -220,6 +253,9 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         val values = ContentValues()
         values.put(PROGRAM_COMMAND,pgm.command)
         values.put(PROGRAM_NAME, pgm.name)
+        values.put(PROGRAM_SAVE,pgm.save)
+        values.put(PROGRAM_TIMESTAMP,pgm.timestamp)
+        values.put(PROGRAM_PGM, pgm.pgm)
         db.insert(PROGRAM_TABLE, null , values)
         db.close()
 

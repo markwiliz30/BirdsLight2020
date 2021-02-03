@@ -22,6 +22,7 @@ import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.PgmCollection
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.collection.StepCollection
+import com.example.blapp.common.DayState
 import com.example.blapp.common.DeviceProtocol
 import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
@@ -72,6 +73,7 @@ class ProgramFragment : Fragment(){
         recycler_pgm.setItemViewCacheSize(25)
         layoutManager = LinearLayoutManager(activity)
         recycler_pgm.layoutManager = layoutManager
+        DayState.editPressed = false
        // ResetBirdsLight()
         //Add Swipe
         val swipe = object: MySwipeHelper(activity, recycler_pgm, 200)
@@ -112,6 +114,7 @@ class ProgramFragment : Fragment(){
 //                                CurrentID.Updatebool(x = true)
 //                            }
                               override fun onClick(pos: Int) {
+                                  DayState.editPressed = true
                                   val getItem = PgmCollection.pgmCollection[pos]
                                   val bundle = bundleOf("parentPgmIndex" to  getItem.pgm!!.toInt())
                                   val pgmChecker =  DayCollection.dayCollection.filter { it.pgm!!.toInt() == getItem.pgm!!.toInt() }
@@ -147,58 +150,6 @@ class ProgramFragment : Fragment(){
                         }
                     )
                 )
-//                buffer.add(
-//                    MyButton(activity,
-//                        "Copy",
-//                        30,
-//                        R.drawable.ic_baseline_file_copy_24,
-//                        Color.parseColor("#14BED1"),
-//                        object : MyButtonClickListener{
-//                            override fun onClick(pos: Int) {
-//                                val bundle = bundleOf("parentPgmIndex" to  PgmCollection.pgmCollection!!.count() + 1)
-//
-//                                val newItem = DayManager()
-//                                newItem.pgm = PgmCollection.pgmCollection!!.count().toByte().inc()
-//                                DayCollection.dayCollection.add(newItem)
-//                                navController.navigate(R.id.action_programFragment_to_dayPicker , bundle)
-//                                CurrentID.UpdateID(num = 8)
-//                                CurrentID.Updatebool(x = true)
-//
-//                                var CopiedPgm = PgmCollection.pgmCollection!!.count() + 1
-//                                Toast.makeText(activity!!, "Copied Program "+ pos.plus(1) +" to Program"+CopiedPgm, Toast.LENGTH_SHORT).show()
-//                            }
-//                        }
-//                    )
-//                )
-
-//                buffer.add(
-//                    MyButton(activity,
-//                        "DayPicker",
-//                        30,
-//                        R.drawable.ic_date_range_dark_blue_24dp,
-//                        Color.parseColor("#14BED1"),
-//                        object : MyButtonClickListener{
-//                            override fun onClick(pos: Int) {
-//                                val bundle = bundleOf("parentPgmIndex" to  pos+1)
-//                                val pgmChecker =  DayCollection.dayCollection.filter { it.pgm!!.toInt() == pos+1 }
-//
-//                                if(pgmChecker.isEmpty()){
-//                                    val newItem = DayManager()
-//                                    newItem.pgm = pos.toByte().inc()
-//                                    DayCollection.dayCollection.add(newItem)
-//                                    navController.navigate(R.id.action_programFragment_to_dayPicker , bundle)
-//                                    CurrentID.UpdateID(num = 8)
-//                                    CurrentID.Updatebool(x = true)
-//
-//                                }else{
-//                                    navController.navigate(R.id.action_programFragment_to_dayPicker , bundle)
-//                                    CurrentID.UpdateID(num = 8)
-//                                    CurrentID.Updatebool(x = true)
-//                                }
-//                            }
-//                        }
-//                    )
-//                )
             }
         }
 
@@ -410,7 +361,24 @@ class ProgramFragment : Fragment(){
                             scheds.pgmname =textName.toString()
                             dbm.addSchedule(scheds)
                         }
+                        pgmAdd.save = 1
 
+                        val date = Date() // given date
+
+                        val calendar =
+                            GregorianCalendar.getInstance() // creates a new calendar instance
+
+                        calendar.time = date // assigns calendar to given date
+
+                        val tdYearStr = calendar[Calendar.YEAR].toString()
+                        val tdMonth = calendar[Calendar.MONTH].toString() // 0 based
+                        val tdDay = calendar[Calendar.DAY_OF_MONTH].toString()
+                        val tdHour = calendar[Calendar.HOUR_OF_DAY].toString()
+                        val tdMinute = calendar[Calendar.MINUTE].toString()
+                        val tdSecond = calendar[Calendar.SECOND].toString()
+
+                        pgmAdd.timestamp = ""+tdMonth+tdDay+tdYearStr+tdHour+":"+tdMinute+":"+tdSecond+""
+                        pgmAdd.pgm = 0
                         dbm.addPgm(pgmAdd)
                         editAlert.dismiss()
                         Toast.makeText(activity!!, "Save Success!" , Toast.LENGTH_LONG).show()

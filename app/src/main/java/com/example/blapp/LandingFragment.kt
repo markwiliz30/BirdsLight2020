@@ -19,13 +19,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.CurrentId.extensions.CurrentID
 import com.example.blapp.adapter.WifiAdapter
+import com.example.blapp.collection.DayCollection
+import com.example.blapp.collection.PgmCollection
+import com.example.blapp.collection.ScheduleCollection
+import com.example.blapp.collection.StepCollection
 import com.example.blapp.common.DeviceProtocol
 import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
 import com.example.blapp.common.WifiUtils
-import com.example.blapp.model.DataSetItem
-import com.example.blapp.model.WifiItem
+import com.example.blapp.databasehelper.DBmanager
+import com.example.blapp.model.*
 import dmax.dialog.SpotsDialog
 import kotlinx.android.synthetic.main.activity_landing.*
 import kotlinx.android.synthetic.main.fragment_day_picker.*
@@ -46,7 +51,7 @@ class LandingFragment : Fragment() {
     lateinit var layoutManager: LinearLayoutManager
     //var wifiList = ArrayList<WifiItem>()
     lateinit var currentConnectedSSID: String
-
+    internal lateinit var dbm: DBmanager
     var resultList = ArrayList<ScanResult>()
     lateinit var wifiManager: WifiManager
     lateinit var adapter: WifiAdapter
@@ -229,6 +234,7 @@ class LandingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dbm = DBmanager(activity!!)
         WifiUtils.isConnectedToBL = false
         LanguageTranslate()
         lst_wifi.setHasFixedSize(true)
@@ -240,7 +246,6 @@ class LandingFragment : Fragment() {
         adapter = WifiAdapter(activity, WifiUtils.wifiList)
         WifiUtils.sharedWifiAdapter = adapter
         lst_wifi.adapter = adapter
-
         startScanning()
         dialog.show()
         delayedDialogDismiss()
@@ -249,7 +254,7 @@ class LandingFragment : Fragment() {
             startScanning()
             dialog.show()
             delayedDialogDismiss()
-
+            retrieveFromDatabase()
 //            var postDelayedSendToModule = Handler()
 //            var sendToModule = Runnable {
 //                dialog.dismiss()
@@ -272,6 +277,58 @@ class LandingFragment : Fragment() {
                 return
             }
         }
+    }
+    fun retrieveFromDatabase(){
+          var getDatabase = dbm.allSaved.filter { it.name == Protocol.currentSSID }
+          var getStepDatabase = dbm.allStep.filter { it.pgm_name == Protocol.currentSSID }
+          var getSchedDatabase = dbm.allSched.filter { it.pgmname == Protocol.currentSSID }
+            if(getDatabase.isNotEmpty() && getStepDatabase.isNotEmpty() && getSchedDatabase.isNotEmpty()){
+                for(get in getDatabase){
+                    val getPgm = PgmItem()
+                    getPgm.command = get.command
+                    getPgm.pgm = get.pgm
+                    getPgm.save = get.save
+                    getPgm.timestamp = get.timestamp
+                    PgmCollection.pgmCollection.add(getPgm)
+                }
+                for(getstep in getStepDatabase){
+                    val newStep = StepItem()
+                    newStep.command = getstep.command
+                    newStep.pgm = getstep.pgm
+                    newStep.step = getstep.step
+                    newStep.pan = getstep.pan
+                    newStep.tilt = getstep.tilt
+                    newStep.blink = getstep.blink
+                    newStep.time = getstep.time
+                    StepCollection.stepCollection.add(getstep)
+                }
+                for(getsched in getSchedDatabase){
+                    val newsched = ScheduleItem()
+                    newsched.command = getsched.command
+                    newsched.pgm = getsched.pgm
+                    newsched.shour = getsched.shour
+                    newsched.sminute = getsched.sminute
+                    newsched.ehour = getsched.ehour
+                    newsched.eminute = getsched.eminute
+                    newsched.sched = getsched.sched
+                    newsched.wday = getsched.wday
+                    newsched.smonth = getsched.smonth
+                    newsched.sday = getsched.sday
+                    newsched.emonth = getsched.emonth
+                    newsched.eday = getsched.eday
+                    ScheduleCollection.scheduleCollection.add(newsched)
+
+                    val newDaymanager = DayManager()
+                    newDaymanager.pgm = getsched.pgm
+                    newDaymanager.sMonth = getsched.smonth.toString()
+                    newDaymanager.sDay = getsched.sday.toString()
+                    newDaymanager.eMonth = getsched.emonth.toString()
+                    newDaymanager.eDay = getsched.eday.toString()
+                    DayCollection.dayCollection.add(newDaymanager)
+                }
+            }
+
+
     }
 
     override fun onDestroyView() {

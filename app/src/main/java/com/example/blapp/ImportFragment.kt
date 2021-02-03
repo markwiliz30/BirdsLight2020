@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.CurrentId.extensions.CurrentID
 import com.example.blapp.adapter.ImportAdapter
 import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.PgmCollection
@@ -63,13 +64,25 @@ class ImportFragment : Fragment() {
             if(lstCheck.isEmpty()){
                 Toast.makeText(activity,"Select a Program to Import!" , Toast.LENGTH_SHORT).show()
             }else{
+                var checker = 1
+                for(item in PgmCollection.pgmCollection)
+                {
+                    if(item.pgm!!.toInt() != checker)
+                    {
+                        break
+                    }
+                    checker++
+                }
+                CurrentID.parentPgmIndex = checker
                 for (itemname in lstCheck){
-                var lastPgm = PgmCollection.pgmCollection.count() + 1
+                var lastPgm = checker
                     for(item in dbm.allpgm){
                         if(item.name == itemname){
                             val newPgm = PgmItem()
                             newPgm.command =item.command
                             newPgm.pgm = lastPgm.toByte()
+                            newPgm.save = item.save
+                            newPgm.timestamp = item.timestamp
                             PgmCollection.pgmCollection.add(newPgm)
                         }
                     }
