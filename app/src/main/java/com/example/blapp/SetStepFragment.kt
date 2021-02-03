@@ -21,9 +21,11 @@ import kotlinx.android.synthetic.main.fragment_set_step.*
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.common.DeviceProtocol
 import com.example.blapp.common.Language
+import com.example.blapp.databasehelper.DBmanager
 import com.example.blapp.model.DataSetItem
 import com.example.blapp.model.ScheduleItem
 import java.lang.Exception
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -39,6 +41,7 @@ class SetStepFragment : Fragment() {
     internal var tmVal: Int = 0
     internal var editClicked: Boolean = false
     internal var tempDelete: Int =0
+    internal lateinit var dbm: DBmanager
     var tempStepList: MutableList<StepItem> = mutableListOf()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,6 +66,7 @@ class SetStepFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dbm = DBmanager(activity!!)
         navController = Navigation.findNavController(view)
         val command: Byte = 0x01
         var data: ByteArray
@@ -268,73 +272,13 @@ class SetStepFragment : Fragment() {
                 createdPgm.pgm = CurrentID.parentPgmIndex.toByte()
                 AddStep(stepIndex)
                 AddPgmToCollection(createdPgm, tempStepList)
+                UploadDataSets()
+                addToDatabaseSave()
                 navController.navigate(R.id.action_setStepFragment_to_programFragment)
                 CurrentID.Updatebool(x = false)
                 CurrentID.UpdateID(num = 3)
             }
 
-//            var dataSetCollection: MutableList<DataSetItem> = mutableListOf()
-//
-//            var dataHold: DataSetItem
-//
-//            for(item in StepCollection.stepCollection)
-//            {
-//                dataHold = DataSetItem()
-//                dataHold.myCommand = item.command
-//                dataHold.myDatas = byteArrayOf(
-//                    item.pgm!!.toByte(),
-//                    item.step!!.toByte(),
-//                    item.pan!!.toByte(),
-//                    item.tilt!!.toByte(),
-//                    item.blink!!.toByte(),
-//                    item.time!!.toByte()
-//                )
-//                dataSetCollection.add(dataHold)
-//            }
-//
-//            for(item in PgmCollection.pgmCollection)
-//            {
-//                dataHold = DataSetItem()
-//                dataHold.myCommand = item.command
-//                dataHold.myDatas = byteArrayOf(
-//                    item.pgm!!.toByte()
-//                )
-//                dataSetCollection.add(dataHold)
-//            }
-//
-//            for(item in ScheduleCollection.scheduleCollection)
-//            {
-//                dataHold = DataSetItem()
-//                dataHold.myCommand = item.command
-//                dataHold.myDatas = byteArrayOf(
-//                    item.pgm!!.toByte(),
-//                    item.smonth!!.toByte(),
-//                    item.sday!!.toByte(),
-//                    item.emonth!!.toByte(),
-//                    item.eday!!.toByte(),
-//                    item.wday!!.toByte(),
-//                    item.shour!!.toByte(),
-//                    item.sminute!!.toByte(),
-//                    item.ehour!!.toByte(),
-//                    item.eminute!!.toByte()
-//                )
-//                dataSetCollection.add(dataHold)
-//            }
-//
-//            Protocol.cDeviceProt!!.upload(dataSetCollection)
-
-            UploadDataSets()
-
-//            data = byteArrayOf(
-//                0x01.toByte(),
-//                0x01.toByte(),
-//                0.toByte(),
-//                0.toByte(),
-//                0.toByte(),
-//                0x01.toByte()
-//            )
-            //undo moko
-//            Protocol.cDeviceProt!!.transferData(command, data)
 
         }
 
@@ -468,36 +412,6 @@ class SetStepFragment : Fragment() {
         {
             Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
         }
-
-//        for(lStepItem in filteredStepCollection)
-//        {
-//            for(lSchedItem in filteredSchedCollection)
-//            {
-//                dataHold = DataSetItem()
-//                dataHold.myCommand = 0x06.toByte()
-//                dataHold.myDatas = byteArrayOf(
-//                    lStepItem.pgm!!.toByte(),
-//                    lSchedItem.smonth!!.toByte(),
-//                    lSchedItem.sday!!.toByte(),
-//                    lSchedItem.emonth!!.toByte(),
-//                    lSchedItem.eday!!.toByte(),
-//                    lSchedItem.wday!!.toByte(),
-//                    lSchedItem.shour!!.toByte(),
-//                    lSchedItem.sminute!!.toByte(),
-//                    lSchedItem.ehour!!.toByte(),
-//                    lSchedItem.eminute!!.toByte(),
-//                    lStepItem.step!!.toByte(),
-//                    lStepItem.pan!!.toByte(),
-//                    lStepItem.tilt!!.toByte(),
-//                    lStepItem.blink!!.toByte(),
-//                    lStepItem.time!!.toByte()
-//                )
-//
-//                dataSetCollection.add(dataHold)
-//            }
-//        }
-
-//        Protocol.cDeviceProt!!.upload(dataSetCollection)
     }
 
     private fun AddPgmToCollection(pgm: PgmItem, stepList: List<StepItem>)
@@ -649,6 +563,42 @@ class SetStepFragment : Fragment() {
 
     }
 
+    private fun addToDatabaseSave(){
+        var pgmSave = PgmCollection.pgmCollection.find { it.pgm == CurrentID.parentPgmIndex.toByte() }
+
+        if(pgmSave != null){
+            pgmSave.name = Protocol.currentSSID.toString()
+            var stepSave = StepCollection.stepCollection.filter { it.pgm == CurrentID.parentPgmIndex.toByte() }
+            for(steps in stepSave){
+                steps.pgm_name = Protocol.currentSSID.toString()
+                dbm.addStep(steps)
+            }
+            var schedSave = ScheduleCollection.scheduleCollection.filter {it.pgm == CurrentID.parentPgmIndex.toByte()}
+            for(sched in schedSave){
+                sched.pgmname = Protocol.currentSSID.toString()
+                dbm.addSchedule(sched)
+            }
+            pgmSave.save = 0
+            val date = Date() // given date
+
+            val calendar =
+                GregorianCalendar.getInstance() // creates a new calendar instance
+
+            calendar.time = date // assigns calendar to given date
+
+            val tdYearStr = calendar[Calendar.YEAR].toString()
+            val tdMonth = calendar[Calendar.MONTH].toString() // 0 based
+            val tdDay = calendar[Calendar.DAY_OF_MONTH].toString()
+            val tdHour = calendar[Calendar.HOUR_OF_DAY].toString()
+            val tdMinute = calendar[Calendar.MINUTE].toString()
+            val tdSecond = calendar[Calendar.SECOND].toString()
+
+            pgmSave.timestamp = ""+tdMonth+tdDay+tdYearStr+tdHour+":"+tdMinute+":"+tdSecond+""
+            pgmSave.pgm = CurrentID.parentPgmIndex.toByte()
+            dbm.addPgm(pgmSave)
+        }
+
+    }
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){
             lbl_New_Program.text = "新"

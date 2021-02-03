@@ -11,4 +11,5 @@ object DayState {
     public var alldays: Boolean = false
     public var firstboot = true
     public var ScheduleComplete: Boolean = false
+    public var editPressed: Boolean = false
 }
