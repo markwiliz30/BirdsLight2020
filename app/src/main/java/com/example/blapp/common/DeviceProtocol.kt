@@ -423,21 +423,17 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
-        var char = bundle.getString("text")
-        var char3 = char!!.get(0)
-        var char4 = char3.toByte()
-        val text = bundle.getString("text")
-        val firstChar = text!!.get(0) + ""
-        val secondChar = text!!.get(1) + ""
-        val thirdChar = text!!.get(2) + ""
-        val receivedAuth = firstChar + secondChar + thirdChar
+        val text = bundle.getByteArray("text")
+        val receivedAuth = String(text!!, 0, 3)
         val authComp = "AUD"
         val recogComp = "RED"
+
         if (receivedAuth.equals(authComp)) {
             canAccess = true
 //            isRecognized = true
             WifiUtils.isConnectedToBL = true
         }
+
         if (receivedAuth.equals(recogComp)) {
             isRecognized = true
             WifiUtils.isConnectedToBL = true
@@ -450,9 +446,9 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         return true
     }
 
-    override fun onReceived(msg: String) {
+    override fun onReceived(msg: ByteArray) {
         val bundle = Bundle()
-        bundle.putString("text", msg)
+        bundle.putByteArray("text", msg)
         val msg = Message()
         msg.data = bundle
         handler!!.sendMessage(msg)

@@ -32,7 +32,8 @@ class Channel(onSocketListener: OnSocketListener?) : Runnable {
         while (running) {
             try {
                 socket!!.receive(packet)
-                val msg = String(buffer, 0, packet.length)
+                val msg = buffer.copyOfRange(0, packet.length)
+//                val msg = String(buffer, 0, packet.length)
 
                 onSocketListener?.onReceived(msg)
             } catch (e: IOException) {
