@@ -235,7 +235,6 @@ class WifiUtils {
         if (holdWifiInfo == NetworkInfo.DetailedState.OBTAINING_IPADDR || holdWifiInfo == NetworkInfo.DetailedState.CONNECTED) {
             if(wifiInfo.ssid == "\"" + SSID + "\"")
             {
-                Protocol.currentSSID = SSID
                 return true
             }
         }
@@ -264,6 +263,7 @@ class WifiUtils {
         val holdWifiInfo = WifiInfo.getDetailedStateOf(wifiInfo.supplicantState)
 
         if (holdWifiInfo == NetworkInfo.DetailedState.OBTAINING_IPADDR || holdWifiInfo == NetworkInfo.DetailedState.CONNECTED) {
+            Protocol.currentSSID = wifiInfo.ssid
             return wifiInfo.ssid
         }
         return "none"
