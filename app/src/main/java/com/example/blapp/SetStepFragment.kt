@@ -272,13 +272,12 @@ class SetStepFragment : Fragment() {
                 createdPgm.pgm = CurrentID.parentPgmIndex.toByte()
                 AddStep(stepIndex)
                 AddPgmToCollection(createdPgm, tempStepList)
-                UploadDataSets()
                 addToDatabaseSave()
                 navController.navigate(R.id.action_setStepFragment_to_programFragment)
                 CurrentID.Updatebool(x = false)
                 CurrentID.UpdateID(num = 3)
             }
-
+            UploadDataSets()
 
         }
 
