@@ -464,11 +464,8 @@ class SetStepFragment : Fragment() {
             dataArray += lStepItem.time!!
         }
 
-        var dataArray2 = byteArrayOf( 255.toByte())
-
         if(Protocol.cDeviceProt != null)
         {
-
             Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
         }
 

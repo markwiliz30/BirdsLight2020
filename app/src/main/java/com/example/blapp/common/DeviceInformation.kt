@@ -5,6 +5,6 @@ object DeviceInformation {
     val destinationIP = "192.168.1.2"
     val destinationPort = 2035
 //    val sourcePort = 2035
-//    val destinationIP = "192.168.1.156"
+//    val destinationIP = "192.168.1.103"
 //    val destinationPort = 2035
 }

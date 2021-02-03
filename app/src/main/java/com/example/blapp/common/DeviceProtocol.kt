@@ -423,6 +423,9 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
+        var char = bundle.getString("text")
+        var char3 = char!!.get(0)
+        var char4 = char3.toByte()
         val text = bundle.getString("text")
         val firstChar = text!!.get(0) + ""
         val secondChar = text!!.get(1) + ""
