@@ -91,9 +91,7 @@ class ProgramFragment : Fragment(){
                         object : MyButtonClickListener{
                             override fun onClick(pos: Int) {
                                 DeleteAlert(pos)
-                             var filter= DayCollection.dayCollection.filter {  it.pgm!!.toInt() == pos+1}
-                                collection = filter.find {it.pgm!!.toInt() == pos+1}
-                                DayCollection.dayCollection.remove(collection)
+
 
                             }
                         }
@@ -145,7 +143,7 @@ class ProgramFragment : Fragment(){
                         Color.parseColor("#14BED1"),
                         object : MyButtonClickListener{
                             override fun onClick(pos: Int) {
-                                showCreateCategoryDialog(pos+1)
+                                showCreateCategoryDialog(pos)
                             }
                         }
                     )
@@ -259,9 +257,29 @@ class ProgramFragment : Fragment(){
 //            SynchronizePgmCollection()
             DeleteSchedule(getItem.pgm!!.toInt())
 
+            var filter= DayCollection.dayCollection.filter {  it.pgm!!.toInt() == pos+1}
+           // collection = filter.find {it.pgm!!.toInt() == pos+1}
+            for(item in filter){
+                DayCollection.dayCollection.remove(item)
+            }
+
+            var filterPgmInDatabase = dbm.allSaved.filter { it.pgm!!.toInt() == getItem.pgm!!.toInt() && it.name == Protocol.currentSSID }
+            for(pgmInDatabase in filterPgmInDatabase){
+                dbm.deletePgm(pgmInDatabase.name , pgmInDatabase.pgm!!.toByte())
+            }
+
+            var filterStepInDatabase = dbm.allStep.filter { it.pgm!!.toInt() == getItem.pgm!!.toInt() && it.pgm_name == Protocol.currentSSID }
+            for(stepInDatabase in filterStepInDatabase){
+                dbm.deleteStep(stepInDatabase.pgm_name!!, stepInDatabase.pgm!!.toByte())
+            }
+
+            var filterSchedInDatabase = dbm.allSched.filter { it.pgm!!.toInt() == getItem.pgm!!.toInt() && it.pgmname == Protocol.currentSSID }
+            for(schedInDatabase in filterSchedInDatabase){
+                dbm.deleteSchedule(schedInDatabase.pgmname!! , schedInDatabase.pgm!!.toByte())
+            }
         }
         mAlertDialog.setNegativeButton("No") { dialog, id ->
-            Toast.makeText(activity!!, "No", Toast.LENGTH_SHORT).show()
+
         }
         mAlertDialog.show()
     }
@@ -334,12 +352,13 @@ class ProgramFragment : Fragment(){
 
         editView.input_save.setOnClickListener{
             val textName = editAlert.name_input.text
-            var pgmAdd = PgmCollection.pgmCollection.find { it.pgm == pgm.toByte() }
+            var getPgm = PgmCollection.pgmCollection[pgm]
+            //var pgmAdd = PgmCollection.pgmCollection.find { it.pgm == getPgm.pgm }
             var pgmNameCheck = dbm.allpgm.find { it.name == textName.toString() }
 
 
 
-            if (pgmAdd != null) {
+            if (getPgm != null) {
                 when {
                     textName.isEmpty() -> {
                         editView.name_input.setBackgroundResource(R.drawable.redborder)
@@ -350,18 +369,18 @@ class ProgramFragment : Fragment(){
                         Toast.makeText(activity!!, "Name Already Taken!" , Toast.LENGTH_LONG).show()
                     }
                     else -> {
-                        pgmAdd.name = textName.toString()
-                            var stepAdd = StepCollection.stepCollection.filter { it.pgm == pgm.toByte() }
+                        getPgm.name = textName.toString()
+                            var stepAdd = StepCollection.stepCollection.filter { it.pgm == getPgm.pgm }
                         for(steps in stepAdd){
                             steps.pgm_name = textName.toString()
                             dbm.addStep(steps)
                         }
-                            var schedAdd = ScheduleCollection.scheduleCollection.filter { it.pgm == pgm.toByte() }
+                            var schedAdd = ScheduleCollection.scheduleCollection.filter { it.pgm == getPgm.pgm }
                         for(scheds in schedAdd){
                             scheds.pgmname =textName.toString()
                             dbm.addSchedule(scheds)
                         }
-                        pgmAdd.save = 1
+                        getPgm.save = 1
 
                         val date = Date() // given date
 
@@ -377,9 +396,9 @@ class ProgramFragment : Fragment(){
                         val tdMinute = calendar[Calendar.MINUTE].toString()
                         val tdSecond = calendar[Calendar.SECOND].toString()
 
-                        pgmAdd.timestamp = ""+tdMonth+tdDay+tdYearStr+tdHour+":"+tdMinute+":"+tdSecond+""
-                        pgmAdd.pgm = 0
-                        dbm.addPgm(pgmAdd)
+                        getPgm.timestamp = ""+tdMonth+tdDay+tdYearStr+tdHour+":"+tdMinute+":"+tdSecond+""
+                        //pgmAdd.pgm = 0
+                        dbm.addPgm(getPgm)
                         editAlert.dismiss()
                         Toast.makeText(activity!!, "Save Success!" , Toast.LENGTH_LONG).show()
                     }

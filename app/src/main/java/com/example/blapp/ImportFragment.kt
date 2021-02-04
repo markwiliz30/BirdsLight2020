@@ -64,17 +64,18 @@ class ImportFragment : Fragment() {
             if(lstCheck.isEmpty()){
                 Toast.makeText(activity,"Select a Program to Import!" , Toast.LENGTH_SHORT).show()
             }else{
-                var checker = 1
-                for(item in PgmCollection.pgmCollection)
-                {
-                    if(item.pgm!!.toInt() != checker)
-                    {
-                        break
-                    }
-                    checker++
-                }
-                CurrentID.parentPgmIndex = checker
                 for (itemname in lstCheck){
+                    var checker = 1
+                    for(item in PgmCollection.pgmCollection)
+                    {
+                        var pgmChecker = PgmCollection.pgmCollection.filter { it.pgm == checker.toByte() }
+                        if(pgmChecker.isEmpty())
+                        {
+                            break
+                        }
+                        checker++
+                    }
+                    CurrentID.parentPgmIndex = checker
                 var lastPgm = checker
                     for(item in dbm.allpgm){
                         if(item.name == itemname){
@@ -86,7 +87,8 @@ class ImportFragment : Fragment() {
                             PgmCollection.pgmCollection.add(newPgm)
                         }
                     }
-                    for(item in dbm.allStep){
+                    var filterStep = dbm.allStep.filter { it.pgm_name == itemname }
+                    for(item in filterStep){
                         if(item.pgm_name == itemname){
                             val newStep = StepItem()
                             newStep.command = item.command
@@ -99,7 +101,8 @@ class ImportFragment : Fragment() {
                             StepCollection.stepCollection.add(newStep)
                         }
                     }
-                    for (item in dbm.allSched){
+                    var filterSched = dbm.allSched.filter { it.pgmname == itemname }
+                    for (item in filterSched){
                         if(item.pgmname == itemname){
                             val newSchedule = ScheduleItem()
                             newSchedule.command = item.command

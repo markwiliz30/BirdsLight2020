@@ -279,15 +279,35 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         db.close()
     }
 
+    fun deletePgm(name: String , pgm: Byte){
+        val db:SQLiteDatabase = this.writableDatabase
+
+        db.delete(PROGRAM_TABLE, "$PROGRAM_NAME = ? AND $PROGRAM_PGM = ? ", arrayOf(name,pgm.toString()))
+        db.close()
+    }
+
     fun deleteStep(name: String){
         val db:SQLiteDatabase = this.writableDatabase
         db.delete(STEP_TABLE, "$STEP_PGM_NAME = ?" , arrayOf(name))
         db.close()
     }
 
+    fun deleteStep(name: String, pgm: Byte){
+        val db:SQLiteDatabase = this.writableDatabase
+        db.delete(STEP_TABLE, "$STEP_PGM_NAME = ? AND $STEP_PGM = ?", arrayOf(name,pgm.toString()))
+        db.close()
+    }
+
     fun deleteSchedule(name: String){
         val db:SQLiteDatabase = this.writableDatabase
         db.delete(SCHEDULE_TABLE, "$SCHEDULE_PGM_NAME = ?" , arrayOf(name))
+        db.close()
+    }
+
+    fun deleteSchedule(name: String, pgm: Byte){
+        val db:SQLiteDatabase = this.writableDatabase
+        db.delete(SCHEDULE_TABLE, "$SCHEDULE_PGM_NAME = ? AND $SCHEDULE_PGM = ?" , arrayOf(name,pgm.toString()))
+        db.close()
     }
 
     fun deleteAllPgm(){
