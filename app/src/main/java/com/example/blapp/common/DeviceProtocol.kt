@@ -253,16 +253,16 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 //        longRunningTaskFuture = executorService.submit(sendToModule) as Nothing?
     }
 
-    fun receiveBLData(msg: String)
+    fun receiveBLData(msg: ByteArray)
     {
-        var getWdayCount = msg.get(5).toByte()
+        var getWdayCount = msg.get(6)
         if(getWdayCount.toInt() != 0)
         {
-            val getPgm = msg.get(0).toByte()
-            val getSmonth = msg.get(1).toByte()
-            val getSday = msg.get(2).toByte()
-            val getEmonth = msg.get(3).toByte()
-            val getEday = msg.get(4).toByte()
+            val getPgm = msg.get(1)
+            val getSmonth = msg.get(2)
+            val getSday = msg.get(3)
+            val getEmonth = msg.get(4)
+            val getEday = msg.get(5)
 
             var dayManagerItem = DayManager()
             dayManagerItem.pgm = getPgm
@@ -271,37 +271,48 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             dayManagerItem.eMonth = getEmonth.toString()
             dayManagerItem.eDay = getEday.toString()
 
-            var i = 1
+            var wdayIndex = 1
             var wdayPos = 0
-            while(i != getWdayCount.toInt())
-            {
-                wdayPos = (6*i) - (i-1)
-                var getWday = msg.get(wdayPos)
-                val getShour = msg.get(wdayPos+1).toByte()
-                val getSmins = msg.get(wdayPos+2).toByte()
-                val getEhour = msg.get(wdayPos+3).toByte()
-                val getEmins = msg.get(wdayPos+4).toByte()
-                var wDayList: MutableList<Int> = mutableListOf()
-                var subWday = getWday.toByte()
-                while(subWday != 0.toByte())
-                {
-                    subWday = breakWdays(subWday, wDayList, dayManagerItem)
-                    var schedItem = ScheduleItem()
-                    schedItem.pgm = getPgm
-                    schedItem.smonth = getSmonth
-                    schedItem.sday = getSday
-                    schedItem.emonth = getEmonth
-                    schedItem.eday = getEday
-                    schedItem.wday = convertToLocalBinFormat(wDayList[0].toByte())
-                    wDayList.clear()
-                    schedItem.shour = getShour
-                    schedItem.sminute = getSmins
-                    schedItem.ehour = getEhour
-                    schedItem.eminute = getEmins
+            var subWday = 0.toByte()
+            var getShour = 0.toByte()
+            var getSmins = 0.toByte()
+            var getEhour = 0.toByte()
+            var getEmins = 0.toByte()
 
-                    ScheduleCollection.scheduleCollection.add(schedItem)
-                    i++
+//            while(i != getWdayCount.toInt())
+            for(i in 1..getWdayCount.toInt())
+            {
+                if(subWday == 0.toByte())
+                {
+                    wdayPos = ((6*wdayIndex) - (wdayIndex-1))+1
+                    wdayIndex++
+
+                    getShour = msg.get(wdayPos+1)
+                    getSmins = msg.get(wdayPos+2)
+                    getEhour = msg.get(wdayPos+3)
+                    getEmins = msg.get(wdayPos+4)
+
+                    var getWday = msg.get(wdayPos)
+                    subWday = getWday
                 }
+
+                var wDayList: MutableList<Int> = mutableListOf()
+
+                subWday = breakWdays(subWday, wDayList, dayManagerItem)
+                var schedItem = ScheduleItem()
+                schedItem.pgm = getPgm
+                schedItem.smonth = getSmonth
+                schedItem.sday = getSday
+                schedItem.emonth = getEmonth
+                schedItem.eday = getEday
+                schedItem.wday = convertToLocalBinFormat(wDayList[0].toByte())
+                wDayList.clear()
+                schedItem.shour = getShour
+                schedItem.sminute = getSmins
+                schedItem.ehour = getEhour
+                schedItem.eminute = getEmins
+
+                ScheduleCollection.scheduleCollection.add(schedItem)
             }
             var pgmItem = PgmItem()
             pgmItem.pgm = getPgm
@@ -313,11 +324,11 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         }
     }
 
-    fun collectRecSteps(msg: String, wdayPos: Int, pgm: Byte)
+    fun collectRecSteps(msg: ByteArray, wdayPos: Int, pgm: Byte)
     {
         //adjust the additional to wdayPos
-        val stepCountPos = (wdayPos -1) + 5
-        var stepCount = msg.get(stepCountPos).toByte()
+        val stepCountPos = wdayPos + 5
+        var stepCount = msg.get(stepCountPos)
         for(i in 0 until stepCount.toInt())
         {
             var xPos = (stepCountPos+1) + (i*4)
@@ -326,10 +337,10 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             var tPos = lPos++
 
             val stp = i+1
-            val xVal = msg.get(xPos).toByte()
-            val yVal = msg.get(yPos).toByte()
-            val lVal = msg.get(lPos).toByte()
-            val tVal = msg.get(tPos).toByte()
+            val xVal = msg.get(xPos)
+            val yVal = msg.get(yPos)
+            val lVal = msg.get(lPos)
+            val tVal = msg.get(tPos)
 
             var stepItem = StepItem()
             stepItem.pgm = pgm
@@ -423,8 +434,8 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
-        val text = bundle.getByteArray("text")
-        val receivedAuth = String(text!!, 0, 3)
+        val data = bundle.getByteArray("text")
+        val receivedAuth = String(data!!, 0, 3)
         val authComp = "AUD"
         val recogComp = "RED"
 
@@ -438,11 +449,11 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             isRecognized = true
             WifiUtils.isConnectedToBL = true
         }
-//
-//        if(firstChar.toByte() == 0x16.toByte())
-//        {
-//            receiveBLData(text)
-//        }
+
+        if(data.get(0) == 0x16.toByte())
+        {
+            receiveBLData(data)
+        }
         return true
     }
 
