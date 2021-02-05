@@ -271,7 +271,6 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             dayManagerItem.eMonth = getEmonth.toString()
             dayManagerItem.eDay = getEday.toString()
 
-            var wdayIndex = 1
             var wdayPos = 0
             var subWday = 0.toByte()
             var getShour = 0.toByte()
@@ -282,37 +281,36 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 //            while(i != getWdayCount.toInt())
             for(i in 1..getWdayCount.toInt())
             {
-                if(subWday == 0.toByte())
-                {
-                    wdayPos = ((6*wdayIndex) - (wdayIndex-1))+1
-                    wdayIndex++
+                wdayPos = ((6*i) - (i-1))+1
 
-                    getShour = msg.get(wdayPos+1)
-                    getSmins = msg.get(wdayPos+2)
-                    getEhour = msg.get(wdayPos+3)
-                    getEmins = msg.get(wdayPos+4)
+                getShour = msg.get(wdayPos+1)
+                getSmins = msg.get(wdayPos+2)
+                getEhour = msg.get(wdayPos+3)
+                getEmins = msg.get(wdayPos+4)
 
-                    var getWday = msg.get(wdayPos)
-                    subWday = getWday
-                }
+                var getWday = msg.get(wdayPos)
+                subWday = getWday
 
                 var wDayList: MutableList<Int> = mutableListOf()
 
-                subWday = breakWdays(subWday, wDayList, dayManagerItem)
-                var schedItem = ScheduleItem()
-                schedItem.pgm = getPgm
-                schedItem.smonth = getSmonth
-                schedItem.sday = getSday
-                schedItem.emonth = getEmonth
-                schedItem.eday = getEday
-                schedItem.wday = convertToLocalBinFormat(wDayList[0].toByte())
-                wDayList.clear()
-                schedItem.shour = getShour
-                schedItem.sminute = getSmins
-                schedItem.ehour = getEhour
-                schedItem.eminute = getEmins
+                while(subWday > 0)
+                {
+                    subWday = breakWdays(subWday, wDayList, dayManagerItem)
+                    var schedItem = ScheduleItem()
+                    schedItem.pgm = getPgm
+                    schedItem.smonth = getSmonth
+                    schedItem.sday = getSday
+                    schedItem.emonth = getEmonth
+                    schedItem.eday = getEday
+                    schedItem.wday = convertToLocalBinFormat(wDayList[0].toByte())
+                    wDayList.clear()
+                    schedItem.shour = getShour
+                    schedItem.sminute = getSmins
+                    schedItem.ehour = getEhour
+                    schedItem.eminute = getEmins
 
-                ScheduleCollection.scheduleCollection.add(schedItem)
+                    ScheduleCollection.scheduleCollection.add(schedItem)
+                }
             }
             var pgmItem = PgmItem()
             pgmItem.pgm = getPgm

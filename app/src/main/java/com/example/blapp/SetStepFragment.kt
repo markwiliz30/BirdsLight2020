@@ -1,6 +1,7 @@
 package com.example.blapp
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
@@ -42,6 +43,8 @@ class SetStepFragment : Fragment() {
     internal var editClicked: Boolean = false
     internal var tempDelete: Int =0
     internal lateinit var dbm: DBmanager
+    var postDelayedSendToModule = Handler()
+    var dataArray = byteArrayOf()
     var tempStepList: MutableList<StepItem> = mutableListOf()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -379,14 +382,12 @@ class SetStepFragment : Fragment() {
             }
         }
 
-        var dataArray = byteArrayOf(
-            groupFilteredSchedCollect[0].pgm!!.toByte(),
-            groupFilteredSchedCollect[0].smonth!!.toByte(),
-            groupFilteredSchedCollect[0].sday!!.toByte(),
-            groupFilteredSchedCollect[0].emonth!!.toByte(),
-            groupFilteredSchedCollect[0].eday!!.toByte(),
-            groupFilteredSchedCollect.count().toByte()
-        )
+        dataArray += groupFilteredSchedCollect[0].pgm!!.toByte()
+        dataArray += groupFilteredSchedCollect[0].smonth!!.toByte()
+        dataArray += groupFilteredSchedCollect[0].sday!!.toByte()
+        dataArray += groupFilteredSchedCollect[0].emonth!!.toByte()
+        dataArray += groupFilteredSchedCollect[0].eday!!.toByte()
+        dataArray += groupFilteredSchedCollect.count().toByte()
 
         for(lSchedItem in groupFilteredSchedCollect)
         {
@@ -409,8 +410,20 @@ class SetStepFragment : Fragment() {
 
         if(Protocol.cDeviceProt != null)
         {
-            Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
+            var initSend = byteArrayOf(
+                0x80.toByte(),
+                0x80.toByte(),
+                0xff.toByte())
+            Protocol.cDeviceProt!!.transferDataWithDelay(0x01.toByte(), initSend)
+
+            postDelayedSendToModule.postDelayed(moduleSend, 1000)
+            postDelayedSendToModule.postDelayed(moduleSend, 1300)
+//            Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
         }
+    }
+
+    var moduleSend = Runnable {
+        Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
     }
 
     private fun AddPgmToCollection(pgm: PgmItem, stepList: List<StepItem>)
