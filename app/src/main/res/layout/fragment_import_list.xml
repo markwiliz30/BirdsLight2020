@@ -20,8 +20,15 @@
             android:layout_gravity="left|center"
             android:layout_marginLeft="30dp"
             android:textColor="#39405A" />
-        <CheckBox
-            android:id="@+id/import_checkbox"
+<!--        <CheckBox-->
+<!--            android:id="@+id/import_checkbox"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="right|center"-->
+<!--            android:clickable="false"-->
+<!--            android:layout_marginRight="30dp"/>-->
+        <RadioButton
+            android:id="@+id/import_radiobutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center"

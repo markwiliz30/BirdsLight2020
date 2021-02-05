@@ -24,16 +24,28 @@ class ImportAdapter(internal var context: FragmentActivity?,internal var itemLis
     }
 
     override fun onBindViewHolder(holder: ImportViewHolder, position: Int) {
-        holder.importCardCheckBox.isChecked = ImportFragment.isSelectedAll
+       // holder.importCardCheckBox.isChecked = ImportFragment.isSelectedAll
+
 
         var importhold: String? = itemList[position].name
         holder.imporTitle.text = importhold.toString()
+
         holder.importCard.setOnClickListener{
             itemList[position].isClicked = !itemList[position].isClicked
-                holder.importCardCheckBox.isChecked = itemList[position].isClicked
+            holder.importRadio.isChecked = itemList[position].isClicked
+
+
         }
-        holder.importCardCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+
+        holder.importRadio.setOnCheckedChangeListener { buttonView, isChecked ->
             itemList[position].isClicked = isChecked
         }
+//        holder.importCard.setOnClickListener{
+//            itemList[position].isClicked = !itemList[position].isClicked
+//               // holder.importCardCheckBox.isChecked = itemList[position].isClicked
+//        }
+//        holder.importCardCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+//            itemList[position].isClicked = isChecked
+//        }
     }
 }

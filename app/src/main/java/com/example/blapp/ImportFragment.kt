@@ -62,7 +62,7 @@ class ImportFragment : Fragment() {
                 }
             }
             if(lstCheck.isEmpty()){
-                Toast.makeText(activity,"Select a Program to Import!" , Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity,"Select a Program to Export!" , Toast.LENGTH_SHORT).show()
             }else{
                 for (itemname in lstCheck){
                     var checker = 1
@@ -131,7 +131,7 @@ class ImportFragment : Fragment() {
                 }
                 lstCheck.clear()
                 refreshList()
-                select_all_checkbox.isChecked = false
+                //select_all_checkbox.isChecked = false
                 adapter.notifyDataSetChanged()
                 Toast.makeText(activity, "Import Success!" , Toast.LENGTH_SHORT).show()
             }
@@ -150,14 +150,17 @@ class ImportFragment : Fragment() {
             }
 
         }
-        select_all_checkbox.setOnCheckedChangeListener { _, isChecked ->
-//                for (id in adapter.itemList) {
-//                    adapter.context!!.import_checkbox.isChecked = true
-//                }
+//        select_all_checkbox.setOnCheckedChangeListener { _, isChecked ->
+////                for (id in adapter.itemList) {
+////                    adapter.context!!.import_checkbox.isChecked = true
+////                }
+//
+//            isSelectedAll = !isSelectedAll
+//            adapter.notifyDataSetChanged()
+//        }
 
-            isSelectedAll = !isSelectedAll
-            adapter.notifyDataSetChanged()
-        }
+
+
         ShowImports()
     }
 
@@ -197,10 +200,10 @@ class ImportFragment : Fragment() {
                         }
                     }
                 }
-                select_all_checkbox.isChecked = false
+                //select_all_checkbox.isChecked = false
                 refreshList()
                 lstCheck.clear()
-            select_all_checkbox.isChecked = false
+            //select_all_checkbox.isChecked = false
             adapter.notifyDataSetChanged()
         }
 
@@ -213,7 +216,7 @@ class ImportFragment : Fragment() {
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){
             lblImportList.text = "出口清单"
-            lbl_Select_All.text = "全选"
+            //lbl_Select_All.text = "全选"
             btn_import_list.text = "出口"
             delete_import.text = "删除"
         }
