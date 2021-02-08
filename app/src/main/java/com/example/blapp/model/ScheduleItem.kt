@@ -2,6 +2,7 @@ package com.example.blapp.model
 
 class ScheduleItem{
     var command: Byte? = 0
+    var sched_id: Byte? = 0
     var pgm: Byte? = 0
     var smonth: Byte? = 0
     var sday: Byte? = 0

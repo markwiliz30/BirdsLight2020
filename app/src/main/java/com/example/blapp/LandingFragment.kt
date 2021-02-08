@@ -289,6 +289,8 @@ class LandingFragment : Fragment() {
                     getPgm.pgm = get.pgm
                     getPgm.save = get.save
                     getPgm.timestamp = get.timestamp
+                    getPgm.name = get.name
+                    getPgm.pgm_id = get.pgm_id
                     PgmCollection.pgmCollection.add(getPgm)
                 }
                 for(getstep in getStepDatabase){
@@ -300,6 +302,8 @@ class LandingFragment : Fragment() {
                     newStep.tilt = getstep.tilt
                     newStep.blink = getstep.blink
                     newStep.time = getstep.time
+                    newStep.pgm_name = getstep.pgm_name
+                    newStep.step_id = getstep.step_id
                     StepCollection.stepCollection.add(getstep)
                 }
                 for(getsched in getSchedDatabase){
@@ -316,6 +320,8 @@ class LandingFragment : Fragment() {
                     newsched.sday = getsched.sday
                     newsched.emonth = getsched.emonth
                     newsched.eday = getsched.eday
+                    newsched.pgmname = getsched.pgmname
+                    newsched.sched_id = getsched.sched_id
                     ScheduleCollection.scheduleCollection.add(newsched)
 
                     val newDaymanager = DayManager()

@@ -134,7 +134,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
     }
 
 
-    fun updateStep(step: StepItem): Int {
+    fun updateStep(step: StepItem, step_id: Byte): Int {
         val db:SQLiteDatabase = this.writableDatabase
         val values = ContentValues()
         values.put(STEP_PGM_NAME,step.pgm_name)
@@ -143,8 +143,9 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         values.put(STEP_TILT, step.tilt)
         values.put(STEP_BLINK, step.blink)
         values.put(STEP_TIME, step.time)
+        values.put(STEP_PGM, step.pgm)
 
-        return db.update(STEP_TABLE , values , "$STEP_PGM_NAME =" , arrayOf(step.pgm_name.toString()))
+        return db.update(STEP_TABLE , values , "$STEP_ID =" , arrayOf(step_id.toString()))
         db.close()
     }
 
@@ -206,6 +207,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
             if(cursor.moveToFirst()){
                 do{
                     val schedule = ScheduleItem()
+                    schedule.sched_id = cursor.getInt(cursor.getColumnIndex(SCHEDULE_ID.toString())).toByte()
                     schedule.pgmname = cursor.getString(cursor.getColumnIndex(SCHEDULE_PGM_NAME.toString()))
                     schedule.command = cursor.getInt(cursor.getColumnIndex(SCHEDULE_COMMAND.toString())).toByte()
                     schedule.smonth = cursor.getInt(cursor.getColumnIndex(SCHEDULE_SMONTH.toString())).toByte()
@@ -247,6 +249,25 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
 
     }
 
+    fun updateSchedule(schedule: ScheduleItem, sched_id : Byte): Int {
+        val db:SQLiteDatabase = this.writableDatabase
+        val values = ContentValues()
+        values.put(SCHEDULE_PGM_NAME , schedule.pgmname)
+        values.put(SCHEDULE_COMMAND , schedule.command)
+        values.put(SCHEDULE_SMONTH , schedule.smonth)
+        values.put(SCHEDULE_SDAY , schedule.sday)
+        values.put(SCHEDULE_EMONTH , schedule.emonth)
+        values.put(SCHEDULE_EDAY , schedule.eday)
+        values.put(SCHEDULE_WDAY , schedule.wday)
+        values.put(SCHEDULE_SHOUR , schedule.shour)
+        values.put(SCHEDULE_SMINUTE , schedule.sminute)
+        values.put(SCHEDULE_EHOUR , schedule.ehour)
+        values.put(SCHEDULE_EMINUTE , schedule.eminute)
+        values.put(SCHEDULE_SCHED , schedule.sched)
+        values.put(SCHEDULE_PGM, schedule.pgm)
+        return db.update(SCHEDULE_TABLE, values , "$SCHEDULE_ID = ?" , arrayOf(sched_id.toString()))
+
+    }
 
     fun addPgm(pgm: PgmItem){
         val db:SQLiteDatabase = this.writableDatabase
@@ -261,14 +282,17 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
 
     }
 
-    fun updatePgm(pgm:PgmItem): Int{
+    fun updatePgm(pgm:PgmItem , pgm_id: Byte): Int{
         val db:SQLiteDatabase = this.writableDatabase
         val values = ContentValues()
-        values.put(PROGRAM_ID, pgm.pgm_id)
+        //values.put(PROGRAM_ID, pgm.pgm_id)
         values.put(PROGRAM_COMMAND,pgm.command)
         values.put(PROGRAM_NAME, pgm.name)
+        values.put(PROGRAM_SAVE, pgm.save)
+        values.put(PROGRAM_TIMESTAMP, pgm.timestamp)
+        values.put(PROGRAM_PGM, pgm.pgm)
 
-        return db.update(PROGRAM_TABLE, values , "$PROGRAM_ID = ?" , arrayOf(pgm.pgm_id.toString()))
+        return db.update(PROGRAM_TABLE, values , "$PROGRAM_ID = ?" , arrayOf(pgm_id.toString()))
         db.close()
     }
 

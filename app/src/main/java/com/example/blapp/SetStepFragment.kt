@@ -263,6 +263,7 @@ class SetStepFragment : Fragment() {
                 AddStep(stepIndex)
                 UpdatePgmAtCollection(CurrentID.parentPgmIndex, tempStepList)
                 Toast.makeText(activity!!, "Update Success!", Toast.LENGTH_SHORT).show()
+                updateDatabase()
                 editClicked = false
                 navController.navigate(R.id.action_setStepFragment_to_programFragment)
                 CurrentID.Updatebool(x = false)
@@ -413,7 +414,7 @@ class SetStepFragment : Fragment() {
             var initSend = byteArrayOf(
                 0x80.toByte(),
                 0x80.toByte(),
-                0xff.toByte())
+                0x00.toByte())
             Protocol.cDeviceProt!!.transferDataWithDelay(0x01.toByte(), initSend)
 
             postDelayedSendToModule.postDelayed(moduleSend, 1000)
@@ -611,6 +612,42 @@ class SetStepFragment : Fragment() {
         }
 
     }
+
+    private fun updateDatabase(){
+        var pgmUpdate = PgmCollection.pgmCollection.find { it.pgm == CurrentID.parentPgmIndex.toByte() }
+
+        if(pgmUpdate != null){
+            var UpdateStep = StepCollection.stepCollection.filter { it.pgm_name == pgmUpdate.name }
+            for(step in UpdateStep){
+                dbm.updateStep(step ,step.step_id!!)
+            }
+            var UpdateSched = ScheduleCollection.scheduleCollection.filter { it.pgmname == pgmUpdate.name }
+            for(sched in UpdateSched){
+                dbm.updateSchedule(sched, sched.sched_id!!)
+            }
+
+            val date = Date() // given date
+
+            val calendar =
+                GregorianCalendar.getInstance() // creates a new calendar instance
+
+            calendar.time = date // assigns calendar to given date
+
+            val tdYearStr = calendar[Calendar.YEAR].toString()
+            val tdMonth = calendar[Calendar.MONTH].toString() // 0 based
+            val tdDay = calendar[Calendar.DAY_OF_MONTH].toString()
+            val tdHour = calendar[Calendar.HOUR_OF_DAY].toString()
+            val tdMinute = calendar[Calendar.MINUTE].toString()
+            val tdSecond = calendar[Calendar.SECOND].toString()
+
+            pgmUpdate.timestamp = ""+tdMonth+tdDay+tdYearStr+tdHour+":"+tdMinute+":"+tdSecond+""
+            pgmUpdate.pgm = CurrentID.parentPgmIndex.toByte()
+
+            dbm.updatePgm(pgmUpdate , pgmUpdate.pgm_id!!)
+
+        }
+    }
+
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){
             lbl_New_Program.text = "新"
