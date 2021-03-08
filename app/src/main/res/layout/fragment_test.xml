@@ -150,6 +150,32 @@
                 android:layout_marginTop="20dp"
                 />
 
+            <Button
+                android:id="@+id/btnVerCheck"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="50dp"
+                android:background="@drawable/button_model"
+                android:text="Check version"
+                android:textColor="#14BED1"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                />
+
+            <Button
+                android:id="@+id/btnSoftUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="50dp"
+                android:background="@drawable/button_model"
+                android:text="Update"
+                android:textColor="#14BED1"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

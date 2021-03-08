@@ -283,6 +283,18 @@ class TestFragment : Fragment() {
             Protocol.cDeviceProt!!.transferData(0x16.toByte(), dRec)
         }
 
+        btnSoftUpdate.setOnClickListener {
+            var dUpdate = byteArrayOf(
+                0x01)
+            Protocol.cDeviceProt!!.transferData(0x20.toByte(), dUpdate)
+        }
+
+        btnVerCheck.setOnClickListener {
+            var dVCheck = byteArrayOf(
+                0x01)
+            Protocol.cDeviceProt!!.transferData(0x21.toByte(), dVCheck)
+        }
+
     }
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){
