@@ -158,7 +158,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
 
                 //replace if statement "WifiUtils.isConnectedToBL"
                 ID_TESTFRAGMENT ->
-                  if (WifiUtils.isConnectedToBL) {
+                  if (true) {
                       if (CurrentID.getID() == ID_HOME) {
                           navController.navigate(R.id.action_landingFragment_to_testFragment)
                           CurrentID.UpdateID(num = it.id)
