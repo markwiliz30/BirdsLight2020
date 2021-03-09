@@ -12,7 +12,7 @@ import com.example.blapp.model.StepItem
 
 class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VER) {
     companion object{
-        const val DATABASE_NAME = "BIRDSLIGHT.db"
+        const val DATABASE_NAME = "BIRDSLIGHTv2.db"
         const val DATABASE_VER = 1
 
         const val STEP_TABLE = "TABLE_STEP"
@@ -134,10 +134,9 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
     }
 
 
-    fun updateStep(step: StepItem, step_id: Byte): Int {
+    fun updateStep(step: StepItem, step_id: Byte) {
         val db:SQLiteDatabase = this.writableDatabase
         val values = ContentValues()
-        values.put(STEP_PGM_NAME,step.pgm_name)
         values.put(STEP_STEP, step.step)
         values.put(STEP_PAN, step.pan)
         values.put(STEP_TILT, step.tilt)
@@ -145,7 +144,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         values.put(STEP_TIME, step.time)
         values.put(STEP_PGM, step.pgm)
 
-        return db.update(STEP_TABLE , values , "$STEP_ID =" , arrayOf(step_id.toString()))
+        db.update(STEP_TABLE , values , "$STEP_ID = "+step_id , arrayOf())
         db.close()
     }
 
@@ -249,7 +248,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
 
     }
 
-    fun updateSchedule(schedule: ScheduleItem, sched_id : Byte): Int {
+    fun updateSchedule(schedule: ScheduleItem, sched_id : Byte) {
         val db:SQLiteDatabase = this.writableDatabase
         val values = ContentValues()
         values.put(SCHEDULE_PGM_NAME , schedule.pgmname)
@@ -265,8 +264,7 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         values.put(SCHEDULE_EMINUTE , schedule.eminute)
         values.put(SCHEDULE_SCHED , schedule.sched)
         values.put(SCHEDULE_PGM, schedule.pgm)
-        return db.update(SCHEDULE_TABLE, values , "$SCHEDULE_ID = ?" , arrayOf(sched_id.toString()))
-
+        db.update(SCHEDULE_TABLE, values , "$SCHEDULE_ID = ?"+sched_id , arrayOf())
     }
 
     fun addPgm(pgm: PgmItem){

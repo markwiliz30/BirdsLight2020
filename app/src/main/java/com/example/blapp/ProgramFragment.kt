@@ -4,12 +4,14 @@ package com.example.blapp
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -53,6 +55,7 @@ class ProgramFragment : Fragment(){
     internal lateinit var dbm:DBmanager
     internal var lstStep: List<StepItem> = ArrayList<StepItem>()
     internal var lstPgm: List<PgmItem> = ArrayList<PgmItem>()
+    var postDelayedSendToModule = Handler()
 
 
     override fun onCreateView(
@@ -242,7 +245,16 @@ class ProgramFragment : Fragment(){
         btn_activate.setOnClickListener{
             val lData = byteArrayOf(0x00.toByte())
             Protocol.cDeviceProt!!.transferData(0x02.toByte(), lData)
+            Toast.makeText(activity!!, "Closing Application" , Toast.LENGTH_LONG).show()
+
+            postDelayedSendToModule.postDelayed(EndActivity, 1000)
+
         }
+    }
+    var EndActivity = Runnable {
+        CurrentID.UpdateID(num = 1)
+        getActivity()!!.moveTaskToBack(true)
+        getActivity()!!.finish()
     }
     private fun DeleteAlert(pos: Int){
         val getItem = PgmCollection.pgmCollection[pos]
@@ -284,9 +296,6 @@ class ProgramFragment : Fragment(){
         mAlertDialog.show()
     }
 
-    private fun SaveName(name: String){
-
-    }
 
     private fun DeletePGM(pgm: Int)
     {
@@ -435,6 +444,7 @@ class ProgramFragment : Fragment(){
             infoAlert.dismiss()
         }
     }
+
 
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){

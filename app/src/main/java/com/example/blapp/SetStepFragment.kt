@@ -40,6 +40,8 @@ class SetStepFragment : Fragment() {
     internal var tVal:Int = 0
     internal var bVal:Int = 0
     internal var tmVal: Int = 0
+    internal var pgm_name: String = ""
+    internal var step_id:Byte = 0
     internal var editClicked: Boolean = false
     internal var tempDelete: Int =0
     internal lateinit var dbm: DBmanager
@@ -195,6 +197,10 @@ class SetStepFragment : Fragment() {
                 if(txt_step_time.text.isEmpty())
                 {
                    txt_step_time.setText("1")
+                    tmVal = 1
+                }
+                else if (txt_step_time.text.toString().toInt() == 0){
+                    txt_step_time.setText("1")
                     tmVal = 1
                 }
                 else if(txt_step_time.text.toString().toInt() > 20)
@@ -485,9 +491,12 @@ class SetStepFragment : Fragment() {
             bVal = newCurrentitem!!.blink!!.toUByte().toInt()
             tmVal = newCurrentitem!!.time!!.toUByte().toInt()
 
-        updateTextOnTilt(tVal)
-        updateTextOnPan(pVal)
-        update_step_blink.text = bVal.toString()
+            pgm_name = newCurrentitem!!.pgm_name!!
+            step_id = newCurrentitem.step_id!!
+
+            updateTextOnTilt(tVal)
+            updateTextOnPan(pVal)
+            update_step_blink.text = bVal.toString()
 
             edit_pan_sb.progress = pVal
             edit_tilt_sb.progress = tVal
@@ -531,6 +540,7 @@ class SetStepFragment : Fragment() {
         newItem.tilt = tVal.toByte()
         newItem.blink = bVal.toByte()
         newItem.time = tmVal.toByte()
+        newItem.pgm_name = pgm_name
         tempStepList.add(newItem)
     }
 
@@ -617,13 +627,32 @@ class SetStepFragment : Fragment() {
         var pgmUpdate = PgmCollection.pgmCollection.find { it.pgm == CurrentID.parentPgmIndex.toByte() }
 
         if(pgmUpdate != null){
-            var UpdateStep = StepCollection.stepCollection.filter { it.pgm_name == pgmUpdate.name }
-            for(step in UpdateStep){
-                dbm.updateStep(step ,step.step_id!!)
+//            var UpdateStep = StepCollection.stepCollection.filter { it.pgm_name == pgmUpdate.name }
+//            for(step in UpdateStep){
+//                dbm.updateStep(step ,step.step_id!!)
+//            }
+//            var UpdateSched = ScheduleCollection.scheduleCollection.filter { it.pgmname == pgmUpdate.name }
+//            for(sched in UpdateSched){
+//                dbm.updateSchedule(sched, sched.sched_id!!)
+//            }
+
+            var filterStepInDatabase = dbm.allStep.filter { it.pgm!!.toInt() == CurrentID.parentPgmIndex && it.pgm_name == Protocol.currentSSID }
+            for(stepInDatabase in filterStepInDatabase){
+                dbm.deleteStep(stepInDatabase.pgm_name!!, stepInDatabase.pgm!!.toByte())
             }
-            var UpdateSched = ScheduleCollection.scheduleCollection.filter { it.pgmname == pgmUpdate.name }
-            for(sched in UpdateSched){
-                dbm.updateSchedule(sched, sched.sched_id!!)
+            var stepSave = StepCollection.stepCollection.filter { it.pgm == CurrentID.parentPgmIndex.toByte() }
+            for(steps in stepSave){
+                steps.pgm_name = Protocol.currentSSID.toString()
+                dbm.addStep(steps)
+            }
+            var filterSchedInDatabase = dbm.allSched.filter { it.pgm!!.toInt() ==  CurrentID.parentPgmIndex && it.pgmname == Protocol.currentSSID }
+            for(schedInDatabase in filterSchedInDatabase){
+                dbm.deleteSchedule(schedInDatabase.pgmname!! , schedInDatabase.pgm!!.toByte())
+            }
+            var schedSave = ScheduleCollection.scheduleCollection.filter {it.pgm == CurrentID.parentPgmIndex.toByte()}
+            for(sched in schedSave){
+                sched.pgmname = Protocol.currentSSID.toString()
+                dbm.addSchedule(sched)
             }
 
             val date = Date() // given date
