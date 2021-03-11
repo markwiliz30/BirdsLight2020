@@ -163,6 +163,17 @@
                 android:layout_marginTop="20dp"
                 />
 
+            <TextView
+                android:id="@+id/lblVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="#39405A"
+                />
+
             <Button
                 android:id="@+id/btnSoftUpdate"
                 android:layout_width="match_parent"
@@ -170,7 +181,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="50dp"
                 android:background="@drawable/button_model"
-                android:text="Update"
+                android:text="S/W Update"
                 android:textColor="#14BED1"
                 android:textSize="20dp"
                 android:layout_marginTop="20dp"

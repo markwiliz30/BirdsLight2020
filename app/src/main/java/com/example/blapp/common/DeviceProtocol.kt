@@ -452,6 +452,8 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         {
             receiveBLData(data)
         }
+
+        TestTransferRateVal.verVal = String(data)
         return true
     }
 

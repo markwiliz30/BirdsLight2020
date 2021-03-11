@@ -293,6 +293,11 @@ class TestFragment : Fragment() {
             var dVCheck = byteArrayOf(
                 0x01)
             Protocol.cDeviceProt!!.transferData(0x21.toByte(), dVCheck)
+
+//            var testData = byteArrayOf(0x65, 0x66, 0x67)
+//            TestTransferRateVal.verVal = String(testData)
+
+            lblVersion.text = TestTransferRateVal.verVal
         }
 
     }
