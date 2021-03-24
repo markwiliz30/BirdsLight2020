@@ -3,6 +3,7 @@ package com.example.blapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.service.autofill.Dataset
 import android.view.LayoutInflater
 import android.view.View
@@ -277,10 +278,18 @@ class TestFragment : Fragment() {
 //            ButtonStatus = true
         }
 
+        val displaylabel = Runnable {
+            //if (canAccess)
+            lblVersion.text = TestTransferRateVal.verVal
+        }
+
         btnRecTest.setOnClickListener{
             var dRec = byteArrayOf(
                 0x01)
             Protocol.cDeviceProt!!.transferData(0x16.toByte(), dRec)
+
+            val postDdisplay = Handler()
+            postDdisplay.postDelayed(displaylabel, 600)
         }
 
         btnSoftUpdate.setOnClickListener {
@@ -297,7 +306,8 @@ class TestFragment : Fragment() {
 //            var testData = byteArrayOf(0x65, 0x66, 0x67)
 //            TestTransferRateVal.verVal = String(testData)
 
-            lblVersion.text = TestTransferRateVal.verVal
+            val postDdisplay = Handler()
+            postDdisplay.postDelayed(displaylabel, 600)
         }
 
     }
