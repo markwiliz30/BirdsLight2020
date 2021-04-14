@@ -1,6 +1,7 @@
 package com.example.blapp.common
 
-object TestTransferRateVal {
+object GlobalVars {
     var tRate = 100
     var verVal = ""
+    var willRetreive = false
 }

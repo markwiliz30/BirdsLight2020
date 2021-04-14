@@ -421,10 +421,10 @@ class SetStepFragment : Fragment() {
                 0x80.toByte(),
                 0x80.toByte(),
                 0x00.toByte())
-            Protocol.cDeviceProt!!.transferDataWithDelay(0x01.toByte(), initSend)
+            Protocol.cDeviceProt!!.transferData(0x01.toByte(), initSend)
 
             postDelayedSendToModule.postDelayed(moduleSend, 1000)
-            postDelayedSendToModule.postDelayed(moduleSend, 1300)
+            postDelayedSendToModule.postDelayed(moduleSend, 1800)
 //            Protocol.cDeviceProt!!.transferData(0x06.toByte(), dataArray)
         }
     }

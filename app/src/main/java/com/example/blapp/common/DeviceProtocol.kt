@@ -3,10 +3,8 @@ package com.example.blapp.common
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import com.example.blapp.collection.DayCollection
-import com.example.blapp.collection.PgmCollection
-import com.example.blapp.collection.ScheduleCollection
-import com.example.blapp.collection.StepCollection
+import android.widget.Toast
+import com.example.blapp.collection.*
 import com.example.blapp.communication.Channel
 import com.example.blapp.communication.OnSocketListener
 import com.example.blapp.model.*
@@ -14,7 +12,7 @@ import java.net.InetSocketAddress
 import java.net.SocketException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
+import kotlin.coroutines.coroutineContext
 
 class  DeviceProtocol : Handler.Callback, OnSocketListener {
     var sendCount = 0
@@ -45,6 +43,8 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
     var canAccess = false
     var isRecognized = false
     var canSend =  false
+    var retCnt = 0
+
     fun startChannel(): String {
         address =
             InetSocketAddress(DeviceInformation.destinationIP, DeviceInformation.destinationPort)
@@ -176,9 +176,9 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
     private fun sendAll() {
         sendSignature()
         val postDelayedSendData = Handler()
-        postDelayedSendData.postDelayed(postSendData, 100)
+        postDelayedSendData.postDelayed(postSendData, 300)
         val postDelayedSendAck = Handler()
-        postDelayedSendAck.postDelayed(postSendAck, 200)
+        postDelayedSendAck.postDelayed(postSendAck, 600)
         canAccess = false
         isRecognized = false
     }
@@ -239,7 +239,7 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         data = exData
         dataLength = data.size
         canSend = true
-        postDelayedSendToModule.postDelayed(sendToModule, TestTransferRateVal.tRate.toLong())
+        postDelayedSendToModule.postDelayed(sendToModule, GlobalVars.tRate.toLong())
     }
 
     //for debugging
@@ -249,20 +249,20 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         data = exData
         dataLength = data.size
         canSend = true
-        postDelayedSendToModule.postDelayed(sendToModule, TestTransferRateVal.tRate.toLong())
+        postDelayedSendToModule.postDelayed(sendToModule, GlobalVars.tRate.toLong())
 //        longRunningTaskFuture = executorService.submit(sendToModule) as Nothing?
     }
 
     fun receiveBLData(msg: ByteArray)
     {
-        var getWdayCount = msg.get(6)
+        var getWdayCount = msg.get(5)
         if(getWdayCount.toInt() != 0)
         {
-            val getPgm = msg.get(1)
-            val getSmonth = msg.get(2)
-            val getSday = msg.get(3)
-            val getEmonth = msg.get(4)
-            val getEday = msg.get(5)
+            val getPgm = msg.get(0)
+            val getSmonth = msg.get(1)
+            val getSday = msg.get(2)
+            val getEmonth = msg.get(3)
+            val getEday = msg.get(4)
 
             var dayManagerItem = DayManager()
             dayManagerItem.pgm = getPgm
@@ -281,7 +281,7 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 //            while(i != getWdayCount.toInt())
             for(i in 1..getWdayCount.toInt())
             {
-                wdayPos = ((6*i) - (i-1))+1
+                wdayPos = ((5*i) - (i-1))+i
 
                 getShour = msg.get(wdayPos+1)
                 getSmins = msg.get(wdayPos+2)
@@ -303,6 +303,9 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
                     schedItem.emonth = getEmonth
                     schedItem.eday = getEday
                     schedItem.wday = convertToLocalBinFormat(wDayList[0].toByte())
+                    var filteredSched = ScheduleCollection.scheduleCollection.filter { it.wday == schedItem.wday }
+                    var schedNumber = filteredSched.count() + 1
+                    schedItem.sched = schedNumber.toByte()
                     wDayList.clear()
                     schedItem.shour = getShour
                     schedItem.sminute = getSmins
@@ -329,10 +332,11 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         var stepCount = msg.get(stepCountPos)
         for(i in 0 until stepCount.toInt())
         {
-            var xPos = (stepCountPos+1) + (i*4)
-            var yPos = xPos++
-            var lPos = yPos++
-            var tPos = lPos++
+            var posHold = (stepCountPos) + (i*4)
+            var xPos = posHold + 1
+            var yPos = posHold + 2
+            var lPos = posHold + 3
+            var tPos = posHold + 4
 
             val stp = i+1
             val xVal = msg.get(xPos)
@@ -353,31 +357,31 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
     }
 
     fun convertToLocalBinFormat(binVal: Byte?): Byte{
-        var binVal = 0.toByte()
+        var retVal = 0.toByte()
         if(binVal == 1.toByte())
         {
-            binVal = 1.toByte()
+            retVal = 1.toByte()
         }else if(binVal == 2.toByte())
         {
-            binVal = 2.toByte()
+            retVal = 2.toByte()
         }else if(binVal == 4.toByte())
         {
-            binVal = 3.toByte()
+            retVal = 3.toByte()
         }else if(binVal == 8.toByte())
         {
-            binVal = 4.toByte()
+            retVal = 4.toByte()
         }else if(binVal == 16.toByte())
         {
-            binVal = 5.toByte()
+            retVal = 5.toByte()
         }else if(binVal == 32.toByte())
         {
-            binVal = 6.toByte()
+            retVal = 6.toByte()
         }else if(binVal == 64.toByte())
         {
-            binVal = 7.toByte()
+            retVal = 7.toByte()
         }
 
-        return binVal
+        return retVal
     }
 
     fun breakWdays(wdays: Byte, wDayList: MutableList<Int>, dayManager: DayManager): Byte
@@ -426,7 +430,7 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         }
         else
         {
-            return wdays
+            return 0.toByte()
         }
     }
 
@@ -436,6 +440,13 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         val receivedAuth = String(data!!, 0, 3)
         val authComp = "AUD"
         val recogComp = "RED"
+
+        canAccess = false
+        isRecognized = false
+
+        LogCollection.logCollection.add(String(data!!))
+
+//        TestTransferRateVal.verVal = String(data)
 
         if (receivedAuth.equals(authComp)) {
             canAccess = true
@@ -448,12 +459,20 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             WifiUtils.isConnectedToBL = true
         }
 
-        if(data.get(0) == 0x16.toByte())
+        if(GlobalVars.willRetreive)
         {
-            receiveBLData(data)
+            if(retCnt == 2)
+            {
+                GlobalVars.willRetreive = false
+                receiveBLData(data)
+                retCnt = 0
+            }
+            else
+            {
+                retCnt++
+            }
         }
 
-        TestTransferRateVal.verVal = String(data)
         return true
     }
 
