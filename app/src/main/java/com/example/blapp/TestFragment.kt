@@ -35,6 +35,7 @@ class TestFragment : Fragment() {
     internal var ButtonStatus:Boolean = true
     lateinit var layoutManager: LinearLayoutManager
     lateinit var adapter: LogAdapter
+    var currentProg = 0;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -327,12 +328,9 @@ class TestFragment : Fragment() {
 //            ButtonStatus = true
         }
 
-        btnRecTest.setOnClickListener{
+        btnRet.setOnClickListener{
             GlobalVars.willRetreive = true
-            var dRec = byteArrayOf(
-                0x01
-            )
-            Protocol.cDeviceProt!!.transferData(0x16.toByte(), dRec)
+            getProgs(9, 0x16.toByte())
 
             val postDdisplay = Handler()
             postDdisplay.postDelayed(displaylabel, 800)
@@ -369,6 +367,19 @@ class TestFragment : Fragment() {
         }
     }
 
+    fun getProgs(data: Int, command: Byte){
+        var dRec = byteArrayOf(
+            data.toByte()
+        )
+        Protocol.cDeviceProt!!.transferData(command, dRec)
+
+//        val getNext = Handler()
+//        getNext.postDelayed(getNextProg, 800)
+    }
+
+    val getNextProg = Runnable {
+        getProgs(currentProg, 0x16.toByte())
+    }
 
     private fun getItems() {
 //        val a = PgmCollection.pgmCollection.sortedWith(compareBy({ it.pgm }))

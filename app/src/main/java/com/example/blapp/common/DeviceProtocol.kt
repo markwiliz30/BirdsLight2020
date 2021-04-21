@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.widget.Toast
+import com.CurrentId.extensions.CurrentID
 import com.example.blapp.collection.*
 import com.example.blapp.communication.Channel
 import com.example.blapp.communication.OnSocketListener
@@ -255,10 +256,21 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     fun receiveBLData(msg: ByteArray)
     {
+        val receivedAuth = String(msg!!, 0, 3)
+        if(receivedAuth == "AUD" || receivedAuth == "RED")
+        {
+            return
+        }
+
         var getWdayCount = msg.get(5)
         if(getWdayCount.toInt() != 0)
         {
             val getPgm = msg.get(0)
+            var checkPgm = PgmCollection.pgmCollection.find { it.pgm == getPgm }
+            if(checkPgm != null)
+            {
+                return
+            }
             val getSmonth = msg.get(1)
             val getSday = msg.get(2)
             val getEmonth = msg.get(3)
@@ -437,19 +449,24 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
         val data = bundle.getByteArray("text")
-        val receivedAuth = String(data!!, 0, 3)
+        lateinit var receivedAuth: String
+        if(data!!.size >=3) {
+            receivedAuth = String(data!!, 0, 3)
+        }
         val authComp = "AUD"
         val recogComp = "RED"
 
         canAccess = false
         isRecognized = false
 
-        LogCollection.logCollection.add(String(data!!))
-
-//        TestTransferRateVal.verVal = String(data)
+//        LogCollection.logCollection.add(String(data!!))
 
         if (receivedAuth.equals(authComp)) {
             canAccess = true
+            if(retCnt != 0)
+            {
+                retCnt = 0
+            }
 //            isRecognized = true
             WifiUtils.isConnectedToBL = true
         }
@@ -459,19 +476,20 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             WifiUtils.isConnectedToBL = true
         }
 
-        if(GlobalVars.willRetreive)
-        {
-            if(retCnt == 2)
-            {
-                GlobalVars.willRetreive = false
-                receiveBLData(data)
-                retCnt = 0
-            }
-            else
-            {
-                retCnt++
-            }
-        }
+//        if(GlobalVars.willRetreive)
+//        {
+//            if(retCnt == 2)
+//            {
+//                retCnt = 0
+//                GlobalVars.willRetreive = false
+//                receiveBLData(data)
+//            }
+//            else
+//            {
+//                retCnt++
+//            }
+//
+//        }
 
         return true
     }
