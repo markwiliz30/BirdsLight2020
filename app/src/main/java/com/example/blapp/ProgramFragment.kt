@@ -24,16 +24,14 @@ import com.example.blapp.collection.DayCollection
 import com.example.blapp.collection.PgmCollection
 import com.example.blapp.collection.ScheduleCollection
 import com.example.blapp.collection.StepCollection
-import com.example.blapp.common.DayState
-import com.example.blapp.common.DeviceProtocol
-import com.example.blapp.common.Language
-import com.example.blapp.common.Protocol
+import com.example.blapp.common.*
 import com.example.blapp.databasehelper.DBmanager
 import com.example.blapp.helper.MyButton
 import com.example.blapp.helper.MySwipeHelper
 import com.example.blapp.listener.MyButtonClickListener
 import com.example.blapp.model.DayManager
 import com.example.blapp.model.PgmItem
+import com.example.blapp.model.ScheduleItem
 import com.example.blapp.model.StepItem
 import kotlinx.android.synthetic.main.fragment_info.view.*
 import kotlinx.android.synthetic.main.fragment_input_dialog.*
@@ -52,7 +50,7 @@ class ProgramFragment : Fragment(){
     lateinit var adapter: PgmAdapter
     var collection: DayManager? = null
    // internal lateinit var dbStep:DBmanager
-    internal lateinit var dbm:DBmanager
+    lateinit var dbm:DBmanager
     internal var lstStep: List<StepItem> = ArrayList<StepItem>()
     internal var lstPgm: List<PgmItem> = ArrayList<PgmItem>()
     var postDelayedSendToModule = Handler()
@@ -71,7 +69,10 @@ class ProgramFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         dbm = DBmanager(activity!!)
-
+        if (GlobalVars.retrieveDatabaseDone){
+            GlobalVars.retrieveDatabaseDone = false
+            retrieveFromDatabase()
+        }
         recycler_pgm.setHasFixedSize(true)
         recycler_pgm.setItemViewCacheSize(25)
         layoutManager = LinearLayoutManager(activity)
@@ -156,7 +157,64 @@ class ProgramFragment : Fragment(){
 
         generateItem()
     }
+    fun retrieveFromDatabase() {
+        var getDatabase = dbm.allSaved.filter { it.name == Protocol.currentSSID }
+        var getStepDatabase = dbm.allStep.filter { it.pgm_name == Protocol.currentSSID }
+        var getSchedDatabase = dbm.allSched.filter { it.pgmname == Protocol.currentSSID }
+        if(getDatabase.isNotEmpty() && getStepDatabase.isNotEmpty() && getSchedDatabase.isNotEmpty()){
+            for(get in getDatabase){
+                val getPgm = PgmItem()
+                getPgm.command = get.command
+                getPgm.pgm = get.pgm
+                getPgm.save = get.save
+                getPgm.timestamp = get.timestamp
+                getPgm.name = get.name
+                getPgm.pgm_id = get.pgm_id
+                PgmCollection.pgmCollection.add(getPgm)
+            }
+            for(getstep in getStepDatabase){
+                val newStep = StepItem()
+                newStep.command = getstep.command
+                newStep.pgm = getstep.pgm
+                newStep.step = getstep.step
+                newStep.pan = getstep.pan
+                newStep.tilt = getstep.tilt
+                newStep.blink = getstep.blink
+                newStep.time = getstep.time
+                newStep.pgm_name = getstep.pgm_name
+                newStep.step_id = getstep.step_id
+                StepCollection.stepCollection.add(getstep)
+            }
+            for(getsched in getSchedDatabase){
+                val newsched = ScheduleItem()
+                newsched.command = getsched.command
+                newsched.pgm = getsched.pgm
+                newsched.shour = getsched.shour
+                newsched.sminute = getsched.sminute
+                newsched.ehour = getsched.ehour
+                newsched.eminute = getsched.eminute
+                newsched.sched = getsched.sched
+                newsched.wday = getsched.wday
+                newsched.smonth = getsched.smonth
+                newsched.sday = getsched.sday
+                newsched.emonth = getsched.emonth
+                newsched.eday = getsched.eday
+                newsched.pgmname = getsched.pgmname
+                newsched.sched_id = getsched.sched_id
+                ScheduleCollection.scheduleCollection.add(newsched)
 
+                val newDaymanager = DayManager()
+                newDaymanager.pgm = getsched.pgm
+                newDaymanager.sMonth = getsched.smonth.toString()
+                newDaymanager.sDay = getsched.sday.toString()
+                newDaymanager.eMonth = getsched.emonth.toString()
+                newDaymanager.eDay = getsched.eday.toString()
+                DayCollection.dayCollection.add(newDaymanager)
+            }
+        }
+
+
+    }
     private fun generateItem() {
         PgmCollection.pgmCollection.sortBy { it.pgm!!.toInt() }
 //        val a = PgmCollection.pgmCollection.sortedWith(compareBy({ it.pgm }))
@@ -187,6 +245,7 @@ class ProgramFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
+
 
         LanguageTranslate()
         btn_new_pgm.setOnClickListener{
@@ -421,18 +480,6 @@ class ProgramFragment : Fragment(){
         }
     }
 
-    fun ResetBirdsLight(){
-        val command: Byte = 0x01
-        val data = byteArrayOf(
-            128.toByte(),
-            128.toByte(),
-            0.toByte()
-        )
-//        undo moko
-        if(Protocol.cDeviceProt != null) {
-            Protocol.cDeviceProt!!.transferData(command, data)
-        }
-    }
 
     fun InfoPopup(){
         val infoAlert = AlertDialog.Builder(activity!!).create()
@@ -444,7 +491,6 @@ class ProgramFragment : Fragment(){
             infoAlert.dismiss()
         }
     }
-
 
     fun LanguageTranslate(){
         if (Language.Lang == "Chinese"){

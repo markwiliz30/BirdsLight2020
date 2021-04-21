@@ -29,9 +29,16 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import androidx.core.os.bundleOf
 import com.example.blapp.collection.DayCollection
+import com.example.blapp.collection.PgmCollection
 import com.example.blapp.collection.ScheduleCollection
+import com.example.blapp.collection.StepCollection
 import com.example.blapp.common.*
+import com.example.blapp.common.GlobalVars.retrieveDatabaseDone
+import com.example.blapp.databasehelper.DBmanager
 import com.example.blapp.model.DayManager
+import com.example.blapp.model.PgmItem
+import com.example.blapp.model.ScheduleItem
+import com.example.blapp.model.StepItem
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResultCallback
@@ -67,13 +74,12 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         private const val ID_DAYPICKERFRAGMENT = 8
         private const val ID_IMPORTFRAGMENT = 9
         private const val ID_CALENDAR = 10
-
         private var aax = true
-
         var isBNavVisible = false
     }
     private val REQUEST_LOCATION_CODE = 1
     lateinit var navController: NavController
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -805,4 +811,5 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         }
         mAlertDialog.show()
     }
+
 }

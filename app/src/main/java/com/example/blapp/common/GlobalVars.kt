@@ -4,4 +4,5 @@ object GlobalVars {
     var tRate = 100
     var verVal = ""
     var willRetreive = false
+    var retrieveDatabaseDone = true
 }

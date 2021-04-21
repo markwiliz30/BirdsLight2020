@@ -254,7 +254,7 @@ class LandingFragment : Fragment() {
             startScanning()
             dialog.show()
             delayedDialogDismiss()
-            retrieveFromDatabase()
+ //           retrieveFromDatabase()
 //            var postDelayedSendToModule = Handler()
 //            var sendToModule = Runnable {
 //                dialog.dismiss()
