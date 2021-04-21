@@ -1,10 +1,8 @@
 package com.example.blapp
 
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,15 +12,14 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blapp.adapter.LogAdapter
-import com.example.blapp.adapter.PgmAdapter
 import com.example.blapp.collection.LogCollection
-import com.example.blapp.collection.PgmCollection
 import com.example.blapp.common.*
-import com.skydoves.balloon.textForm
 import kotlinx.android.synthetic.main.fragment_program.*
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_test.*
+import kotlinx.android.synthetic.main.layout_loading_dialog.*
+import me.itangqi.waveloadingview.WaveLoadingView
 import java.util.*
 
 
@@ -329,11 +326,12 @@ class TestFragment : Fragment() {
         }
 
         btnRet.setOnClickListener{
-            GlobalVars.willRetreive = true
-            getProgs(9, 0x16.toByte())
+            GlobalVars.hasProg = true
+            currentProg++
+            getProgs(currentProg, 0x16.toByte())
 
-            val postDdisplay = Handler()
-            postDdisplay.postDelayed(displaylabel, 800)
+//            val postDdisplay = Handler()
+//            postDdisplay.postDelayed(displaylabel, 800)
         }
 
         btnSoftUpdate.setOnClickListener {
@@ -367,17 +365,32 @@ class TestFragment : Fragment() {
         }
     }
 
-    fun getProgs(data: Int, command: Byte){
+    private fun getProgs(data: Int, command: Byte){
+        GlobalVars.willRetreive = true
         var dRec = byteArrayOf(
             data.toByte()
         )
         Protocol.cDeviceProt!!.transferData(command, dRec)
 
-//        val getNext = Handler()
-//        getNext.postDelayed(getNextProg, 800)
+        if(currentProg >= 24)
+        {
+            currentProg = 0
+            GlobalVars.hasProg = false
+        }
+
+        if(GlobalVars.hasProg)
+        {
+            currentProg++
+            val getNext = Handler()
+            getNext.postDelayed(getNextProg, 800)
+        }else
+        {
+            currentProg = 0
+            Toast.makeText(context, "retrieved", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    val getNextProg = Runnable {
+    private val getNextProg = Runnable {
         getProgs(currentProg, 0x16.toByte())
     }
 
@@ -386,7 +399,7 @@ class TestFragment : Fragment() {
 //        PgmCollection.pgmCollection = a as MutableList<PgmItem>
         adapter = LogAdapter(activity, LogCollection.logCollection)
         log_rec.adapter = adapter
-        log_rec.scrollToPosition(LogCollection.logCollection.size -1)
+        log_rec.scrollToPosition(LogCollection.logCollection.size - 1)
     }
 
     fun LanguageTranslate(){

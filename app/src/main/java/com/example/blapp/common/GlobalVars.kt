@@ -5,4 +5,5 @@ object GlobalVars {
     var verVal = ""
     var willRetreive = false
     var retrieveDatabaseDone = true
+    var hasProg = false
 }

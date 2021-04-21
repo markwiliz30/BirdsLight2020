@@ -256,15 +256,17 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     fun receiveBLData(msg: ByteArray)
     {
-        val receivedAuth = String(msg!!, 0, 3)
-        if(receivedAuth == "AUD" || receivedAuth == "RED")
+        val receivedAuth = String(msg!!, 0, 2)
+        if(receivedAuth == "NO" || receivedAuth == "AU" || receivedAuth == "RE")
         {
+            GlobalVars.hasProg = false
             return
         }
 
         var getWdayCount = msg.get(5)
         if(getWdayCount.toInt() != 0)
         {
+            GlobalVars.hasProg = true
             val getPgm = msg.get(0)
             var checkPgm = PgmCollection.pgmCollection.find { it.pgm == getPgm }
             if(checkPgm != null)
@@ -449,7 +451,7 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
         val data = bundle.getByteArray("text")
-        lateinit var receivedAuth: String
+        var receivedAuth = ""
         if(data!!.size >=3) {
             receivedAuth = String(data!!, 0, 3)
         }
@@ -459,7 +461,7 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         canAccess = false
         isRecognized = false
 
-//        LogCollection.logCollection.add(String(data!!))
+        LogCollection.logCollection.add(String(data!!))
 
         if (receivedAuth.equals(authComp)) {
             canAccess = true
@@ -476,20 +478,20 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
             WifiUtils.isConnectedToBL = true
         }
 
-//        if(GlobalVars.willRetreive)
-//        {
-//            if(retCnt == 2)
-//            {
-//                retCnt = 0
-//                GlobalVars.willRetreive = false
-//                receiveBLData(data)
-//            }
-//            else
-//            {
-//                retCnt++
-//            }
-//
-//        }
+        if(GlobalVars.willRetreive)
+        {
+            if(retCnt == 2)
+            {
+                retCnt = 0
+                GlobalVars.willRetreive = false
+                receiveBLData(data)
+            }
+            else
+            {
+                retCnt++
+            }
+
+        }
 
         return true
     }
