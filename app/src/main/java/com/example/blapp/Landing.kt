@@ -802,8 +802,14 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
         mAlertDialog.setMessage("If you continue to exit all scheduled programs will not be activated.") //set alertdialog message
         mAlertDialog.setPositiveButton("Yes") { dialog, id ->
             CurrentID.UpdateID(num = ID_HOME)
+
+            DayCollection.dayCollection.clear()
+            PgmCollection.pgmCollection.clear()
+            ScheduleCollection.scheduleCollection.clear()
+            StepCollection.stepCollection.clear()
+            retrieveDatabaseDone = true
             finishAffinity()
-           // Toast.makeText(this, "Yes", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this, "Yes", Toast.LENGTH_SHORT).show()
         }
         mAlertDialog.setNegativeButton("No") { dialog, id ->
 

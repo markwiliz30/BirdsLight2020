@@ -305,6 +305,10 @@ class ProgramFragment : Fragment(){
             val lData = byteArrayOf(0x00.toByte())
             Protocol.cDeviceProt!!.transferData(0x02.toByte(), lData)
             Toast.makeText(activity!!, "Closing Application" , Toast.LENGTH_LONG).show()
+            DayCollection.dayCollection.clear()
+            PgmCollection.pgmCollection.clear()
+            ScheduleCollection.scheduleCollection.clear()
+            StepCollection.stepCollection.clear()
 
             postDelayedSendToModule.postDelayed(EndActivity, 1000)
 
@@ -312,6 +316,11 @@ class ProgramFragment : Fragment(){
     }
     var EndActivity = Runnable {
         CurrentID.UpdateID(num = 1)
+        GlobalVars.retrieveDatabaseDone = true
+        DayCollection.dayCollection.clear()
+        PgmCollection.pgmCollection.clear()
+        ScheduleCollection.scheduleCollection.clear()
+        StepCollection.stepCollection.clear()
         getActivity()!!.moveTaskToBack(true)
         getActivity()!!.finish()
     }

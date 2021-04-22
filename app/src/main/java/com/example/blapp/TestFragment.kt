@@ -13,9 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.CurrentId.extensions.CurrentID
 import com.example.blapp.adapter.LogAdapter
 import com.example.blapp.collection.*
 import com.example.blapp.common.*
+import com.example.blapp.databasehelper.DBmanager
 import kotlinx.android.synthetic.main.fragment_program.*
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -36,6 +38,7 @@ class TestFragment : Fragment() {
     lateinit var layoutManager: LinearLayoutManager
     lateinit var adapter: LogAdapter
     var currentProg = 0
+    internal lateinit var dbm: DBmanager
     private lateinit var loadingAlert: AlertDialog
     private lateinit var loadingView: View
 
@@ -61,6 +64,7 @@ class TestFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        dbm = DBmanager(activity!!)
         super.onViewCreated(view, savedInstanceState)
         loadingAlert = AlertDialog.Builder(activity!!, R.style.CustomDialog).create()
         loadingAlert.setCancelable(false)
@@ -377,16 +381,23 @@ class TestFragment : Fragment() {
         mAlertDialog.setTitle("Are you sure?") //set alertdialog title
         mAlertDialog.setMessage("Retrieving data from the moving head will clear all your created programs. Do you want to continue?" ) //set alertdialog message
         mAlertDialog.setPositiveButton("Yes") { dialog, id ->
+
+            dbm.deletePgm(Protocol.currentSSID.toString())
+            dbm.deleteStep(Protocol.currentSSID.toString())
+            dbm.deleteSchedule(Protocol.currentSSID.toString())
+
             DayCollection.dayCollection.clear()
             PgmCollection.pgmCollection.clear()
             ScheduleCollection.scheduleCollection.clear()
             StepCollection.stepCollection.clear()
+
 
             loadingView.loading_dialog.progressValue = 0
             LoadingPopup()
             GlobalVars.hasProg = true
             currentProg++
             getProgs(currentProg, 0x16.toByte())
+
         }
         mAlertDialog.setNegativeButton("No") { dialog, id ->
 
@@ -398,6 +409,46 @@ class TestFragment : Fragment() {
         loadingAlert.setView(loadingView)
         loadingAlert.show()
     }
+    private fun addToDatabaseSave(){
+        for ( i in 1..PgmCollection.pgmCollection.count()){
+            var pgmSave = PgmCollection.pgmCollection.find { it.pgm == i.toByte() }
+
+
+            pgmSave!!.name = Protocol.currentSSID.toString()
+            var stepSave = StepCollection.stepCollection.filter { it.pgm == i.toByte() }
+            for(steps in stepSave){
+                steps.pgm_name = Protocol.currentSSID.toString()
+                dbm.addStep(steps)
+            }
+            var schedSave = ScheduleCollection.scheduleCollection.filter {it.pgm == i.toByte()}
+            for(sched in schedSave){
+                sched.pgmname = Protocol.currentSSID.toString()
+                dbm.addSchedule(sched)
+            }
+            pgmSave.save = 0
+            val date = Date() // given date
+
+            val calendar =
+                GregorianCalendar.getInstance() // creates a new calendar instance
+
+            calendar.time = date // assigns calendar to given date
+
+            val tdYearStr = calendar[Calendar.YEAR].toString()
+            val tdMonth = calendar[Calendar.MONTH].toString() // 0 based
+            val tdDay = calendar[Calendar.DAY_OF_MONTH].toString()
+            val tdHour = calendar[Calendar.HOUR_OF_DAY].toString()
+            val tdMinute = calendar[Calendar.MINUTE].toString()
+            val tdSecond = calendar[Calendar.SECOND].toString()
+
+            pgmSave.timestamp = ""+tdMonth+tdDay+tdYearStr+tdHour+":"+tdMinute+":"+tdSecond+""
+            pgmSave.pgm = i.toByte()
+            dbm.addPgm(pgmSave)
+
+        }
+
+
+    }
+
 
     private fun getProgs(data: Int, command: Byte){
         GlobalVars.willRetreive = true
@@ -433,6 +484,7 @@ class TestFragment : Fragment() {
     }
 
     val dismissAlert = Runnable {
+        addToDatabaseSave()
         loadingAlert.dismiss()
         Toast.makeText(context, "retrieved", Toast.LENGTH_SHORT).show()
     }
