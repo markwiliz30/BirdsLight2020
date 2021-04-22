@@ -332,16 +332,21 @@ class DBmanager(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null,
         db.close()
     }
 
-    fun deleteAllPgm(){
+    fun deleteAllPgm(ssid: String){
         val db:SQLiteDatabase = this.writableDatabase
 
-        db.execSQL("DELETE from $PROGRAM_TABLE")
+        db.execSQL("DELETE from $PROGRAM_TABLE where $PROGRAM_NAME = $ssid")
     }
 
-    fun deleteAllStep(){
+    fun deleteAllStep(ssid: String){
         val db:SQLiteDatabase = this.writableDatabase
-        db.execSQL("DELETE from $STEP_TABLE")
+        db.execSQL("DELETE from $STEP_TABLE where $STEP_PGM_NAME = $ssid")
     }
 
+    fun deleteAllSchedule(ssid: String){
+        val db:SQLiteDatabase = this.writableDatabase
+
+        db.execSQL("DELETE from $SCHEDULE_TABLE where $SCHEDULE_PGM_NAME = $ssid")
+    }
 
 }
