@@ -138,13 +138,13 @@
                 />
 
             <Button
-                android:id="@+id/btnRecTest"
+                android:id="@+id/btnRet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="50dp"
                 android:background="@drawable/button_model"
-                android:text="rec"
+                android:text="retrieve"
                 android:textColor="#14BED1"
                 android:textSize="20dp"
                 android:layout_marginTop="20dp"

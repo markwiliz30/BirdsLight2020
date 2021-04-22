@@ -1,28 +1,28 @@
 package com.example.blapp
 
 
-import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.blapp.adapter.LogAdapter
-import com.example.blapp.adapter.PgmAdapter
-import com.example.blapp.collection.LogCollection
-import com.example.blapp.collection.PgmCollection
+import com.example.blapp.collection.*
 import com.example.blapp.common.*
-import com.skydoves.balloon.textForm
 import kotlinx.android.synthetic.main.fragment_program.*
 import kotlinx.android.synthetic.main.fragment_set_step.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_test.*
+import kotlinx.android.synthetic.main.layout_loading_dialog.*
+import kotlinx.android.synthetic.main.layout_loading_dialog.view.*
+import me.itangqi.waveloadingview.WaveLoadingView
 import java.util.*
 
 
@@ -35,6 +35,9 @@ class TestFragment : Fragment() {
     internal var ButtonStatus:Boolean = true
     lateinit var layoutManager: LinearLayoutManager
     lateinit var adapter: LogAdapter
+    var currentProg = 0
+    private lateinit var loadingAlert: AlertDialog
+    private lateinit var loadingView: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +62,9 @@ class TestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadingAlert = AlertDialog.Builder(activity!!, R.style.CustomDialog).create()
+        loadingAlert.setCancelable(false)
+        loadingView = layoutInflater.inflate(R.layout.layout_loading_dialog, null)
         LogCollection.logCollection.clear()
         layoutManager = LinearLayoutManager(activity)
         log_rec.layoutManager = layoutManager
@@ -327,15 +333,11 @@ class TestFragment : Fragment() {
 //            ButtonStatus = true
         }
 
-        btnRecTest.setOnClickListener{
-            GlobalVars.willRetreive = true
-            var dRec = byteArrayOf(
-                0x01
-            )
-            Protocol.cDeviceProt!!.transferData(0x16.toByte(), dRec)
+        btnRet.setOnClickListener{
+            retrieveWarning()
 
-            val postDdisplay = Handler()
-            postDdisplay.postDelayed(displaylabel, 800)
+//            val postDdisplay = Handler()
+//            postDdisplay.postDelayed(displaylabel, 800)
         }
 
         btnSoftUpdate.setOnClickListener {
@@ -369,13 +371,82 @@ class TestFragment : Fragment() {
         }
     }
 
+    private fun retrieveWarning(){
+        val mAlertDialog = AlertDialog.Builder(activity!!)
+        mAlertDialog.setIcon(R.mipmap.ic_launcher_round) //set alertdialog icon
+        mAlertDialog.setTitle("Are you sure?") //set alertdialog title
+        mAlertDialog.setMessage("Retrieving data from the moving head will clear all your created programs. Do you want to continue?" ) //set alertdialog message
+        mAlertDialog.setPositiveButton("Yes") { dialog, id ->
+            DayCollection.dayCollection.clear()
+            PgmCollection.pgmCollection.clear()
+            ScheduleCollection.scheduleCollection.clear()
+            StepCollection.stepCollection.clear()
+
+            loadingView.loading_dialog.progressValue = 0
+            LoadingPopup()
+            GlobalVars.hasProg = true
+            currentProg++
+            getProgs(currentProg, 0x16.toByte())
+        }
+        mAlertDialog.setNegativeButton("No") { dialog, id ->
+
+        }
+        mAlertDialog.show()
+    }
+
+    fun LoadingPopup(){
+        loadingAlert.setView(loadingView)
+        loadingAlert.show()
+    }
+
+    private fun getProgs(data: Int, command: Byte){
+        GlobalVars.willRetreive = true
+        var dRec = byteArrayOf(
+            data.toByte()
+        )
+        Protocol.cDeviceProt!!.transferData(command, dRec)
+
+        if(currentProg >= 24)
+        {
+            currentProg = 0
+            GlobalVars.hasProg = false
+        }
+
+        if(GlobalVars.hasProg)
+        {
+            currentProg++
+            var firstNum: Double = currentProg.toDouble()
+            var secondNum: Double = 24.toDouble()
+            var perProg: Double = (firstNum/secondNum) * 100
+            loadingView.loading_dialog.progressValue = perProg.toInt()
+            loadingView.loading_dialog.centerTitle = perProg.toInt().toString() + "%"
+            val getNext = Handler()
+            getNext.postDelayed(getNextProg, 800)
+        }else
+        {
+            currentProg = 0
+            loadingView.loading_dialog.progressValue = 100
+            loadingView.loading_dialog.centerTitle = 100.toString() + "%"
+            val alertRemove = Handler()
+            alertRemove.postDelayed(dismissAlert, 500)
+        }
+    }
+
+    val dismissAlert = Runnable {
+        loadingAlert.dismiss()
+        Toast.makeText(context, "retrieved", Toast.LENGTH_SHORT).show()
+    }
+
+    private val getNextProg = Runnable {
+        getProgs(currentProg, 0x16.toByte())
+    }
 
     private fun getItems() {
 //        val a = PgmCollection.pgmCollection.sortedWith(compareBy({ it.pgm }))
 //        PgmCollection.pgmCollection = a as MutableList<PgmItem>
         adapter = LogAdapter(activity, LogCollection.logCollection)
         log_rec.adapter = adapter
-        log_rec.scrollToPosition(LogCollection.logCollection.size -1)
+        log_rec.scrollToPosition(LogCollection.logCollection.size - 1)
     }
 
     fun LanguageTranslate(){

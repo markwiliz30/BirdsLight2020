@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.widget.Toast
+import com.CurrentId.extensions.CurrentID
 import com.example.blapp.collection.*
 import com.example.blapp.communication.Channel
 import com.example.blapp.communication.OnSocketListener
@@ -255,10 +256,23 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
     fun receiveBLData(msg: ByteArray)
     {
+        val receivedAuth = String(msg!!, 0, 2)
+        if(receivedAuth == "NO" || receivedAuth == "AU" || receivedAuth == "RE")
+        {
+            GlobalVars.hasProg = false
+            return
+        }
+
         var getWdayCount = msg.get(5)
         if(getWdayCount.toInt() != 0)
         {
+            GlobalVars.hasProg = true
             val getPgm = msg.get(0)
+            var checkPgm = PgmCollection.pgmCollection.find { it.pgm == getPgm }
+            if(checkPgm != null)
+            {
+                return
+            }
             val getSmonth = msg.get(1)
             val getSday = msg.get(2)
             val getEmonth = msg.get(3)
@@ -437,7 +451,10 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
     override fun handleMessage(msg: Message): Boolean {
         val bundle = msg.data
         val data = bundle.getByteArray("text")
-        val receivedAuth = String(data!!, 0, 3)
+        var receivedAuth = ""
+        if(data!!.size >=3) {
+            receivedAuth = String(data!!, 0, 3)
+        }
         val authComp = "AUD"
         val recogComp = "RED"
 
@@ -446,10 +463,12 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
 
         LogCollection.logCollection.add(String(data!!))
 
-//        TestTransferRateVal.verVal = String(data)
-
         if (receivedAuth.equals(authComp)) {
             canAccess = true
+            if(retCnt != 0)
+            {
+                retCnt = 0
+            }
 //            isRecognized = true
             WifiUtils.isConnectedToBL = true
         }
@@ -463,14 +482,15 @@ class  DeviceProtocol : Handler.Callback, OnSocketListener {
         {
             if(retCnt == 2)
             {
+                retCnt = 0
                 GlobalVars.willRetreive = false
                 receiveBLData(data)
-                retCnt = 0
             }
             else
             {
                 retCnt++
             }
+
         }
 
         return true
