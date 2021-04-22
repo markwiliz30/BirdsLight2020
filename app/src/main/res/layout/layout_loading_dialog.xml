@@ -9,7 +9,7 @@
     android:weightSum="2">
 
     <me.itangqi.waveloadingview.WaveLoadingView
-        android:id="@+id/loading_view"
+        android:id="@+id/loading_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:wlv_borderColor="@color/MainColor"

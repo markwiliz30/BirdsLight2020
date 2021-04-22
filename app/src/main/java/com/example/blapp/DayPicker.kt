@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_day_picker.*
 import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_info.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.layout_loading_dialog.view.*
 
 /**
  * A simple [Fragment] subclass.

@@ -86,8 +86,8 @@ class ScheduleFragment : Fragment() {
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
             val view: View = layoutInflater.inflate(R.layout.layout_loading_dialog, null)
-            view.loading_view.progressValue = progressVal
-            view.loading_view.centerTitle = progressVal.toString()
+            view.loading_dialog.progressValue = progressVal
+            view.loading_dialog.centerTitle = progressVal.toString()
 //            view.btn_inc.setOnClickListener{
 //                if(progressVal < 100) {
 //                    progressVal++
