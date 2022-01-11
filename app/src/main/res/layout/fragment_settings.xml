@@ -68,6 +68,37 @@
 
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
+                android:id="@+id/UpdateBL"
+                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                app:cardBackgroundColor="@color/MainColor"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:weightSum="2"
+                    >
+                    <TextView
+                        android:id="@+id/lblUpdate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Software Update"
+                        android:textSize="30sp"
+                        android:layout_marginHorizontal="30dp"
+                        android:textColor="@color/colorAccent"
+                        android:layout_weight="1"
+                        />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
                 android:id="@+id/FactoryReset"
                 android:layout_height="100dp"
                 android:layout_width="match_parent"

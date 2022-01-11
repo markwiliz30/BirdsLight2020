@@ -1,24 +1,47 @@
 package com.example.blapp
 
 
+import android.app.DownloadManager
+import android.content.Context
+import android.content.DialogInterface
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.content.DialogInterface
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.example.blapp.common.Language
 import com.example.blapp.common.Protocol
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class Settings : Fragment() {
+class Settings : Fragment(), GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener  {
+    private val STORAGE_PERMISSION_CODE: Int = 1000
 
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+
+    }
+
+    override fun onConnected(p0: Bundle?) {
+
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,7 +90,7 @@ class Settings : Fragment() {
 //                "Swedish",
 //                "Thai",
 //                "Vietnamese"
-                   )
+            )
 
             val builder = AlertDialog.Builder(activity!!)
             builder.setTitle("Choose item")
@@ -85,10 +108,11 @@ class Settings : Fragment() {
 
             builder.setPositiveButton("Done",
                 DialogInterface.OnClickListener { dialog, which ->
-                    lblSelectedLanguage.text =listItems[Language.LanguageSelected!!]
+                    lblSelectedLanguage.text = listItems[Language.LanguageSelected!!]
                     Language.Lang = lblSelectedLanguage.text.toString()
                     LanguageTranslate()
-                        dialog.dismiss() })
+                    dialog.dismiss()
+                })
 
             val dialog = builder.create()
             dialog.show()
@@ -102,8 +126,55 @@ class Settings : Fragment() {
             )
             Protocol.cDeviceProt!!.transferData(command, data)
         }
+        //lblUpdate.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow, 0)
+        UpdateBL.setOnClickListener{
+            val connectionManager:ConnectivityManager = activity!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val activeNetwork : NetworkInfo? = connectionManager.activeNetworkInfo
+            val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+
+            if(isConnected){
+
+                val url = "https://emoji.gg/assets/emoji/6757_Sadge.png"
+
+                val request = DownloadManager.Request(Uri.parse(url))
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                request.setTitle("Download")
+                request.setDescription("The file is downloading")
+
+                request.allowScanningByMediaScanner()
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                request.setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS,
+                    "${System.currentTimeMillis()}.png"
+                )
+
+                val downloadManager =
+                    activity!!.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                downloadManager.enqueue(request)
+
+                Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(activity, "Not Connected", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+       when(requestCode){
+           STORAGE_PERMISSION_CODE -> {
+               if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+               } else {
+                   Toast.makeText(activity, "Not Connected", Toast.LENGTH_SHORT).show()
+               }
+           }
+       }
+    }
     fun ShowSaveAlert(){
 
         val mAlertDialog = AlertDialog.Builder(activity!!)
@@ -113,7 +184,7 @@ class Settings : Fragment() {
 
 
         mAlertDialog.setPositiveButton("Okay") { dialog, id ->
-            Toast.makeText(activity , "Reseting device" , Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Reseting device", Toast.LENGTH_SHORT).show()
         }
 
         mAlertDialog.setNegativeButton("Cancel") { dialog, id ->

@@ -263,7 +263,7 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                 }
 
                 //replace the if statement "WifiUtils.isConnectedToBL"
-                ID_SETTINGSFRAGMENT -> if (WifiUtils.isConnectedToBL) {
+                ID_SETTINGSFRAGMENT -> {
                     if(!TestRunning.TestPgm1 && !TestRunning.TestPgm2 && !TestRunning.TestPgm3){
                     if (CurrentID.getID() == ID_HOME) {
                         navController.navigate(R.id.action_landingFragment_to_settings)
@@ -299,9 +299,6 @@ class Landing : AppCompatActivity(), GoogleApiClient.ConnectionCallbacks,
                         //bottomNavigation.show(ID_TESTFRAGMENT)
                         TestRunningDialog()
                     }
-                } else {
-                    bottomNavigation.isVisible = false
-                    NotConnectedAlert()
                 }
 
                 else -> navController.navigate(R.id.action_landingFragment_to_testFragment)
